@@ -1169,6 +1169,22 @@ tr.cob-dia-vazio > td {
         </div>
       </div>
 
+      <!-- GRUPO: PREMIAÇÕES -->
+      <div class="nav-group-header open" onclick="toggleNavGroup('grp-premiacoes',this)" style="margin-top:4px;">
+        <span>🏆 Premiações</span>
+        <span class="nav-group-arrow">▶</span>
+      </div>
+      <div class="nav-group-items" id="grp-premiacoes" style="max-height:400px">
+        <div class="nav-sub-item" onclick="showPage('premio-divisao')" id="nav-premio-divisao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
+          Divisão – Ferramentaria
+        </div>
+        <div class="nav-sub-item" onclick="showPage('premio-manutencao')" id="nav-premio-manutencao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg>
+          Divisão – Manut. Motores
+        </div>
+      </div>
+
       <!-- Admin -->
       <div class="nav-label" id="nav-label-admin" style="display:none;margin-top:8px;">Administração</div>
       <div class="nav-item" id="nav-item-empresas" onclick="showPage('empresas')" style="display:none">
@@ -2518,6 +2534,126 @@ tr.cob-dia-vazio > td {
       </div>
     </div>
 
+
+    <!-- ══ PREMIAÇÕES — DIVISÃO DE RESULTADOS (FERRAMENTARIA) ══ -->
+    <div class="page" id="page-premio-divisao">
+      <div class="page-header">
+        <div><div class="page-title">Divisão de Resultados — Ferramentaria</div><div class="page-sub" style="margin-bottom:0">Prêmio = venda realizada da Ferramentaria × % da faixa atingida, com desconto pela nota do 5S do mês.</div></div>
+      </div>
+
+      <div class="card" style="padding:14px 20px;margin-bottom:16px;">
+        <div class="filter-row">
+          <div class="form-group"><label>Ano</label>
+            <select id="pr-ano" onchange="renderPremioDivisao()" style="width:110px;"></select>
+          </div>
+          <div id="pr-status" style="font-size:12px;color:#78716c;align-self:flex-end;padding-bottom:8px"></div>
+        </div>
+      </div>
+
+      <!-- 1. Resultado mensal -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Meta de venda e prêmio — Jan a Dez</div>
+        <div style="overflow-x:auto" id="pr-resumo-wrap"></div>
+      </div>
+
+      <!-- 2. Avaliação 5S -->
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <div class="card-title" style="margin:0">Avaliação do Programa 5S (Ferramentaria)</div>
+          <button class="btn-novo" onclick="pr5sNovoItem('ferr')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Incluir item
+          </button>
+        </div>
+        <div style="font-size:12px;color:#78716c;margin-bottom:8px">Clique na célula para marcar: vazio → <b style="color:#16a34a">S</b> → <b style="color:#dc2626">N</b> → vazio. Nota = itens "S" ÷ total de itens × 10.</div>
+        <div style="overflow-x:auto" id="pr-5s-wrap"></div>
+      </div>
+
+      <!-- 3. Regras -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="card-title" style="margin:0">Faixas de pagamento (meta)</div>
+            <button class="btn-novo" onclick="prFaixaNova('ferr')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Faixa
+            </button>
+          </div>
+          <div id="pr-faixas-wrap"></div>
+          <div style="font-size:12px;color:#78716c;margin-top:8px">Abaixo da menor faixa não paga.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Desconto pela nota do 5S</div>
+          <table class="dfc-table">
+            <thead><tr><th>Nota do mês</th><th>Desconto no prêmio</th></tr></thead>
+            <tbody>
+              <tr><td>Menor que 6</td><td>50%</td></tr>
+              <tr><td>De 6 até menor que 7</td><td>30%</td></tr>
+              <tr><td>De 7 até menor que 8</td><td>25%</td></tr>
+              <tr><td>8 ou mais</td><td>Sem desconto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PREMIAÇÕES — DIVISÃO DE RESULTADOS (MANUTENÇÃO DE MOTORES) ══ -->
+    <div class="page" id="page-premio-manutencao">
+      <div class="page-header">
+        <div><div class="page-title">Divisão de Resultados — Manutenção de Motores</div><div class="page-sub" style="margin-bottom:0">Prêmio = receita da Manutenção de Motores × % da faixa do CPV (CPV ÷ receita, mesma lógica do DRE), com desconto pela nota do 5S do mês.</div></div>
+      </div>
+
+      <div class="card" style="padding:14px 20px;margin-bottom:16px;">
+        <div class="filter-row">
+          <div class="form-group"><label>Ano</label>
+            <select id="pm-ano" onchange="renderPremioManutencao()" style="width:110px;"></select>
+          </div>
+          <div id="pm-status" style="font-size:12px;color:#78716c;align-self:flex-end;padding-bottom:8px"></div>
+        </div>
+      </div>
+
+      <!-- 1. Resultado mensal -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Receita, CPV e prêmio — Jan a Dez</div>
+        <div style="overflow-x:auto" id="pm-resumo-wrap"></div>
+      </div>
+
+      <!-- 2. Avaliação 5S -->
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <div class="card-title" style="margin:0">Avaliação do Programa 5S (Manutenção de Motores)</div>
+          <button class="btn-novo" onclick="pr5sNovoItem('manut')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Incluir item
+          </button>
+        </div>
+        <div style="font-size:12px;color:#78716c;margin-bottom:8px">Clique na célula para marcar: vazio → <b style="color:#16a34a">S</b> → <b style="color:#dc2626">N</b> → vazio. Nota = itens "S" ÷ total de itens × 10.</div>
+        <div style="overflow-x:auto" id="pm-5s-wrap"></div>
+      </div>
+
+      <!-- 3. Regras -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="card-title" style="margin:0">Faixas de pagamento (CPV)</div>
+            <button class="btn-novo" onclick="prFaixaNova('manut')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Faixa
+            </button>
+          </div>
+          <div id="pm-faixas-wrap"></div>
+          <div style="font-size:12px;color:#78716c;margin-top:8px">CPV acima da maior faixa não paga.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Desconto pela nota do 5S</div>
+          <table class="dfc-table">
+            <thead><tr><th>Nota do mês</th><th>Desconto no prêmio</th></tr></thead>
+            <tbody>
+              <tr><td>Menor que 6</td><td>50%</td></tr>
+              <tr><td>De 6 até menor que 7</td><td>30%</td></tr>
+              <tr><td>De 7 até menor que 8</td><td>25%</td></tr>
+              <tr><td>8 ou mais</td><td>Sem desconto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
     <!-- ══ BANCOS / CAIXAS ══ -->
     <div class="page" id="page-bancos">
@@ -4148,6 +4284,8 @@ const PAGES_CONFIG = [
   { id:'dre-grupos',        label:'DRE Grupos',          grupo:'dre'     },
   { id:'dre-demonstrativo', label:'DRE Demonstrativo',   grupo:'dre'     },
   { id:'dre-analise-cat',   label:'DRE Análise por Categoria', grupo:'dre' },
+  { id:'premio-divisao',    label:'Divisão – Ferramentaria', grupo:'premiacoes' },
+  { id:'premio-manutencao', label:'Divisão – Manutenção de Motores', grupo:'premiacoes' },
 ];
 
 // ══════════════════════════════════════════
@@ -4957,6 +5095,8 @@ function showPage(p) {
   if (p === 'dre-grupos')        { carregarDreGrupoClasses().then(renderDreGrupos); }
   if (p === 'dre-demonstrativo') { carregarVarEstoque().then(carregarDreGrupoClasses).then(renderDre); }
   if (p === 'dre-analise-cat')   { popularCategoriasAnalise(); renderAnaliseCategoria(); }
+  if (p === 'premio-divisao')    renderPremioDivisao();
+  if (p === 'premio-manutencao') renderPremioManutencao();
   if (p === 'usuarios')          renderUsuariosAdmin();
   if (p === 'empresas')          renderEmpresas();
 }
@@ -4996,6 +5136,8 @@ function renderPaginaAtual() {
   if (p === 'dre-grupos')        { carregarDreGrupoClasses().then(renderDreGrupos); }
   if (p === 'dre-demonstrativo') { carregarVarEstoque().then(carregarDreGrupoClasses).then(renderDre); }
   if (p === 'dre-analise-cat')   { popularCategoriasAnalise(); renderAnaliseCategoria(); }
+  if (p === 'premio-divisao')    renderPremioDivisao();
+  if (p === 'premio-manutencao') renderPremioManutencao();
   if (p === 'usuarios')          renderUsuariosAdmin();
   if (p === 'empresas')          renderEmpresas();
 }
@@ -8053,6 +8195,343 @@ function renderDashboard() {
   renderMetasGauges();
 }
 
+
+// ══════════════════════════════════════════
+// PREMIAÇÕES — DIVISÃO DE RESULTADOS
+// Duas telas com a mesma estrutura (5S + regra de prêmio), uma por setor:
+//   ferr  → Ferramentaria: meta de VENDA (faixas por % da meta atingido)
+//   manut → Manutenção de Motores: faixas pelo CPV % (CPV ÷ Receita do DRE)
+// Tudo guardado na tabela "config" (sem tabela nova):
+//   {pfx}5s_itens   → [{id, texto}]  regras do 5S (incluir/editar/excluir)
+//   {pfx}5s:{ano}   → { itemId: { mes: 'S'|'N' } }
+//   premio_meta:{ano} → { mes: valorMeta }            (só Ferramentaria)
+//   {faixasKey}     → faixas de pagamento editáveis
+// Os dados de cada setor são buscados direto no banco pelo empresa_id —
+// independem da empresa ativa no seletor do topo.
+// ══════════════════════════════════════════
+const PR_MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const PR_SETORES = {
+  ferr: {
+    dom: 'pr', pagina: 'premio-divisao', empresa: 'emp_ferramentaria', pfx: 'premio_', tipo: 'meta',
+    faixasKey: 'premio_faixas',
+    faixasPadrao: [ {ating:100,pct:2}, {ating:95,pct:1.5}, {ating:90,pct:1}, {ating:85,pct:0.5} ],
+    itensPadrao: [
+      'Não deixar máquinas e ferramentas ao redor da mesa de trabalho.',
+      'Respeitar as marcações onde os produtos são destinados (compactar caso seja necessário).',
+      'Manter apenas o que está sendo usado sobre a mesa de trabalho.',
+      'Deixar organizado a bancada e guardar as ferramentas.',
+      'Não permitir que os produtos acabem sem notificar o departamento de compras.',
+      'Utilizar equipamento de proteção individual (EPI).',
+      'Ao retirar o material do almoxarifado e não usá-lo, devolva-o exatamente como foi retirado e no mesmo local.',
+      'Não deixar peças novas junto com o orçamento do cliente.',
+      'Desligar as luzes do almoxarifado ao meio dia e término de trabalho.',
+      'Esvaziar as lixeiras e caixa de armazenagem de papelão toda sexta-feira.'
+    ]
+  },
+  manut: {
+    dom: 'pm', pagina: 'premio-manutencao', empresa: 'emp_manutencao', pfx: 'premio_mm_', tipo: 'cpv',
+    faixasKey: 'premio_mm_faixas_cpv',
+    faixasPadrao: [ {ate:59.99,pct:1.5}, {ate:65,pct:1}, {ate:71,pct:0.5} ],
+    itensPadrao: [
+      'Organização da sala de pintura.',
+      'Lavagem do saco do aspirador + esvaziar o tambor (todas as sextas-feiras).',
+      'As peças usadas devem ser limpas e armazenadas adequadamente.',
+      'Manter apenas o que está sendo usado sobre a mesa de trabalho.',
+      'Deixar organizado a bancada e guardar as ferramentas.',
+      'Não é permitido colocar materiais sobre a mesa de teste.',
+      'Respeitar as marcações onde os produtos são destinados (compactar caso seja necessário).',
+      'Não permitir que os produtos acabem sem notificar o departamento de compras.',
+      'Utilizar equipamentos de segurança individual (EPI).',
+      'Ao retirar o material do almoxarifado e não usá-lo, devolva-o exatamente como foi retirado, no mesmo local onde foi retirado.',
+      'Desligar o compressor ao término do dia de trabalho.',
+      'Desligar os ventiladores e as luzes ao meio-dia.',
+      'Verificar e providenciar, se necessário, a carga da empilhadeira no final do dia.',
+      'Não deixar peças novas junto com o orçamento do cliente.'
+    ]
+  }
+};
+// Estado em memória por setor
+const PR_ST = { ferr: {}, manut: {} };
+
+async function prCfgGet(key) {
+  const rows = await sbFetch('config', 'GET', null, `?key=eq.${encodeURIComponent(key)}&select=value`);
+  if (!rows || !rows.length) return undefined;
+  try { return JSON.parse(rows[0].value); } catch(e) { return undefined; }
+}
+async function prCfgSet(s, key, obj) {
+  const value = JSON.stringify(obj);
+  const ex = await sbFetch('config', 'GET', null, `?key=eq.${encodeURIComponent(key)}&select=id`);
+  let ok;
+  if (ex === null) ok = false;
+  else if (ex.length) ok = !!(await sbFetch('config', 'PATCH', { value }, `?key=eq.${encodeURIComponent(key)}`));
+  else ok = !!(await sbFetch('config', 'POST', { id: uid(), key, value }));
+  prStatus(s, ok ? '✅ Salvo' : '⚠️ Não foi possível salvar — verifique a conexão');
+  return ok;
+}
+function prStatus(s, t) { const el = document.getElementById(PR_SETORES[s].dom + '-status'); if (el) el.textContent = t; }
+function prEl(s, suf) { return document.getElementById(PR_SETORES[s].dom + '-' + suf); }
+
+function prAno(s) {
+  const sel = prEl(s, 'ano');
+  if (sel && !sel.options.length) {
+    const y = new Date().getFullYear();
+    for (let a = y - 3; a <= y + 1; a++) sel.add(new Option(a, a));
+    sel.value = y;
+  }
+  return sel ? sel.value : String(new Date().getFullYear());
+}
+
+// Busca paginada direto no banco, filtrada pela empresa do setor
+async function prBuscarTodos(tabela, query) {
+  let all = []; const lim = 1000; let off = 0;
+  while (true) {
+    const lote = await sbFetch(tabela, 'GET', null, `?${query}&limit=${lim}&offset=${off}`);
+    if (!lote || !lote.length) break;
+    all = all.concat(lote);
+    if (lote.length < lim) break;
+    off += lim;
+  }
+  return all;
+}
+
+// Ferramentaria: venda (lancreceber) por mês de dtvenda
+async function prVendasMes(empresa, ano) {
+  const rows = await prBuscarTodos('lancreceber',
+    `select=valor,dtvenda&empresa_id=eq.${empresa}&dtvenda=gte.${ano}-01-01&dtvenda=lte.${ano}-12-31`);
+  const out = {};
+  rows.forEach(r => {
+    const m = parseInt(String(r.dtvenda || '').slice(5, 7), 10);
+    if (m >= 1 && m <= 12) out[m] = (out[m] || 0) + (parseFloat(r.valor) || 0);
+  });
+  return out;
+}
+
+// Manutenção: Receita e CPV pela MESMA lógica do DRE (calcularDreParaMetas),
+// usando só os lançamentos da empresa do setor.
+async function prReceitaCpvMes(empresa, ano) {
+  const [rec, pag] = await Promise.all([
+    prBuscarTodos('lancreceber', `select=valor,dtvenda,dtcompra,prod,cat_dre&empresa_id=eq.${empresa}`),
+    prBuscarTodos('lancamentos', `select=valor,dtcompra,prod,cat_dre&empresa_id=eq.${empresa}&dtcompra=gte.${ano}-01-01&dtcompra=lte.${ano}-12-31`)
+  ]);
+  const r = calcularDreParaMetas(parseInt(ano, 10), { lancreceber: rec, lancamentos: pag, semVarEstoque: true });
+  return { receita: r.venda, cpv: r.cpv };
+}
+
+function renderPremioDivisao()   { return prRenderSetor('ferr'); }
+function renderPremioManutencao() { return prRenderSetor('manut'); }
+
+async function prRenderSetor(s) {
+  const cfg = PR_SETORES[s], st = PR_ST[s];
+  const ano = prAno(s);
+  prStatus(s, 'Carregando…');
+  const pedidos = [
+    prCfgGet(cfg.pfx + '5s_itens'), prCfgGet(cfg.faixasKey), prCfgGet(cfg.pfx + '5s:' + ano),
+    cfg.tipo === 'meta' ? prCfgGet('premio_meta:' + ano) : Promise.resolve(undefined),
+    cfg.tipo === 'meta' ? prVendasMes(cfg.empresa, ano) : prReceitaCpvMes(cfg.empresa, ano)
+  ];
+  const [itens, faixas, marc, meta, dados] = await Promise.all(pedidos);
+  st.itens  = Array.isArray(itens) ? itens : cfg.itensPadrao.map(t => ({ id: uid(), texto: t }));
+  st.faixas = Array.isArray(faixas) ? faixas : cfg.faixasPadrao.map(f => ({...f}));
+  st.marc = marc || {}; st.meta = meta || {}; st.dados = dados || {};
+  if (!Array.isArray(itens)) prCfgSet(s, cfg.pfx + '5s_itens', st.itens);
+  if (!Array.isArray(faixas)) prCfgSet(s, cfg.faixasKey, st.faixas);
+  prStatus(s, '');
+  prRender5s(s); prRenderFaixas(s); prRenderResumo(s);
+}
+
+// ── Cálculos ──
+function prNota(s, m) {
+  const st = PR_ST[s], n = st.itens.length; if (!n) return null;
+  let marcados = 0, ok = 0;
+  st.itens.forEach(it => { const v = (st.marc[it.id] || {})[m]; if (v) marcados++; if (v === 'S') ok++; });
+  return marcados ? (ok / n) * 10 : null;
+}
+function prDescontoNota(nota) {
+  if (nota === null) return 0;
+  if (nota < 6) return 50;
+  if (nota < 7) return 30;
+  if (nota < 8) return 25;
+  return 0;
+}
+// Ferramentaria: maior faixa cujo "% da meta" foi atingido
+function prPctFaixaMeta(s, atingPct) {
+  const f = [...PR_ST[s].faixas].sort((a, b) => b.ating - a.ating).find(f => atingPct >= f.ating);
+  return f ? f.pct : 0;
+}
+// Manutenção: primeira faixa (menor limite) em que o CPV % fica "até" o limite
+function prPctFaixaCpv(s, cpvPct) {
+  const v = Math.round(cpvPct * 100) / 100;
+  const f = [...PR_ST[s].faixas].sort((a, b) => a.ate - b.ate).find(f => v <= f.ate);
+  return f ? f.pct : 0;
+}
+const prFmtN = v => (v === null || v === undefined) ? '—' : v.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+
+// ── Tela: resumo mensal ──
+function prRenderResumo(s) {
+  const cfg = PR_SETORES[s], st = PR_ST[s];
+  const wrap = prEl(s, 'resumo-wrap'); if (!wrap) return;
+  const linhas = cfg.tipo === 'meta'
+    ? [['meta','Meta de venda (R$)'],['real','Venda realizada'],['ating','% da meta atingido'],['pct','% prêmio (faixa)']]
+    : [['rec','Receita'],['cpv','CPV (R$)'],['cpvp','CPV %'],['pct','% prêmio (faixa CPV)']];
+  linhas.push(['bruto','Prêmio bruto'],['nota','Nota 5S'],['desc','Desconto pela nota'],['liq','Prêmio a pagar']);
+  const L = {}; linhas.forEach(([k]) => L[k] = []);
+  const T = { meta:0, real:0, rec:0, cpv:0, bruto:0, liq:0 };
+  for (let m = 1; m <= 12; m++) {
+    let base = 0, pct = 0;
+    if (cfg.tipo === 'meta') {
+      const meta = parseFloat(st.meta[m]) || 0, real = st.dados[m] || 0;
+      const ating = meta > 0 ? real / meta * 100 : null;
+      pct = ating === null ? 0 : prPctFaixaMeta(s, ating);
+      base = real; T.meta += meta; T.real += real;
+      L.meta.push(`<td><input type="number" min="0" step="0.01" value="${meta || ''}" onchange="prSalvarMeta('${s}',${m},this.value)" style="width:96px;text-align:right;padding:4px 6px;border:1px solid #e7e5e4;border-radius:6px;font-family:inherit;font-size:12px"></td>`);
+      L.real.push(`<td>${fmtBRL(real)}</td>`);
+      L.ating.push(`<td>${ating === null ? '—' : prFmtN(ating) + '%'}</td>`);
+    } else {
+      const rec = (st.dados.receita || {})[m] || 0, cpv = (st.dados.cpv || {})[m] || 0;
+      const cpvp = rec > 0 ? cpv / rec * 100 : null;
+      pct = cpvp === null ? 0 : prPctFaixaCpv(s, cpvp);
+      base = rec; T.rec += rec; T.cpv += cpv;
+      L.rec.push(`<td>${fmtBRL(rec)}</td>`);
+      L.cpv.push(`<td>${fmtBRL(cpv)}</td>`);
+      const corC = cpvp === null ? '#a8a29e' : (pct ? '#16a34a' : '#dc2626');
+      L.cpvp.push(`<td style="color:${corC};font-weight:700">${cpvp === null ? '—' : prFmtN(cpvp) + '%'}</td>`);
+    }
+    const bruto = base * pct / 100;
+    const nota = prNota(s, m), desc = prDescontoNota(nota);
+    const liq = bruto * (1 - desc / 100);
+    T.bruto += bruto; T.liq += liq;
+    L.pct.push(`<td>${pct ? prFmtN(pct) + '%' : '—'}</td>`);
+    L.bruto.push(`<td>${fmtBRL(bruto)}</td>`);
+    const corN = nota === null ? '#a8a29e' : (nota >= 8 ? '#16a34a' : '#dc2626');
+    L.nota.push(`<td style="color:${corN};font-weight:700">${prFmtN(nota)}</td>`);
+    L.desc.push(`<td>${desc ? '-' + desc + '%' : '—'}</td>`);
+    L.liq.push(`<td style="font-weight:700;color:#ea580c">${fmtBRL(liq)}</td>`);
+  }
+  const tot = {
+    meta: fmtBRL(T.meta), real: fmtBRL(T.real),
+    ating: T.meta > 0 ? prFmtN(T.real / T.meta * 100) + '%' : '—',
+    rec: fmtBRL(T.rec), cpv: fmtBRL(T.cpv),
+    cpvp: T.rec > 0 ? prFmtN(T.cpv / T.rec * 100) + '%' : '—',
+    bruto: fmtBRL(T.bruto), liq: `<b style="color:#ea580c">${fmtBRL(T.liq)}</b>`
+  };
+  wrap.innerHTML = `<table class="dfc-table">
+    <thead><tr><th>${cfg.tipo === 'meta' ? 'Ferramentaria' : 'Manutenção de Motores'}</th>${PR_MESES.map(x => `<th>${x}</th>`).join('')}<th>Total</th></tr></thead>
+    <tbody>${linhas.map(([k, rot]) => k === 'liq'
+      ? `<tr style="background:#fff7ed"><td><b>${rot}</b></td>${L[k].join('')}<td>${tot[k]}</td></tr>`
+      : `<tr><td>${rot}</td>${L[k].join('')}<td>${tot[k] || ''}</td></tr>`).join('')}
+    </tbody></table>`;
+}
+async function prSalvarMeta(s, m, v) {
+  const st = PR_ST[s], n = parseFloat(v);
+  if (n > 0) st.meta[m] = n; else delete st.meta[m];
+  prRenderResumo(s);
+  await prCfgSet(s, 'premio_meta:' + prAno(s), st.meta);
+}
+
+// ── Tela: avaliação 5S ──
+function prRender5s(s) {
+  const st = PR_ST[s];
+  const wrap = prEl(s, '5s-wrap'); if (!wrap) return;
+  const cel = (it, m) => {
+    const v = (st.marc[it.id] || {})[m] || '';
+    const cor = v === 'S' ? 'background:#dcfce7;color:#16a34a' : v === 'N' ? 'background:#fee2e2;color:#dc2626' : 'background:#faf9f7;color:#d6d3d1';
+    return `<td style="text-align:center;padding:4px"><button onclick="pr5sToggle('${s}','${it.id}',${m})" style="width:34px;height:28px;border:1px solid #e7e5e4;border-radius:6px;cursor:pointer;font-weight:700;${cor}">${v || '·'}</button></td>`;
+  };
+  const linhas = st.itens.map((it, i) => `<tr>
+      <td style="white-space:normal;min-width:280px">
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="color:#a8a29e;font-size:11px;width:18px">${i + 1}</span>
+          <input type="text" value="${esc(it.texto)}" title="${esc(it.texto)}" onchange="pr5sEditar('${s}','${it.id}',this.value)" style="flex:1;min-width:220px;padding:4px 6px;border:1px solid transparent;border-radius:6px;font-family:inherit;font-size:13px;background:transparent" onfocus="this.style.borderColor='#e7e5e4'" onblur="this.style.borderColor='transparent'">
+          <button title="Excluir item" onclick="pr5sExcluir('${s}','${it.id}')" style="border:none;background:none;color:#dc2626;cursor:pointer;font-size:15px">✕</button>
+        </div>
+      </td>${PR_MESES.map((_, k) => cel(it, k + 1)).join('')}</tr>`).join('');
+  const notas = PR_MESES.map((_, k) => {
+    const n = prNota(s, k + 1);
+    const cor = n === null ? '#a8a29e' : (n >= 8 ? '#16a34a' : '#dc2626');
+    return `<td style="text-align:center;font-weight:700;color:${cor}">${prFmtN(n)}</td>`;
+  }).join('');
+  wrap.innerHTML = `<table class="dfc-table">
+    <thead><tr><th>Regras do 5S</th>${PR_MESES.map(x => `<th style="text-align:center">${x}</th>`).join('')}</tr></thead>
+    <tbody>${linhas || `<tr><td colspan="13" style="text-align:center;color:#a8a29e">Nenhum item. Clique em "Incluir item".</td></tr>`}
+      <tr style="background:#fff7ed"><td><b>NOTA</b></td>${notas}</tr>
+    </tbody></table>`;
+}
+const _pr5sTimer = {};
+function pr5sToggle(s, id, m) {
+  const st = PR_ST[s];
+  const r = st.marc[id] = st.marc[id] || {};
+  r[m] = r[m] === 'S' ? 'N' : (r[m] === 'N' ? '' : 'S');
+  if (!r[m]) delete r[m];
+  prRender5s(s); prRenderResumo(s);
+  clearTimeout(_pr5sTimer[s]);
+  const key = PR_SETORES[s].pfx + '5s:' + prAno(s);
+  _pr5sTimer[s] = setTimeout(() => prCfgSet(s, key, st.marc), 600);
+}
+async function pr5sNovoItem(s) {
+  const st = PR_ST[s];
+  st.itens.push({ id: uid(), texto: 'Novo item' });
+  prRender5s(s); prRenderResumo(s);
+  const ins = prEl(s, '5s-wrap').querySelectorAll('input[type=text]');
+  const ult = ins[ins.length - 1]; if (ult) { ult.focus(); ult.select(); }
+  await prCfgSet(s, PR_SETORES[s].pfx + '5s_itens', st.itens);
+}
+async function pr5sEditar(s, id, txt) {
+  const st = PR_ST[s];
+  const it = st.itens.find(x => x.id === id); if (!it) return;
+  txt = String(txt || '').trim();
+  if (!txt) { prRender5s(s); return; }
+  it.texto = txt;
+  await prCfgSet(s, PR_SETORES[s].pfx + '5s_itens', st.itens);
+}
+async function pr5sExcluir(s, id) {
+  const st = PR_ST[s];
+  const it = st.itens.find(x => x.id === id); if (!it) return;
+  if (!confirm('Excluir o item "' + it.texto + '"?')) return;
+  st.itens = st.itens.filter(x => x.id !== id);
+  prRender5s(s); prRenderResumo(s);
+  await prCfgSet(s, PR_SETORES[s].pfx + '5s_itens', st.itens);
+}
+
+// ── Tela: faixas de pagamento ──
+function prRenderFaixas(s) {
+  const cfg = PR_SETORES[s], st = PR_ST[s];
+  const wrap = prEl(s, 'faixas-wrap'); if (!wrap) return;
+  const inp = 'width:80px;text-align:right;padding:4px 6px;border:1px solid #e7e5e4;border-radius:6px;font-family:inherit;font-size:12px';
+  const campo = cfg.tipo === 'meta' ? 'ating' : 'ate';
+  const ord = st.faixas.map((f, i) => ({ f, i }))
+    .sort((a, b) => cfg.tipo === 'meta' ? b.f.ating - a.f.ating : a.f.ate - b.f.ate);
+  const cab = cfg.tipo === 'meta'
+    ? '<th>Atingir (% da meta)</th><th>Paga (% da venda)</th>'
+    : '<th>CPV até (% da receita)</th><th>Paga (% da receita)</th>';
+  const pre = cfg.tipo === 'meta' ? '≥' : '≤';
+  wrap.innerHTML = `<table class="dfc-table">
+    <thead><tr>${cab}<th></th></tr></thead>
+    <tbody>${ord.map(({ f, i }) => `<tr>
+      <td>${pre} <input type="number" step="0.01" min="0" value="${f[campo]}" onchange="prFaixaEditar('${s}',${i},'${campo}',this.value)" style="${inp}"> %</td>
+      <td><input type="number" step="0.01" min="0" value="${f.pct}" onchange="prFaixaEditar('${s}',${i},'pct',this.value)" style="${inp}"> %</td>
+      <td><button title="Excluir faixa" onclick="prFaixaExcluir('${s}',${i})" style="border:none;background:none;color:#dc2626;cursor:pointer;font-size:15px">✕</button></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+async function prFaixaEditar(s, i, campo, v) {
+  const st = PR_ST[s];
+  if (!st.faixas[i]) return;
+  st.faixas[i][campo] = parseFloat(v) || 0;
+  prRenderFaixas(s); prRenderResumo(s);
+  await prCfgSet(s, PR_SETORES[s].faixasKey, st.faixas);
+}
+async function prFaixaNova(s) {
+  const st = PR_ST[s];
+  st.faixas.push(PR_SETORES[s].tipo === 'meta' ? { ating: 80, pct: 0 } : { ate: 75, pct: 0 });
+  prRenderFaixas(s); prRenderResumo(s);
+  await prCfgSet(s, PR_SETORES[s].faixasKey, st.faixas);
+}
+async function prFaixaExcluir(s, i) {
+  if (!confirm('Excluir esta faixa?')) return;
+  PR_ST[s].faixas.splice(i, 1);
+  prRenderFaixas(s); prRenderResumo(s);
+  await prCfgSet(s, PR_SETORES[s].faixasKey, PR_ST[s].faixas);
+}
+
 // ══════════════════════════════════════════
 // ITEM 3 — METAS DO DRE + MEDIDORES NO DASHBOARD
 // Metas (alvo em R$ por mês) para Venda, CPV, Margem de Contribuição e Lucro.
@@ -8133,7 +8612,9 @@ function getSubtotalMargemId() {
 // Calcula, para cada mês do ano, o REALIZADO de Venda, CPV, Margem de
 // Contribuição e Lucro Líquido — seguindo exatamente a mesma lógica do DRE
 // (inclusive a variação de estoque somada ao CPV).
-function calcularDreParaMetas(ano) {
+function calcularDreParaMetas(ano, fonte) {
+  // fonte (opcional): { lancreceber, lancamentos, semVarEstoque } — usado pela
+  // Divisão de Resultados para calcular o DRE de uma empresa específica.
   const vazio = { venda:{}, cpv:{}, mc:{}, lucro:{} };
   if (!ano || !db.dre_grupos.length) return vazio;
   const grupos = [...db.dre_grupos].sort((a,b)=>(a.ordem||0)-(b.ordem||0));
@@ -8147,7 +8628,7 @@ function calcularDreParaMetas(ano) {
   const somenteClassEl = document.getElementById('dre-somente-classificados');
   const somenteClass = somenteClassEl ? somenteClassEl.checked : false;
 
-  db.lancreceber.forEach(l => {
+  ((fonte && fonte.lancreceber) || db.lancreceber).forEach(l => {
     const dtRef = l.dtvenda || l.dtcompra; if (!dtRef) return;
     const p = dtRef.split('-'); if (parseInt(p[0]) !== ano) return;
     const m = parseInt(p[1]);
@@ -8158,7 +8639,7 @@ function calcularDreParaMetas(ano) {
     if (!grupoId && !somenteClass && grupoBase) grupoId = grupoBase.id;
     if (grupoId && valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (l.valor||0) * dreSinalCat(catId, grupoId);
   });
-  db.lancamentos.forEach(l => {
+  ((fonte && fonte.lancamentos) || db.lancamentos).forEach(l => {
     const dtRef = l.dtcompra; if (!dtRef) return;
     const p = dtRef.split('-'); if (parseInt(p[0]) !== ano) return;
     const m = parseInt(p[1]);
@@ -8174,7 +8655,8 @@ function calcularDreParaMetas(ano) {
   if (varEstId) {
     const mapaAno = dreVarEstoque[ano] || {};
     for (let m=1;m<=12;m++){
-      const variacao = parseFloat(mapaAno[m]) || 0;
+      // Variação de estoque é global (não separada por empresa): fica fora no cálculo por empresa
+      const variacao = (fonte && fonte.semVarEstoque) ? 0 : (parseFloat(mapaAno[m]) || 0);
       if (valoresMes[m][varEstId] !== undefined) valoresMes[m][varEstId] = 0;
       if (cpvId && valoresMes[m][cpvId] !== undefined) valoresMes[m][cpvId] += variacao;
     }
@@ -9103,7 +9585,7 @@ function applyNavPermissions() {
     item.style.display = allowed.includes(pg) ? '' : 'none';
   });
   // Ocultar cabeçalho do grupo se todos os itens estiverem ocultos
-  ['grp-pagar','grp-receber','grp-dfc','grp-dre'].forEach(grpId => {
+  ['grp-pagar','grp-receber','grp-dfc','grp-dre','grp-premiacoes'].forEach(grpId => {
     const grp = document.getElementById(grpId);
     if(!grp) return;
     const visivel = grp.querySelectorAll('.nav-sub-item:not([style*="none"])').length > 0;
@@ -9132,6 +9614,7 @@ async function renderUsuariosAdmin() {
     const pagReceber = pagsVisiveis.filter(pg=>pg.grupo==='receber');
     const pagDfc     = pagsVisiveis.filter(pg=>pg.grupo==='dfc');
     const pagDre     = pagsVisiveis.filter(pg=>pg.grupo==='dre');
+    const pagPremio  = pagsVisiveis.filter(pg=>pg.grupo==='premiacoes');
     const buildPerms = (pgs) => pgs.map(pg => {
       const checked = (u.pages || []).includes(pg.id);
       const disabled = isAdmin ? ' disabled-perm' : '';
@@ -9153,7 +9636,9 @@ async function renderUsuariosAdmin() {
       <div style="font-size:10px;color:#a8a29e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📊 DFC</div>
       <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${buildPerms(pagDfc)}</div>
       <div style="font-size:10px;color:#a8a29e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📈 DRE</div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px">${buildPerms(pagDre)}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${buildPerms(pagDre)}</div>
+      <div style="font-size:10px;color:#a8a29e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">🏆 Premiações</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${buildPerms(pagPremio)}</div>
     </div>`;
 
     // Último login deste usuário
@@ -15216,7 +15701,7 @@ function clearCustosFixosFiltros() {
 
 
 // ── Marcador de versão (para confirmar qual arquivo está no ar) ──
-window.APP_BUILD = '2026-10-25 · mega · setup-inicial';
+window.APP_BUILD = '2026-10-25 · mega · premiacoes-manutencao';
 (function(){ var b = document.getElementById('sidebar-build'); if (b) b.textContent = 'build ' + window.APP_BUILD; })();
 
 // Fechar modais clicando fora
