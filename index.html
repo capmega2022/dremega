@@ -4899,7 +4899,7 @@ async function loadAllData() {
       if (!lancId) return;
       let obj = null;
       try { obj = JSON.parse(c.value); } catch(e) { obj = null; }
-      if (obj && obj.ativo) db.custosfixos[lancId] = { ativo: true, vigencias: obj.vigencias || [] };
+      if (obj && obj.ativo) db.custosfixos[lancId] = { ativo: true, vigencias: obj.vigencias || [], gerados: obj.gerados };
     });
     // Cobrança: follow-ups e baixas parciais (key = "cobranca:<lancId>:<parcela>")
     cobrancaDados = {};
@@ -4937,6 +4937,7 @@ async function loadAllData() {
     populateEmpresaSelects();
     bumpDbVer(); // [OTIMIZADO] dados novos => reconstrói índices e parcelas
     await garantirResultadoFinanceiro();
+    await cfGerarPendentes();
   } catch(e) {
     console.error('Erro ao carregar dados:', e);
     alert('Erro ao conectar ao banco de dados. Verifique a conexão.');
@@ -6223,8 +6224,10 @@ async function saveLancamento() {
   const rL = await sbFetch('lancamentos', 'POST', lanc);
   if(!rL) { alert('❌ Erro ao salvar lançamento. Verifique sua conexão e tente novamente.'); return; }
   if (ehCustoFixo) {
-    const okCf = await cfSalvarNoBanco(lanc.id, true, _vigTemp.l);
+    window._cfUltimosGerados = 0;
+    const okCf = await cfSalvarNoBanco(lanc.id, true, _vigTemp.l, lanc);
     if (!okCf) alert('⚠ O lançamento foi salvo, mas as vigências do custo fixo não puderam ser gravadas.' + sbErroMsg());
+    else if (window._cfUltimosGerados) alert(`✅ Custo fixo: ${window._cfUltimosGerados} lançamento(s) mensal(is) gerado(s) em Contas a Pagar, conforme a vigência.`);
   }
   // Só mantém no array em memória (e portanto visível na tela) se pertencer
   // à empresa ativa no seletor — senão ele foi salvo corretamente no banco,
@@ -6458,8 +6461,10 @@ async function updateLancamento() {
     parcela_datas: l.parcela_datas
   }, `?id=eq.${l.id}`);
   if (!okU) { alert('❌ Não foi possível salvar a edição no banco de dados.' + sbErroMsg()); return; }
+  window._cfUltimosGerados = 0;
   const okCfE = await cfSalvarNoBanco(l.id, ehCustoFixoEdit, _vigTemp.edit);
   if (!okCfE) alert('⚠ O lançamento foi salvo, mas o custo fixo/vigências não puderam ser gravados.' + sbErroMsg());
+  else if (window._cfUltimosGerados) alert(`✅ Custo fixo: ${window._cfUltimosGerados} lançamento(s) mensal(is) gerado(s) em Contas a Pagar, conforme a vigência.`);
   // Se a empresa foi trocada para uma diferente da ativa no seletor, o
   // registro tem que sumir da lista atual (senão fica aparecendo na empresa errada).
   if (!pertenceEmpresaAtiva(l.empresa_id)) db.lancamentos = db.lancamentos.filter(x => x.id !== l.id);
@@ -15533,16 +15538,135 @@ function vigTextoPeriodo(v) {
   return (v.inicio ? fmtDate(v.inicio) : '—') + ' → ' + (v.fim ? fmtDate(v.fim) : 'Indeterminado');
 }
 
+// ── Lançamentos mensais do custo fixo ─────────────────────────────────
+// Cada mês coberto pelas vigências vira um lançamento a pagar próprio
+// (competência e vencimento naquele mês), para aparecer em Contas a Pagar,
+// no fluxo de caixa e no DRE do mês certo. O lançamento original cobre o
+// mês da sua competência; os demais meses são gerados aqui.
+//   - vigência sem fim: gera até 12 meses à frente de hoje
+//   - ao editar/encerrar a vigência: meses que saíram e ainda não foram
+//     pagos são excluídos; meses pagos nunca são apagados
+//   - mês gerado que o usuário excluiu à mão não é recriado
+function _cfAddMeses(iso, n) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const alvo = new Date(y, m - 1 + n, 1);
+  const ult = new Date(alvo.getFullYear(), alvo.getMonth() + 1, 0).getDate();
+  alvo.setDate(Math.min(d, ult));
+  return _isoStr(alvo);
+}
+function cfOcorrenciasMensais(vigencias, valorPadrao) {
+  const limiteIndet = _cfAddMeses(today(), 12);
+  const out = [];
+  vigOrdenar(vigencias).forEach(v => {
+    if (!v.inicio) return;
+    const fim = v.fim || limiteIndet;
+    const valor = parseFloat(v.valor) > 0 ? parseFloat(v.valor) : valorPadrao;
+    for (let i = 0; i < 240; i++) {
+      const data = _cfAddMeses(v.inicio, i);
+      if (data > fim) break;
+      out.push({ data, valor });
+    }
+  });
+  return out;
+}
+async function cfSincronizarLancamentos(orig, ativo, vigencias, geradosAntes) {
+  const gerados = (geradosAntes || []).map(g => Object.assign({}, g));
+  // Situação real no banco dos meses já gerados
+  const ids = gerados.map(g => g.lancId).filter(Boolean);
+  let noBanco = {};
+  if (ids.length) {
+    const rows = await sbFetch('lancamentos', 'GET', null,
+      `?select=id,pago,valor,dtcompra&id=in.(${ids.map(encodeURIComponent).join(',')})`);
+    if (rows === null) return null;
+    rows.forEach(r => noBanco[r.id] = r);
+  }
+  const desejado = ativo ? cfOcorrenciasMensais(vigencias, (parseFloat(orig.valor) || 0) / (orig.parcelas || 1)) : [];
+  const mesOrig = (orig.dtcompra || '').slice(0, 7);
+  const porMes = {};
+  desejado.forEach(o => { const k = o.data.slice(0, 7); if (k !== mesOrig && !porMes[k]) porMes[k] = o; });
+
+  const novos = [];
+  // 1. Meses já gerados: excluir os que saíram (se não pagos), ajustar valor
+  for (const g of gerados) {
+    const reg = noBanco[g.lancId];
+    if (!reg) { g.removido = true; continue; }          // excluído à mão: não recria
+    const alvo = porMes[g.mes];
+    const pago = reg.pago === 'sim';
+    if (!alvo) {
+      if (!pago) {
+        const ok = await sbFetch('lancamentos', 'DELETE', null, `?id=eq.${encodeURIComponent(g.lancId)}`);
+        if (ok) { g.removido = true; db.lancamentos = db.lancamentos.filter(x => x.id !== g.lancId); }
+      }
+      continue;
+    }
+    if (!pago && Math.abs((parseFloat(reg.valor) || 0) - alvo.valor) > 0.005) {
+      const ok = await sbFetch('lancamentos', 'PATCH', { valor: alvo.valor }, `?id=eq.${encodeURIComponent(g.lancId)}`);
+      if (ok) { const m = db.lancamentos.find(x => x.id === g.lancId); if (m) m.valor = alvo.valor; }
+    }
+  }
+  // 2. Meses ainda não gerados
+  const jaTem = new Set(gerados.map(g => g.mes));
+  for (const k of Object.keys(porMes).sort()) {
+    if (jaTem.has(k)) continue;
+    const o = porMes[k];
+    const rec = {
+      id: uid(), empresa_id: orig.empresa_id || null,
+      dtcompra: o.data, dtprev: o.data, nf: '',
+      forn: orig.forn || '', prod: orig.prod || '', valor: o.valor,
+      parcelas: 1, financeiro: orig.financeiro || 'nao', pago: 'nao', dtpago: '',
+      tipo_pag: orig.tipo_pag || '', banco: orig.banco || '', cat_dre: orig.cat_dre || '',
+      obs: 'Custo fixo — ' + MESES_ABR[parseInt(k.slice(5, 7))] + '/' + k.slice(0, 4) + (orig.obs ? ' · ' + orig.obs : ''),
+      parcela_datas: null
+    };
+    const ok = await sbFetch('lancamentos', 'POST', rec);
+    if (!ok) continue;
+    gerados.push({ mes: k, lancId: rec.id });
+    novos.push(rec);
+    if (pertenceEmpresaAtiva(rec.empresa_id)) db.lancamentos.push(rec);
+  }
+  bumpDbVer();
+  return { gerados: gerados.filter(g => !g.removido || noBanco[g.lancId] === undefined), novos: novos.length };
+}
+
+// Custos fixos cadastrados antes de existir a geração mensal: gera os meses
+// uma única vez (só o administrador, ao entrar).
+let _cfPendentesFeito = false;
+async function cfGerarPendentes() {
+  if (_cfPendentesFeito || !currentUser || currentUser.role !== 'admin') return;
+  _cfPendentesFeito = true;
+  try {
+    let total = 0;
+    for (const lancId of Object.keys(db.custosfixos || {})) {
+      const d = db.custosfixos[lancId];
+      if (!d || !d.ativo || d.gerados !== undefined) continue;
+      if (!db.lancamentos.find(x => x.id === lancId)) continue;
+      window._cfUltimosGerados = 0;
+      const ok = await cfSalvarNoBanco(lancId, true, d.vigencias || []);
+      if (ok) total += window._cfUltimosGerados || 0;
+    }
+    if (total) console.info(`[Mega] Custos fixos: ${total} lançamento(s) mensal(is) gerado(s).`);
+  } catch (e) { console.error('Custos fixos: falha ao gerar meses pendentes.', e); }
+}
+
 // ── Gravação (tabela `config`) ─────────────────────────────────────────
-async function cfSalvarNoBanco(lancId, ativo, vigencias) {
+async function cfSalvarNoBanco(lancId, ativo, vigencias, lancObj) {
   const key = CF_CONFIG_PREFIX + lancId;
   const filtro = `?key=eq.${encodeURIComponent(key)}`;
+  const orig = lancObj || db.lancamentos.find(x => x.id === lancId);
+  const dadosAntes = cfDadosDoLanc(lancId) || {};
   if (!ativo) {
+    // Desmarcou / excluiu: tira os meses gerados que ainda não foram pagos
+    if (orig && (dadosAntes.gerados || []).length) await cfSincronizarLancamentos(orig, false, [], dadosAntes.gerados);
     const del = await sbFetch('config', 'DELETE', null, filtro);
     if (del === null) return false;
     delete db.custosfixos[lancId]; bumpDbVer(); return true;
   }
   const payload = { ativo: true, vigencias: vigOrdenar(vigencias || []) };
+  if (orig) {
+    const sync = await cfSincronizarLancamentos(orig, true, payload.vigencias, dadosAntes.gerados);
+    if (sync) { payload.gerados = sync.gerados; window._cfUltimosGerados = sync.novos; }
+    else payload.gerados = dadosAntes.gerados || [];
+  }
   // [CORREÇÃO] Antes apagava e recriava a linha: se o DELETE fosse bloqueado,
   // ficavam duas linhas e, ao recarregar, a vigência antiga podia voltar.
   // Agora atualiza a linha existente (PATCH) ou cria só se ainda não existir.
@@ -15964,7 +16088,7 @@ function clearCustosFixosFiltros() {
 
 
 // ── Marcador de versão (para confirmar qual arquivo está no ar) ──
-window.APP_BUILD = '2026-10-27 · mega · desfazer-inadimplencia';
+window.APP_BUILD = '2026-10-27 · mega · custofixo-mensal';
 (function(){ var b = document.getElementById('sidebar-build'); if (b) b.textContent = 'build ' + window.APP_BUILD; })();
 
 // Fechar modais clicando fora
