@@ -237,6 +237,53 @@ th.ef-th { padding:8px 8px 8px 12px; }
 .lanc-sub { font-size:12px; color:#78716c; margin-top:2px; }
 .lanc-x { flex:none; width:34px; height:34px; border:1px solid #e7e5e4; background:#fff; border-radius:9px; font-size:22px; line-height:1; color:#78716c; cursor:pointer; }
 .lanc-x:hover { color:#1f2937; background:#faf9f7; border-color:#d6d3d1; }
+/* ── Janela de Estoque ── */
+.estq-modal { width:1340px; max-width:98vw; max-height:94vh; padding:0; display:flex; flex-direction:column; overflow:hidden; }
+.estq-head { flex:none; display:flex; align-items:center; gap:14px; padding:16px 22px; border-bottom:1px solid #f0efed; background:linear-gradient(180deg,#fffaf6,#fff); }
+.estq-ico { width:40px; height:40px; border-radius:11px; background:#fff1e6; display:flex; align-items:center; justify-content:center; font-size:19px; flex:none; }
+.estq-tit { font-size:16px; font-weight:700; color:#1f2937; }
+.estq-sub { font-size:11.5px; color:#78716c; margin-top:2px; }
+.estq-ano { width:96px !important; height:36px; padding:0 10px !important; font-weight:700; line-height:normal; }
+.estq-body { flex:1; min-height:0; overflow-y:auto; padding:14px 18px 4px; background:#fbfaf9; }
+.estq-foot { flex:none; display:flex; align-items:center; gap:10px; justify-content:flex-end; padding:12px 22px; border-top:1px solid #f0efed; background:#fff; }
+.estq-status { margin-right:auto; font-size:12px; color:#16a34a; font-weight:600; }
+.estq-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+.estq-kpi { background:#fff; border:1px solid #eeece9; border-radius:10px; padding:10px 14px; }
+.estq-kpi .v { font-family:'DM Mono',monospace; font-size:15px; font-weight:700; color:#1f2937; }
+.estq-kpi .l { font-size:10.5px; color:#a8a29e; text-transform:uppercase; letter-spacing:.4px; margin-top:2px; }
+.estq-sec { background:#fff; border:1px solid #eeece9; border-radius:12px; padding:12px 12px; margin-bottom:12px; }
+.estq-sec-tit { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#57534e; margin-bottom:10px; }
+.estq-num { width:19px; height:19px; border-radius:50%; background:#fff1e6; color:#ea580c; font-size:10.5px; display:inline-flex; align-items:center; justify-content:center; letter-spacing:0; }
+.estq-hint { font-weight:400; text-transform:none; letter-spacing:0; color:#a8a29e; font-size:11px; }
+.estq-total { margin-left:auto; font-size:11.5px; text-transform:none; letter-spacing:0; padding:3px 9px; border-radius:20px; }
+.estq-total.ok { background:#dcfce7; color:#15803d; } .estq-total.erro { background:#fee2e2; color:#b91c1c; }
+.estq-coefs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.estq-coef { display:flex; align-items:center; gap:8px; border:1px solid #eeece9; border-radius:9px; padding:7px 10px; background:#fbfaf9; }
+.estq-coef .n { flex:1; min-width:0; font-size:12.5px; font-weight:600; color:#44403c; line-height:1.2; }
+.estq-coef .n small { display:block; font-weight:400; color:#a8a29e; font-size:10.5px; }
+.estq-coef input { width:64px !important; height:28px; padding:0 6px !important; text-align:right; font-family:'DM Mono',monospace; font-size:12.5px !important; }
+.estq-tbl { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; font-size:11.5px; }
+.estq-tbl col.c-rot { width:122px; } .estq-tbl col.c-ano { width:94px; }
+.estq-tbl th { font-size:10px; font-weight:700; color:#78716c; text-transform:uppercase; letter-spacing:.4px; text-align:right; padding:6px 4px; background:#faf9f7; border-bottom:1px solid #e7e5e4; }
+.estq-tbl th:first-child { text-align:left; padding-left:8px; }
+.estq-tbl td { padding:3px 3px; text-align:right; font-family:'DM Mono',monospace; font-size:11px; color:#1f2937; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px solid #f5f5f4; height:30px; }
+.estq-tbl td:first-child { text-align:left; padding-left:8px; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; color:#44403c; white-space:normal; line-height:1.2; overflow:visible; }
+.estq-tbl td:first-child .estq-tag { margin:2px 0 0; }
+.estq-tbl td.c-ano, .estq-tbl th.c-ano { background:#faf9f7; font-weight:700; }
+.estq-tbl tr.grp td { background:#fff7ed; color:#c2410c; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; height:26px; border-bottom:1px solid #fde4cc; }
+.estq-tbl tr.var td { font-weight:700; }
+.estq-tbl tr.var td:first-child { font-weight:700; color:#1f2937; }
+.estq-tbl tr.pct td { color:#a8a29e; font-size:10.5px; height:24px; }
+.estq-tbl tr.ativo td { background:#fff7ed; }
+.estq-tbl tr.ativo td:first-child { box-shadow:inset 3px 0 0 #ea580c; font-weight:700; color:#1f2937; }
+.estq-tbl .mut { color:#a8a29e; }
+.estq-tbl .pos { color:#15803d; } .estq-tbl .neg { color:#dc2626; }
+.estq-in { width:100% !important; height:26px; padding:0 4px !important; border:1px solid #e7e5e4 !important; border-radius:6px !important; background:#fff !important; text-align:right; font-family:'DM Mono',monospace; font-size:11px !important; color:#1f2937; }
+.estq-in:focus { border-color:#ea580c !important; outline:none; box-shadow:0 0 0 2px #ffedd5; }
+.estq-in.ini { background:#fff7ed !important; border-color:#fdba74 !important; }
+.estq-tag { display:inline-block; margin-left:6px; padding:1px 6px; border-radius:10px; background:#ffedd5; color:#c2410c; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.3px; font-family:'Plus Jakarta Sans',sans-serif; }
+@media (max-width:900px) { .estq-kpis, .estq-coefs { grid-template-columns:repeat(2,minmax(0,1fr)); } .estq-tbl { min-width:1000px; } .estq-wrap { overflow-x:auto; } }
+
 .modal-x-auto { position:absolute; top:12px; right:12px; width:32px; height:32px; border:1px solid #e7e5e4; background:#fff; border-radius:8px; font-size:20px; line-height:1; color:#78716c; cursor:pointer; z-index:5; }
 .modal-x-auto:hover { color:#1f2937; background:#faf9f7; border-color:#d6d3d1; }
 .lanc-body { flex:1; min-height:0; overflow-y:auto; padding:18px 24px 6px; background:#fbfaf9; }
@@ -2458,7 +2505,8 @@ tr.cob-dia-vazio > td {
           <span class="dre-tb-sep" aria-hidden="true"></span>
           <label class="dre-tb-check" title="Ignora vendas e compras sem categoria de DRE"><input type="checkbox" id="dre-somente-classificados" onchange="renderDre()" />Somente com categoria</label>
           <label class="dre-tb-check"><input type="checkbox" id="dre-ocultar-acumulada" onchange="salvarPrefsDre(); renderDre();" />Ocultar acumulado</label>
-          <label class="dre-tb-check" title="Ocultar a variação só esconde a linha; o valor já digitado continua somando no CPV."><input type="checkbox" id="dre-ocultar-varestoque" onchange="salvarPrefsDre(); renderDre();" />Ocultar variação do estoque</label>
+          <label class="dre-tb-check" title="Ocultar a variação só esconde a linha; ela continua ajustando o CPV."><input type="checkbox" id="dre-ocultar-varestoque" onchange="salvarPrefsDre(); renderDre();" />Ocultar variação do estoque</label>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="abrirEstoque(document.getElementById('dre-ano').value)" title="Saldos de estoque da Loja e dos Motores, coeficientes e avaliação">📦 Estoque</button>
         </div>
         <div class="dre-tb-row">
           <div class="dre-tb-field"><span class="dre-tb-lbl">Meses</span>
@@ -3242,6 +3290,49 @@ tr.cob-dia-vazio > td {
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-cliente')">Cancelar</button>
       <button class="btn btn-primary" onclick="updateCliente()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL ESTOQUE E VARIAÇÃO POR SEGMENTO ══ -->
+<div class="modal-overlay" id="modal-estoque">
+  <div class="modal estq-modal" role="dialog" aria-labelledby="estq-tit">
+    <div class="estq-head">
+      <div class="estq-ico">📦</div>
+      <div style="flex:1;min-width:0">
+        <div class="estq-tit" id="estq-tit">Estoque e variação por segmento</div>
+        <div class="estq-sub">Saldo final − saldo inicial de cada mês · estoque subiu → CPV diminui · estoque caiu → CPV aumenta</div>
+      </div>
+      <select id="estq-ano" onchange="estqTrocarAno()" class="estq-ano"></select>
+      <button type="button" class="lanc-x" onclick="closeModal('modal-estoque')" title="Fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="estq-body">
+      <div class="estq-kpis" id="estq-kpis"></div>
+
+      <div class="estq-sec">
+        <div class="estq-sec-tit"><span class="estq-num">1</span>Coeficientes <span class="estq-hint">rateio da variação da Loja entre os segmentos</span><span id="estq-coef-total" class="estq-total"></span></div>
+        <div class="estq-coefs" id="estq-coef"></div>
+      </div>
+
+      <div class="estq-sec">
+        <div class="estq-sec-tit"><span class="estq-num">2</span>Saldos de estoque <span class="estq-hint">digite o saldo inicial de janeiro e o saldo final de cada mês · mês sem saldo final = não fechado</span></div>
+        <div id="estq-saldos"></div>
+      </div>
+
+      <div class="estq-sec">
+        <div class="estq-sec-tit"><span class="estq-num">3</span>Variação por segmento <span class="estq-hint">Consolidado = Motores + Loja · Revenda = Motores + Loja × coef. · demais = Loja × coef.</span></div>
+        <div id="estq-segmentos"></div>
+      </div>
+
+      <div class="estq-sec">
+        <div class="estq-sec-tit"><span class="estq-num">4</span><span id="estq-indic-tit">Avaliação do estoque</span> <span class="estq-hint">giro = CPV ÷ estoque médio · cobertura = estoque ÷ CPV × 30 (vermelho acima de 90 dias)</span></div>
+        <div id="estq-indic"></div>
+      </div>
+    </div>
+    <div class="estq-foot">
+      <span id="estq-status" class="estq-status"></span>
+      <button class="btn btn-secondary" onclick="closeModal('modal-estoque')">Fechar</button>
+      <button class="btn btn-primary" onclick="salvarEstoque()">Salvar estoque</button>
     </div>
   </div>
 </div>
@@ -8418,7 +8509,8 @@ async function prReceitaCpvMes(empresa, ano) {
     prBuscarTodos('lancreceber', `select=valor,dtvenda,dtcompra,prod,cat_dre&empresa_id=eq.${empresa}`),
     prBuscarTodos('lancamentos', `select=valor,dtcompra,prod,cat_dre&empresa_id=eq.${empresa}&dtcompra=gte.${ano}-01-01&dtcompra=lte.${ano}-12-31`)
   ]);
-  const r = calcularDreParaMetas(parseInt(ano, 10), { lancreceber: rec, lancamentos: pag, semVarEstoque: true });
+  await carregarEstoque();
+  const r = calcularDreParaMetas(parseInt(ano, 10), { lancreceber: rec, lancamentos: pag, empresaVar: empresa });
   return { receita: r.venda, cpv: r.cpv };
 }
 
@@ -8769,10 +8861,10 @@ function calcularDreParaMetas(ano, fonte) {
   const varEstId = getGrupoVarEstoqueId();
   const cpvId = getGrupoCpvId();
   if (varEstId) {
-    const mapaAno = dreVarEstoque[ano] || {};
     for (let m=1;m<=12;m++){
-      // Variação de estoque é global (não separada por empresa): fica fora no cálculo por empresa
-      const variacao = (fonte && fonte.semVarEstoque) ? 0 : (parseFloat(mapaAno[m]) || 0);
+      // Ajuste do CPV pelo estoque do segmento (empresa da fonte, ou a ativa)
+      const variacao = (fonte && fonte.semVarEstoque) ? 0
+        : estoqueAjusteCpv(ano, m, (fonte && fonte.empresaVar !== undefined) ? fonte.empresaVar : empresaAtual());
       if (valoresMes[m][varEstId] !== undefined) valoresMes[m][varEstId] = 0;
       if (cpvId && valoresMes[m][cpvId] !== undefined) valoresMes[m][cpvId] += variacao;
     }
@@ -11806,6 +11898,7 @@ function parseContabil(s) {
 }
 
 async function carregarVarEstoque() {
+  await carregarEstoque();
   try {
     const rows = await sbFetch('config', 'GET', null, '?key=like.var_estoque:*');
     dreVarEstoque = {};
@@ -11831,6 +11924,267 @@ async function setVarEstoque(mes, rawValor) {
   if (v === 0) delete dreVarEstoque[ano][mes]; else dreVarEstoque[ano][mes] = v;
   await salvarVarEstoque(ano);
   renderDre();
+}
+
+
+// ══════════════════════════════════════════════════════════════════════
+// ESTOQUE E VARIAÇÃO POR SEGMENTO
+// ----------------------------------------------------------------------
+// Dois estoques físicos, com saldo inicial do ano e saldo FINAL de cada mês:
+//   Loja    → compartilhado pelos segmentos, rateado pelos COEFICIENTES
+//   Motores → pertence à Revenda de Motores
+// Variação do mês = Saldo final − Saldo inicial (inicial = final do mês
+// anterior). Mês sem saldo final informado = mês não fechado: variação 0
+// (evita a "queda" falsa do estoque inteiro, como acontece na planilha).
+//
+// Variação por segmento (segue a planilha, linhas 18 a 22):
+//   Consolidado        = Var. Motores + Var. Loja
+//   Revenda de Motores = Var. Motores + Var. Loja × coef. Revenda
+//   Demais segmentos   = Var. Loja × coef. do segmento
+//
+// Efeito no DRE (CMV = Estoque inicial + Compras − Estoque final):
+//   estoque AUMENTOU → parte da compra ficou no estoque → CPV DIMINUI
+//   estoque DIMINUIU → vendeu-se estoque antigo         → CPV AUMENTA
+// Guardado na tabela `config`, key "estoque:{ano}".
+// ══════════════════════════════════════════════════════════════════════
+const ESTQ_DONO_MOTORES = 'emp_revenda';
+const ESTQ_COEF_PADRAO = { emp_ferramentaria: 15, emp_loja: 50, emp_manutencao: 15, emp_revenda: 20 };
+let dreEstoque = {};      // dreEstoque[ano] = { coef:{empId:%}, loja:{inicial, finais:{m:v}}, motores:{...} }
+let _estqAno = null;      // ano aberto na janela
+
+function _estqVazio(ano) {
+  const ant = dreEstoque[ano - 1];
+  const finalDez = (b) => {   // saldo inicial sugerido = último saldo final do ano anterior
+    if (!ant || !ant[b]) return null;
+    for (let m = 12; m >= 1; m--) if (ant[b].finais && ant[b].finais[m] != null) return ant[b].finais[m];
+    return null;
+  };
+  return {
+    coef: Object.assign({}, (ant && ant.coef) || ESTQ_COEF_PADRAO),
+    loja:    { inicial: finalDez('loja'),    finais: {} },
+    motores: { inicial: finalDez('motores'), finais: {} }
+  };
+}
+function estoqueDoAno(ano) { return dreEstoque[ano] || null; }
+
+// Saldos e variação de um estoque (loja | motores) mês a mês
+function estqSerie(dados, bloco) {
+  const out = {};
+  const b = (dados && dados[bloco]) || { inicial: null, finais: {} };
+  let ultimo = (b.inicial != null && b.inicial !== '') ? parseFloat(b.inicial) : null;
+  for (let m = 1; m <= 12; m++) {
+    const fRaw = b.finais ? b.finais[m] : null;
+    const fechado = fRaw != null && fRaw !== '' && ultimo != null;
+    const ini = ultimo;
+    const fim = (fRaw != null && fRaw !== '') ? parseFloat(fRaw) : null;
+    out[m] = { inicial: ini, final: fim, fechado, variacao: fechado ? (fim - ini) : 0 };
+    if (fim != null) ultimo = fim;
+  }
+  return out;
+}
+
+// Variação do segmento no mês (null = mês não fechado)
+function estqVariacaoSegmento(ano, mes, empId) {
+  const d = estoqueDoAno(ano); if (!d) return null;
+  const L = estqSerie(d, 'loja')[mes], M = estqSerie(d, 'motores')[mes];
+  if (!L.fechado && !M.fechado) return null;
+  const vL = L.variacao, vM = M.variacao;
+  const coef = (id) => (parseFloat((d.coef || {})[id]) || 0) / 100;
+  if (!empId) return vL + vM;                                   // Consolidado
+  if (empId === ESTQ_DONO_MOTORES) return vM + vL * coef(empId);
+  return vL * coef(empId);
+}
+// Valor somado ao grupo do CPV no DRE (sinal contábil: −variação)
+function estoqueAjusteCpv(ano, mes, empId) {
+  const v = estqVariacaoSegmento(ano, mes, empId);
+  return v == null ? 0 : -v;
+}
+// Estoque final do segmento (para os indicadores)
+function estqSaldoSegmento(ano, mes, empId, campo) {
+  const d = estoqueDoAno(ano); if (!d) return null;
+  const L = estqSerie(d, 'loja')[mes][campo], M = estqSerie(d, 'motores')[mes][campo];
+  const coef = (id) => (parseFloat((d.coef || {})[id]) || 0) / 100;
+  // Só mostra o saldo quando todos os estoques do segmento têm valor no mês
+  const precisaMotores = !empId || empId === ESTQ_DONO_MOTORES;
+  if (L == null || (precisaMotores && M == null)) return null;
+  if (!empId) return L + M;
+  if (empId === ESTQ_DONO_MOTORES) return M + L * coef(empId);
+  return L * coef(empId);
+}
+
+async function carregarEstoque() {
+  try {
+    const rows = await sbFetch('config', 'GET', null, '?key=like.estoque:*');
+    dreEstoque = {};
+    (rows || []).forEach(c => {
+      const ano = parseInt(String(c.key).split(':')[1]);
+      try { if (ano) dreEstoque[ano] = JSON.parse(c.value) || null; } catch(e) {}
+    });
+  } catch(e) { console.error('Erro ao carregar estoque:', e); }
+}
+async function salvarEstoqueAno(ano) {
+  const key = 'estoque:' + ano;
+  const value = JSON.stringify(dreEstoque[ano] || {});
+  const ex = await sbFetch('config', 'GET', null, `?key=eq.${encodeURIComponent(key)}&select=id`);
+  if (ex === null) return false;
+  if (ex.length) return !!(await sbFetch('config', 'PATCH', { value }, `?key=eq.${encodeURIComponent(key)}`));
+  return !!(await sbFetch('config', 'POST', { id: uid(), key, value }));
+}
+
+// ── Janela ────────────────────────────────────────────────────────────
+const _fmtEstq = v => (v == null || v === '' || isNaN(v)) ? '' : Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Número compacto com sinal (sem "R$", para caber na coluna do mês)
+const _fmtVarEstq = v => {
+  if (v == null) return '<span class="mut">—</span>';
+  if (Math.abs(v) < 0.005) return '<span class="mut">0,00</span>';
+  return `<span class="${v < 0 ? 'neg' : 'pos'}">${v < 0 ? '−' : '+'}${_fmtEstq(Math.abs(v))}</span>`;
+};
+
+async function abrirEstoque(ano) {
+  await carregarEstoque();
+  const sel = document.getElementById('estq-ano');
+  const y = parseInt(ano) || parseInt((document.getElementById('dre-ano') || {}).value) || new Date().getFullYear();
+  if (sel && !sel.options.length) {
+    const atual = new Date().getFullYear();
+    for (let a = atual - 3; a <= atual + 1; a++) sel.add(new Option(a, a));
+  }
+  if (sel && ![...sel.options].some(o => o.value == y)) sel.add(new Option(y, y));
+  if (sel) sel.value = y;
+  _estqAno = y;
+  if (!dreEstoque[y]) dreEstoque[y] = _estqVazio(y);
+  renderEstoque();
+  openModal('modal-estoque');
+}
+function estqTrocarAno() {
+  const y = parseInt(document.getElementById('estq-ano').value);
+  _estqAno = y;
+  if (!dreEstoque[y]) dreEstoque[y] = _estqVazio(y);
+  renderEstoque();
+}
+function estqSet(bloco, campo, mes, raw) {
+  const d = dreEstoque[_estqAno];
+  const txt = String(raw || '').trim();
+  const v = txt === '' ? null : parseContabil(txt);
+  if (campo === 'inicial') d[bloco].inicial = v;
+  else { if (v == null) delete d[bloco].finais[mes]; else d[bloco].finais[mes] = v; }
+  estqRerender();
+}
+// Redesenha depois que o foco já foi para o próximo campo (Tab/Enter) e
+// devolve o foco a ele — dá para digitar os 12 meses seguidos.
+function estqRerender() {
+  setTimeout(() => {
+    const a = document.activeElement;
+    const k = a && a.dataset ? a.dataset.k : null;
+    renderEstoque();
+    if (k) { const el = document.querySelector(`#modal-estoque [data-k="${k}"]`); if (el) { el.focus(); if (el.select) el.select(); } }
+  }, 0);
+}
+function estqSetCoef(empId, raw) {
+  const d = dreEstoque[_estqAno];
+  d.coef[empId] = parseContabil(raw);
+  estqRerender();
+}
+async function salvarEstoque() {
+  const ok = await salvarEstoqueAno(_estqAno);
+  if (!ok) { alert('❌ Não foi possível salvar o estoque.' + sbErroMsg()); return; }
+  document.getElementById('estq-status').textContent = '✅ Salvo';
+  if (paginaVisivel('dre-demonstrativo')) renderDre();
+  if (paginaVisivel('dashboard')) renderDashboard();
+}
+
+function renderEstoque() {
+  const ano = _estqAno, d = dreEstoque[ano];
+  document.getElementById('estq-status').textContent = '';
+  const empAtiva = empresaAtual();
+  const MS = MESES_ABR.slice(1);
+  const colgroup = (comAno) => `<colgroup><col class="c-rot">${MS.map(() => '<col>').join('')}${comAno ? '<col class="c-ano">' : ''}</colgroup>`;
+  const cab = (titulo, comAno) => `<thead><tr><th>${titulo}</th>${MS.map(m => `<th>${m}</th>`).join('')}${comAno ? '<th class="c-ano">Ano</th>' : ''}</tr></thead>`;
+  const tabela = (titulo, corpo, comAno = true) => `<div class="estq-wrap"><table class="estq-tbl">${colgroup(comAno)}${cab(titulo, comAno)}<tbody>${corpo}</tbody></table></div>`;
+
+  // 1. Coeficientes
+  const emps = (typeof empresasAtivas === 'function' ? empresasAtivas() : db.empresas).slice();
+  const ordemSeg = ['emp_revenda', 'emp_ferramentaria', 'emp_manutencao', 'emp_loja'];   // ordem da planilha
+  const posSeg = id => { const i = ordemSeg.indexOf(id); return i < 0 ? 99 : i; };
+  emps.sort((a, b) => posSeg(a.id) - posSeg(b.id));
+  const soma = emps.reduce((s, e) => s + (parseFloat(d.coef[e.id]) || 0), 0);
+  const okSoma = Math.abs(soma - 100) < 0.01;
+  document.getElementById('estq-coef').innerHTML = emps.map(e => `
+    <label class="estq-coef"><span class="n">${esc(e.apelido || e.nome)}${e.id === ESTQ_DONO_MOTORES ? '<small>+ estoque de motores</small>' : ''}</span>
+      <input type="text" data-k="coef-${e.id}" inputmode="decimal" value="${_fmtEstq(d.coef[e.id] || 0)}" onchange="estqSetCoef('${e.id}', this.value)"><span style="font-size:12px;color:#78716c">%</span></label>`).join('');
+  const tot = document.getElementById('estq-coef-total');
+  tot.className = 'estq-total ' + (okSoma ? 'ok' : 'erro');
+  tot.textContent = 'Total ' + _fmtEstq(soma) + '%' + (okSoma ? ' ✓' : ' — deve somar 100%');
+
+  // 2. Saldos (Loja e Motores na mesma grade)
+  const blocoSaldo = (bloco, titulo) => {
+    const s = estqSerie(d, bloco);
+    let somaVar = 0, algum = false;
+    const ini = MS.map((_, i) => i === 0
+      ? `<td><input class="estq-in ini" data-k="${bloco}-i" type="text" inputmode="decimal" value="${_fmtEstq(d[bloco].inicial)}" placeholder="inicial" onchange="estqSet('${bloco}','inicial',1,this.value)"></td>`
+      : `<td class="mut">${s[i+1].inicial == null ? '—' : _fmtEstq(s[i+1].inicial)}</td>`).join('');
+    const fim = MS.map((_, i) => `<td><input class="estq-in" data-k="${bloco}-f${i+1}" type="text" inputmode="decimal" value="${_fmtEstq(s[i+1].final)}" placeholder="—" onchange="estqSet('${bloco}','final',${i+1},this.value)"></td>`).join('');
+    const vari = MS.map((_, i) => { const x = s[i+1]; if (x.fechado) { somaVar += x.variacao; algum = true; } return `<td>${x.fechado ? _fmtVarEstq(x.variacao) : '<span class="mut" title="Sem saldo final: mês não fechado">—</span>'}</td>`; }).join('');
+    const pct = MS.map((_, i) => { const x = s[i+1]; return `<td>${x.fechado && x.inicial ? prFmtN(x.variacao / x.inicial * 100) + '%' : '—'}</td>`; }).join('');
+    const ultimo = (() => { for (let m = 12; m >= 1; m--) if (s[m].final != null) return s[m].final; return d[bloco].inicial; })();
+    return `<tr class="grp"><td colspan="14">${titulo}</td></tr>
+      <tr><td>Saldo inicial</td>${ini}<td class="c-ano mut">${d[bloco].inicial == null ? '—' : _fmtEstq(d[bloco].inicial)}</td></tr>
+      <tr><td>Saldo final</td>${fim}<td class="c-ano">${ultimo == null ? '—' : _fmtEstq(ultimo)}</td></tr>
+      <tr class="var"><td>Variação</td>${vari}<td class="c-ano">${algum ? _fmtVarEstq(somaVar) : '—'}</td></tr>
+      <tr class="pct"><td>Variação %</td>${pct}<td class="c-ano"></td></tr>`;
+  };
+  document.getElementById('estq-saldos').innerHTML = tabela('Estoque', blocoSaldo('loja', '🏬 Loja') + blocoSaldo('motores', '⚙️ Motores'));
+
+  // 3. Variação por segmento
+  const segs = [{ id: '', nome: 'Consolidado' }].concat(emps.map(e => ({ id: e.id, nome: e.apelido || e.nome })));
+  const linhas = segs.map(sg => {
+    let t = 0, algum = false;
+    const cells = MS.map((_, i) => { const v = estqVariacaoSegmento(ano, i + 1, sg.id); if (v != null) { t += v; algum = true; } return `<td>${_fmtVarEstq(v)}</td>`; }).join('');
+    const ativo = (sg.id || '') === (empAtiva || '');
+    return `<tr class="${ativo ? 'ativo' : ''}"><td title="${esc(sg.nome)}">${esc(sg.nome)}${ativo ? '<br><span class="estq-tag">no DRE</span>' : ''}</td>${cells}<td class="c-ano">${algum ? _fmtVarEstq(t) : '—'}</td></tr>`;
+  }).join('');
+  document.getElementById('estq-segmentos').innerHTML = tabela('Segmento', linhas);
+
+  // 4. Avaliação do segmento ativo no DRE
+  const dreM = calcularDreParaMetas(parseInt(ano));
+  const nomeSeg = empAtiva ? empresaNome(empAtiva) : 'Consolidado';
+  document.getElementById('estq-indic-tit').textContent = 'Avaliação do estoque — ' + nomeSeg;
+  const L = { fin: [], ef: [], cpv: [], giro: [], dias: [] };
+  let ultFin = null, somaCpv = 0, somaEf = 0, temEf = false;
+  for (let m = 1; m <= 12; m++) {
+    const fin = estqSaldoSegmento(ano, m, empAtiva, 'final');
+    const ini = estqSaldoSegmento(ano, m, empAtiva, 'inicial');
+    const cpv = (dreM.cpv || {})[m] || 0;
+    const medio = (ini != null && fin != null) ? (ini + fin) / 2 : null;
+    const giro = (medio > 0 && cpv > 0) ? cpv / medio : null;
+    const dias = (fin != null && cpv > 0) ? fin / cpv * 30 : null;
+    const v = estqVariacaoSegmento(ano, m, empAtiva);
+    if (fin != null) ultFin = fin;
+    somaCpv += cpv; if (v != null) { somaEf -= v; temEf = true; }
+    L.fin.push(`<td>${fin == null ? '<span class="mut">—</span>' : _fmtEstq(fin)}</td>`);
+    L.ef.push(`<td>${v == null ? '<span class="mut">—</span>' : (Math.abs(v) < 0.005 ? '0,00' : `<span class="${v > 0 ? 'pos' : 'neg'}">${v > 0 ? '−' : '+'}${_fmtEstq(Math.abs(v))}</span>`)}</td>`);
+    L.cpv.push(`<td>${cpv ? _fmtEstq(cpv) : '<span class="mut">—</span>'}</td>`);
+    L.giro.push(`<td>${giro == null ? '<span class="mut">—</span>' : prFmtN(giro) + 'x'}</td>`);
+    L.dias.push(`<td>${dias == null ? '<span class="mut">—</span>' : `<span class="${dias > 90 ? 'neg' : ''}">${Math.round(dias)} d</span>`}</td>`);
+  }
+  document.getElementById('estq-indic').innerHTML = tabela('Indicador', `
+      <tr><td>Estoque final</td>${L.fin.join('')}<td class="c-ano">${ultFin == null ? '—' : _fmtEstq(ultFin)}</td></tr>
+      <tr><td title="Ajuste do estoque no CPV: − reduz, + aumenta">Efeito no CPV</td>${L.ef.join('')}<td class="c-ano">${temEf ? (Math.abs(somaEf) < 0.005 ? '0,00' : `<span class="${somaEf < 0 ? 'pos' : 'neg'}">${somaEf < 0 ? '−' : '+'}${_fmtEstq(Math.abs(somaEf))}</span>`) : '—'}</td></tr>
+      <tr><td>CPV do mês (DRE)</td>${L.cpv.join('')}<td class="c-ano">${somaCpv ? _fmtEstq(somaCpv) : '—'}</td></tr>
+      <tr><td title="CPV do mês ÷ estoque médio do mês">Giro no mês</td>${L.giro.join('')}<td class="c-ano"></td></tr>
+      <tr><td title="Estoque final ÷ CPV do mês × 30">Cobertura</td>${L.dias.join('')}<td class="c-ano"></td></tr>`);
+
+  // Resumo no topo
+  const sL = estqSerie(d, 'loja'), sM = estqSerie(d, 'motores');
+  const ult = (s, b) => { for (let m = 12; m >= 1; m--) if (s[m].final != null) return { v: s[m].final, m }; return d[b].inicial != null ? { v: d[b].inicial, m: 0 } : null; };
+  const uL = ult(sL, 'loja'), uM = ult(sM, 'motores');
+  let fechados = 0; for (let m = 1; m <= 12; m++) if (sL[m].fechado || sM[m].fechado) fechados++;
+  let varSeg = 0, temSeg = false; for (let m = 1; m <= 12; m++) { const v = estqVariacaoSegmento(ano, m, empAtiva); if (v != null) { varSeg += v; temSeg = true; } }
+  const kpi = (v, l) => `<div class="estq-kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  document.getElementById('estq-kpis').innerHTML =
+    kpi(uL ? fmtBRL(uL.v) : '—', 'Estoque Loja' + (uL && uL.m ? ' · ' + MESES_ABR[uL.m] : '')) +
+    kpi(uM ? fmtBRL(uM.v) : '—', 'Estoque Motores' + (uM && uM.m ? ' · ' + MESES_ABR[uM.m] : '')) +
+    kpi(temSeg ? `<span style="color:${varSeg < 0 ? '#dc2626' : '#15803d'}">${varSeg < 0 ? '−' : '+'}${fmtBRL(Math.abs(varSeg))}</span>` : '—', 'Variação no ano · ' + esc(nomeSeg)) +
+    kpi(fechados + ' / 12', 'Meses fechados');
 }
 
 function renderDre() {
@@ -11990,9 +12344,10 @@ function renderDre() {
   const varEstGrupoId = getGrupoVarEstoqueId();
   const cpvGrupoId = getGrupoCpvId();
   if (varEstGrupoId && valoresMes[1][varEstGrupoId] !== undefined) {
-    const mapaAno = dreVarEstoque[ano] || {};
+    const empVar = empresaAtual();
     for (let m = 1; m <= 12; m++) {
-      const variacao = parseFloat(mapaAno[m]) || 0;
+      // Ajuste do CPV pelo estoque do segmento (−variação: estoque subiu → CPV cai)
+      const variacao = estoqueAjusteCpv(ano, m, empVar);
       // zera a contribuição própria da linha de variação
       valoresMes[m][varEstGrupoId] = 0;
       // soma no CPV, se o grupo do CPV foi identificado
@@ -12153,16 +12508,16 @@ function renderDre() {
   // Linha da Variação de Estoque: células editáveis em formato contábil (digite
   // + ou −). O valor é gravado e somado ao CPV automaticamente.
   const linhaVarEstoque = (g) => {
-    const mapaAno = dreVarEstoque[ano] || {};
+    const empVar = empresaAtual();
     const cells = mesesVisiveis.map(mes => {
-      const val = parseFloat(mapaAno[mes]) || 0;
-      const disp = fmtContabil(val);
-      const cor = val < 0 ? '#dc2626' : '#1f2937';
-      return `<td style="padding:2px 4px"><input type="text" inputmode="decimal" value="${disp}" onchange="setVarEstoque(${mes}, this.value)" onfocus="this.select()" title="Variação de estoque do mês (+ soma ao CPV, − reduz o CPV)" placeholder="0,00" style="width:100%;min-width:88px;text-align:right;font-family:'DM Mono',monospace;font-size:12px;padding:5px 7px;border:1px solid #e7e5e4;border-radius:6px;background:#fff;color:${cor}" /></td>` + pctVazio();
+      const v = estqVariacaoSegmento(ano, mes, empVar);
+      const disp = v == null ? '<span class="dfc-val-zero">—</span>'
+        : (Math.abs(v) < 0.005 ? '0,00' : `<span style="color:${v < 0 ? '#dc2626' : '#16a34a'}">${v < 0 ? '− ' : '+ '}${fmtBRL(Math.abs(v))}</span>`);
+      return `<td class="dre-cell-click" onclick="abrirEstoque(${ano})" title="Variação do estoque (final − inicial). Estoque subiu → CPV diminui; caiu → CPV aumenta. Clique para lançar os saldos.">${disp}</td>` + pctVazio();
     }).join('');
-    let soma = 0; mesesVisiveis.forEach(mes => { soma += parseFloat(mapaAno[mes]) || 0; });
+    let soma = 0; mesesVisiveis.forEach(mes => { soma += estqVariacaoSegmento(ano, mes, empVar) || 0; });
     const totalCell = `<td class="dfc-col-total">${Math.abs(soma) < 0.005 ? '<span class="dfc-val-zero">—</span>' : (soma > 0 ? '+ ' : '− ') + fmtBRL(Math.abs(soma))}</td>`;
-    return `<tr class="dfc-row-sub"><td>${g.nome}</td>${cells}${mostrarAcum ? totalCell + pctVazio(true) : ''}</tr>`;
+    return `<tr class="dfc-row-sub"><td><a href="javascript:void(0)" onclick="abrirEstoque(${ano})" style="color:inherit;text-decoration:underline dotted" title="Abrir saldos de estoque e coeficientes">${g.nome}</a> <span style="font-size:10px;color:#a8a29e">📦</span></td>${cells}${mostrarAcum ? totalCell + pctVazio(true) : ''}</tr>`;
   };
 
   const linhasHtml = grupos.map(g => {
@@ -16088,7 +16443,7 @@ function clearCustosFixosFiltros() {
 
 
 // ── Marcador de versão (para confirmar qual arquivo está no ar) ──
-window.APP_BUILD = '2026-10-27 · mega · custofixo-mensal';
+window.APP_BUILD = '2026-10-27 · mega · estoque-layout';
 (function(){ var b = document.getElementById('sidebar-build'); if (b) b.textContent = 'build ' + window.APP_BUILD; })();
 
 // Fechar modais clicando fora
