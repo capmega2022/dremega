@@ -237,6 +237,8 @@ th.ef-th { padding:8px 8px 8px 12px; }
 .lanc-sub { font-size:12px; color:#78716c; margin-top:2px; }
 .lanc-x { flex:none; width:34px; height:34px; border:1px solid #e7e5e4; background:#fff; border-radius:9px; font-size:22px; line-height:1; color:#78716c; cursor:pointer; }
 .lanc-x:hover { color:#1f2937; background:#faf9f7; border-color:#d6d3d1; }
+.modal-x-auto { position:absolute; top:12px; right:12px; width:32px; height:32px; border:1px solid #e7e5e4; background:#fff; border-radius:8px; font-size:20px; line-height:1; color:#78716c; cursor:pointer; z-index:5; }
+.modal-x-auto:hover { color:#1f2937; background:#faf9f7; border-color:#d6d3d1; }
 .lanc-body { flex:1; min-height:0; overflow-y:auto; padding:18px 24px 6px; background:#fbfaf9; }
 .lanc-sec { background:#fff; border:1px solid #eeece9; border-radius:12px; padding:14px 18px 2px; margin-bottom:14px; transition:border-color .15s, background .15s; }
 .lanc-sec-tit { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:#57534e; margin-bottom:12px; }
@@ -248,6 +250,17 @@ th.ef-th { padding:8px 8px 8px 12px; }
 .lanc-modal .form-group { margin-bottom:14px; }
 .lanc-modal label { font-size:11.5px; font-weight:600; color:#57534e; }
 .lanc-valor { font-family:'DM Mono',monospace; font-size:14px !important; font-weight:600; }
+.lanc-gcv { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:0 14px; align-items:end; }
+.lanc-valor-box label { color:#c2410c !important; }
+.lanc-valor-box input { background:#fff7ed !important; border-color:#fdba74 !important; font-size:16px !important; text-align:right; }
+.lanc-rec .lanc-valor-box label { color:#0f766e !important; }
+.lanc-rec .lanc-valor-box input { background:#f0fdfa !important; border-color:#5eead4 !important; }
+.lanc-flex { display:flex; flex-wrap:wrap; gap:0 14px; }
+.lanc-flex > .form-group { flex:1 1 170px; min-width:0; }
+.lanc-seg { display:flex; gap:3px; padding:3px; border:1px solid #e7e5e4; border-radius:10px; background:#f5f5f4; }
+.lanc-seg button { flex:1; border:none; background:transparent; padding:7px 10px; border-radius:7px; font:inherit; font-size:13px; font-weight:600; color:#78716c; cursor:pointer; white-space:nowrap; }
+.lanc-seg button.on { background:#fff; color:#ea580c; box-shadow:0 1px 3px rgba(0,0,0,.1); }
+.lanc-rec .lanc-seg button.on { color:#0f766e; }
 .lanc-sec.lanc-status-on { border-color:#86efac; background:#f7fdf9; }
 .lanc-lbl-obrig { color:#15803d !important; }
 .lanc-aviso { font-size:11.5px; color:#166534; background:#dcfce7; border-radius:8px; padding:8px 11px; margin:-2px 0 14px; }
@@ -255,7 +268,7 @@ th.ef-th { padding:8px 8px 8px 12px; }
 .lanc-check input { width:16px; height:16px; accent-color:#ea580c; cursor:pointer; flex:none; }
 .lanc-foot { flex:none; display:flex; align-items:center; gap:10px; justify-content:flex-end; padding:14px 24px; border-top:1px solid #f0efed; background:#fff; }
 .lanc-foot-dica { margin-right:auto; font-size:11px; color:#a8a29e; }
-@media (max-width:720px) { .lanc-g3 { grid-template-columns:minmax(0,1fr); } .lanc-g2 { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:720px) { .lanc-g3 { grid-template-columns:minmax(0,1fr); } .lanc-g2 { grid-template-columns:minmax(0,1fr); } .lanc-gcv { grid-template-columns:minmax(0,1fr); } }
 .chip { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:20px; background:#faf9f7; border:1px solid #e7e5e4; font-size:11px; color:#57534e; }
 .divider { border:none; border-top:1px solid #f5f4f2; margin:20px 0; }
 .chart-wrap { position:relative; height:230px; }
@@ -1948,7 +1961,7 @@ tr.cob-dia-vazio > td {
 
         <div class="table-scroll" style="max-height:none">
           <table><thead><tr>
-            <th>Data e hora</th><th>Usuário</th><th>Ação</th><th>Tabela</th><th>Registro</th><th>Detalhe</th>
+            <th>Data e hora</th><th>Usuário</th><th>Ação</th><th>Tabela</th><th>Registro</th><th>Detalhe</th><th></th>
           </tr></thead><tbody id="tb-auditoria">
             <tr><td colspan="6" class="empty-state">Nenhum registro.</td></tr>
           </tbody></table>
@@ -1969,6 +1982,7 @@ tr.cob-dia-vazio > td {
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn-pdf" style="background:#b91c1c" onclick="abrirAvisoAtraso(true)">🔔 Avisos de Atraso</button>
+          <button class="btn-pdf" style="background:#1e40af" onclick="abrirFollowupsGeral()">💬 Follow-ups</button>
           <button class="btn-pdf" style="background:#15803d" onclick="abrirModelosCobranca()">✉️ Mensagens</button>
           <button class="btn-pdf" onclick="imprimirPagina('cobranca')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> PDF</button>
         </div>
@@ -2207,7 +2221,7 @@ tr.cob-dia-vazio > td {
     <div class="page" id="page-dfc-categorias">
       <div class="page-header">
         <div><div class="page-title">Categorias</div><div class="page-sub" style="margin-bottom:0">Gerencie as categorias usadas no Demonstrativo de Fluxo de Caixa (DFC) e na DRE. O Grupo de cada categoria é cadastrado em DRE &rarr; Grupos.</div></div>
-        <button class="btn-novo" id="btn-novo-dfccat" onclick="toggleFormPanel('form-dfccat',this)">
+        <button class="btn-novo" id="btn-novo-dfccat" onclick="clearDfcCategoria(); toggleFormPanel('form-dfccat',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Novo
         </button>
       </div>
@@ -3009,7 +3023,7 @@ tr.cob-dia-vazio > td {
       <div class="lanc-sec">
         <div class="lanc-sec-tit"><span class="lanc-sec-num">1</span>Identificação</div>
         <div class="lanc-g3">
-          <div class="form-group"><label>Empresa *</label><select id="l-empresa" class="sel-empresa"><option value="">Selecione...</option></select></div>
+          <div class="form-group"><label>Empresa *</label><select id="l-empresa" class="sel-empresa" data-geral="1"><option value="">Selecione...</option></select></div>
           <div class="form-group"><label>Data da competência *</label><input id="l-dtcompra" type="date" /></div>
           <div class="form-group"><label>Previsão de pagamento</label><input id="l-dtprev" type="date" /></div>
         </div>
@@ -3018,25 +3032,32 @@ tr.cob-dia-vazio > td {
           <div class="form-group"><label class="label-add">Item<button type="button" class="btn-add-inline" title="Cadastrar novo item" onclick="abrirCadastroRapido('produto','l-prod')">+</button></label><select id="l-prod"><option value="">Nenhum (opcional)</option></select></div>
           <div class="form-group"><label>Nº da nota fiscal</label><input id="l-nf" type="text" placeholder="000000" /></div>
         </div>
-        <div class="lanc-g1">
+        <div class="lanc-gcv">
           <div class="form-group"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','l-catdre')">+</button></label><select id="l-catdre"><option value="">Nenhuma</option></select></div>
+          <div class="form-group lanc-valor-box"><label>Valor total (R$) *</label><input id="l-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
         </div>
       </div>
 
       <div class="lanc-sec">
-        <div class="lanc-sec-tit"><span class="lanc-sec-num">2</span>Valores e parcelas</div>
-        <div class="lanc-g3">
-          <div class="form-group"><label>Valor total (R$) *</label><input id="l-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
-          <div class="form-group"><label>Número de parcelas</label>
-            <select id="l-parcelas" onchange="toggleParcelaDates('l-parcelas','l-parcela-dates')">
+        <div class="lanc-sec-tit"><span class="lanc-sec-num">2</span>Condição de pagamento</div>
+        <div class="lanc-flex">
+          <div class="form-group"><label>Condição</label>
+            <div class="lanc-seg" id="l-cond">
+              <button type="button" data-v="avista" class="on" onclick="lancCondicao('l','avista')">À vista</button>
+              <button type="button" data-v="parcelado" onclick="lancCondicao('l','parcelado')">Parcelado</button>
+            </div>
+          </div>
+          <div class="form-group" id="l-parcelas-wrap" style="display:none"><label>Número de parcelas</label>
+            <select id="l-parcelas" onchange="toggleParcelaDates('l-parcelas','l-parcela-dates'); lancSyncCond('l')">
               <option value="1">1x (À vista)</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option><option value="13">13x</option><option value="14">14x</option><option value="15">15x</option><option value="16">16x</option><option value="17">17x</option><option value="18">18x</option><option value="19">19x</option><option value="20">20x</option><option value="21">21x</option><option value="22">22x</option><option value="23">23x</option><option value="24">24x</option><option value="25">25x</option><option value="26">26x</option><option value="27">27x</option><option value="28">28x</option><option value="29">29x</option><option value="30">30x</option><option value="31">31x</option><option value="32">32x</option><option value="33">33x</option><option value="34">34x</option><option value="35">35x</option><option value="36">36x</option>
             </select>
           </div>
           <div class="form-group"><label>Incluído no financeiro?</label>
             <select id="l-financeiro"><option value="nao">Não</option><option value="sim">Sim</option></select>
           </div>
+          
         </div>
-        <div id="l-parcela-dates" style="display:none;margin-bottom:16px;">
+        <div id="l-parcela-dates" style="display:none;margin-bottom:16px;margin-top:2px;">
           <div style="font-size:12px;font-weight:600;color:#ea580c;margin-bottom:10px;padding:8px 12px;background:#fff1e6;border-radius:6px;border-left:3px solid #ea580c;">
             📅 Datas e valores de cada parcela — preenchidos automaticamente, edite se precisar
           </div>
@@ -3121,7 +3142,7 @@ tr.cob-dia-vazio > td {
       <div class="lanc-sec">
         <div class="lanc-sec-tit"><span class="lanc-sec-num">1</span>Identificação</div>
         <div class="lanc-g3">
-          <div class="form-group"><label>Empresa *</label><select id="lr-empresa" class="sel-empresa"><option value="">Selecione...</option></select></div>
+          <div class="form-group"><label>Empresa *</label><select id="lr-empresa" class="sel-empresa" data-geral="1"><option value="">Selecione...</option></select></div>
           <div class="form-group"><label>Data da competência *</label><input id="lr-dtvenda" type="date" /></div>
           <div class="form-group"><label>Previsão de recebimento</label><input id="lr-dtprev" type="date" /></div>
         </div>
@@ -3130,17 +3151,23 @@ tr.cob-dia-vazio > td {
           <div class="form-group"><label class="label-add">Produto de Venda<button type="button" class="btn-add-inline" title="Cadastrar novo produto de venda" onclick="abrirCadastroRapido('prodvenda','lr-prod')">+</button></label><select id="lr-prod"><option value="">Selecione...</option></select></div>
           <div class="form-group"><label>Nº da nota fiscal</label><input id="lr-nf" type="text" placeholder="000000" /></div>
         </div>
-        <div class="lanc-g1">
+        <div class="lanc-gcv">
           <div class="form-group"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','lr-catdre')">+</button></label><select id="lr-catdre"><option value="">Nenhuma</option></select></div>
+          <div class="form-group lanc-valor-box"><label>Valor total (R$) *</label><input id="lr-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
         </div>
       </div>
 
       <div class="lanc-sec">
-        <div class="lanc-sec-tit"><span class="lanc-sec-num">2</span>Valores e parcelas</div>
-        <div class="lanc-g3">
-          <div class="form-group"><label>Valor total (R$) *</label><input id="lr-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
-          <div class="form-group"><label>Número de parcelas</label>
-            <select id="lr-parcelas" onchange="toggleParcelaDates('lr-parcelas','lr-parcela-dates')">
+        <div class="lanc-sec-tit"><span class="lanc-sec-num">2</span>Condição de recebimento</div>
+        <div class="lanc-flex">
+          <div class="form-group"><label>Condição</label>
+            <div class="lanc-seg" id="lr-cond">
+              <button type="button" data-v="avista" class="on" onclick="lancCondicao('lr','avista')">À vista</button>
+              <button type="button" data-v="parcelado" onclick="lancCondicao('lr','parcelado')">Parcelado</button>
+            </div>
+          </div>
+          <div class="form-group" id="lr-parcelas-wrap" style="display:none"><label>Número de parcelas</label>
+            <select id="lr-parcelas" onchange="toggleParcelaDates('lr-parcelas','lr-parcela-dates'); lancSyncCond('lr')">
               <option value="1">1x (À vista)</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option><option value="13">13x</option><option value="14">14x</option><option value="15">15x</option><option value="16">16x</option><option value="17">17x</option><option value="18">18x</option><option value="19">19x</option><option value="20">20x</option><option value="21">21x</option><option value="22">22x</option><option value="23">23x</option><option value="24">24x</option><option value="25">25x</option><option value="26">26x</option><option value="27">27x</option><option value="28">28x</option><option value="29">29x</option><option value="30">30x</option><option value="31">31x</option><option value="32">32x</option><option value="33">33x</option><option value="34">34x</option><option value="35">35x</option><option value="36">36x</option>
             </select>
           </div>
@@ -3149,7 +3176,7 @@ tr.cob-dia-vazio > td {
           </div>
           <div class="form-group"><label>Juros por atraso (% ao mês)</label><input id="lr-juros" type="number" step="0.01" min="0" placeholder="Vazio = taxa padrão" /></div>
         </div>
-        <div id="lr-parcela-dates" style="display:none;margin-bottom:16px;">
+        <div id="lr-parcela-dates" style="display:none;margin-bottom:16px;margin-top:2px;">
           <div style="font-size:12px;font-weight:600;color:#0f766e;margin-bottom:10px;padding:8px 12px;background:#ccfbf1;border-radius:6px;border-left:3px solid #0f766e;">
             📅 Datas e valores de cada parcela — preenchidos automaticamente, edite se precisar
           </div>
@@ -3274,7 +3301,7 @@ tr.cob-dia-vazio > td {
     <div class="modal-title">Editar Lançamento — Receber</div>
     <input type="hidden" id="edit-lr-id" />
     <div class="grid3">
-      <div class="form-group"><label>Empresa *</label><select id="elr-empresa" class="sel-empresa"><option value="">Selecione...</option></select></div>
+      <div class="form-group"><label>Empresa *</label><select id="elr-empresa" class="sel-empresa" data-geral="1"><option value="">Selecione...</option></select></div>
     </div>
     <div class="grid3">
       <div class="form-group"><label>Data da Competência</label><input id="elr-dtvenda" type="date" /></div>
@@ -3452,7 +3479,7 @@ tr.cob-dia-vazio > td {
 <!-- ══ MODAL: RECEBIMENTO PARCELADO / BAIXA PARCIAL ══ -->
 <div class="modal-overlay" id="modal-cob-baixa">
   <div class="modal" style="width:720px;">
-    <div class="modal-title">💵 Recebimento parcelado da parcela</div>
+    <div class="modal-title">💵 Receber em mais vezes (pagamento parcial)</div>
     <div id="cob-bx-info" style="font-size:13px;color:#57534e;margin-bottom:16px;"></div>
 
     <div class="cob-bx-resumo">
@@ -3471,10 +3498,11 @@ tr.cob-dia-vazio > td {
           <select id="cob-bx-forma" onchange="onTipoRecebChange(this)"><option value="">Selecione...</option></select>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
         <div class="form-group"><label>Banco / Conta *</label>
           <select id="cob-bx-banco"><option value="">Não informado</option></select>
         </div>
+        <div class="form-group"><label>Recebido por (nome) *</label><input id="cob-bx-quem" type="text" placeholder="Quem recebeu o valor" /></div>
         <div class="form-group"><label>Observação</label><input id="cob-bx-obs" type="text" placeholder="Nº do cheque, comprovante..." /></div>
       </div>
       <div class="btn-row">
@@ -3489,6 +3517,36 @@ tr.cob-dia-vazio > td {
 
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-cob-baixa')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: PAINEL GERAL DE FOLLOW-UPS DA COBRANÇA ══ -->
+<div class="modal-overlay" id="modal-cob-fup-geral">
+  <div class="modal" style="width:1000px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+      <div class="modal-title" style="margin:0">💬 Follow-ups da cobrança</div>
+    </div>
+    <div class="filter-row" style="margin-bottom:10px">
+      <div class="form-group"><label>Mostrar</label>
+        <select id="cob-fg-filtro" onchange="renderFollowupsGeral()">
+          <option value="pendentes">Próximos contatos a fazer</option>
+          <option value="vencidos">Próximo contato já vencido</option>
+          <option value="todos">Todas as conversas</option>
+        </select>
+      </div>
+      <div class="form-group" style="min-width:220px"><label>Buscar</label>
+        <input id="cob-fg-busca" type="text" placeholder="Cliente, resumo, pessoa..." oninput="renderFollowupsGeral()" />
+      </div>
+    </div>
+    <div style="max-height:56vh;overflow:auto">
+      <table>
+        <thead><tr><th>Data</th><th>Cliente</th><th>Parcela</th><th>Canal / resultado</th><th>Resumo</th><th>Próximo contato</th><th>Por</th><th></th></tr></thead>
+        <tbody id="tb-cob-fup-geral"></tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-cob-fup-geral')">Fechar</button>
     </div>
   </div>
 </div>
@@ -3828,7 +3886,7 @@ tr.cob-dia-vazio > td {
     <div class="modal-title">Editar Lançamento</div>
     <input type="hidden" id="edit-lanc-id" />
     <div class="grid3">
-      <div class="form-group"><label>Empresa *</label><select id="edit-empresa" class="sel-empresa"><option value="">Selecione...</option></select></div>
+      <div class="form-group"><label>Empresa *</label><select id="edit-empresa" class="sel-empresa" data-geral="1"><option value="">Selecione...</option></select></div>
     </div>
     <div class="grid3">
       <div class="form-group"><label>Data da Competência</label><input id="edit-dtcompra" type="date" /></div>
@@ -4502,6 +4560,17 @@ async function sbFetch(table, method='GET', body=null, params='') {
   // depois não haveria mais como saber o que foi apagado.
   const alvoAntes = (method === 'DELETE' || method === 'PATCH')
     ? _auditAlvo(table, params) : null;
+  // Auditoria com "Desfazer": guarda uma cópia do registro como está no
+  // BANCO antes de alterar/excluir (a memória local às vezes já foi alterada
+  // pela tela antes da gravação). Só para registros identificados por id.
+  if (alvoAntes && table !== 'config' && typeof AUDIT_TABELAS !== 'undefined' && AUDIT_TABELAS[table]
+      && /(^\?|&)id=eq\./.test(params || '') && typeof currentUser !== 'undefined' && currentUser) {
+    try {
+      const snap = await sbFetch(table, 'GET', null, '?select=*&' + String(params).replace(/^\?/, ''));
+      if (Array.isArray(snap) && snap.length === 1) alvoAntes.snap = snap[0];
+    } catch (e) { /* sem cópia: a ação fica registrada, mas não poderá ser desfeita */ }
+    _sbUltimoErro = null;
+  }
 
   // [OTIMIZADO] Qualquer gravação invalida os índices e o cache de parcelas.
   if (gravacao && typeof bumpDbVer === 'function') bumpDbVer();
@@ -4867,6 +4936,7 @@ async function loadAllData() {
     popularSeletorEmpresa();
     populateEmpresaSelects();
     bumpDbVer(); // [OTIMIZADO] dados novos => reconstrói índices e parcelas
+    await garantirResultadoFinanceiro();
   } catch(e) {
     console.error('Erro ao carregar dados:', e);
     alert('Erro ao conectar ao banco de dados. Verifique a conexão.');
@@ -5227,10 +5297,29 @@ document.addEventListener('keydown', function (e) {
   if (!abertos.length) return;
   const ultimo = abertos[abertos.length - 1];
   // Avisos bloqueantes (ex.: cliente em débito) só saem pelo botão do modal
-  if (ultimo.dataset && ultimo.dataset.naoFechar) return;
-  if (MODAIS_SO_FECHA_NO_X.has(ultimo.id)) return;
-  closeModal(ultimo.id);
+  // Todas as janelas agora fecham só pelo X / botões — Esc não fecha mais.
+  return;
 });
+
+// Condição de pagamento/recebimento nos lançamentos novos: "À vista" deixa
+// o nº de parcelas em 1 e esconde a grade; "Parcelado" abre o nº de parcelas
+// (mínimo 2) e as caixas com data e valor de cada parcela.
+function lancCondicao(p, modo) {
+  const sel = document.getElementById(p + '-parcelas');
+  if (!sel) return;
+  if (modo === 'parcelado') { if ((parseInt(sel.value) || 1) < 2) sel.value = '2'; }
+  else sel.value = '1';
+  toggleParcelaDates(p + '-parcelas', p + '-parcela-dates');
+  lancSyncCond(p);
+}
+function lancSyncCond(p) {
+  const sel = document.getElementById(p + '-parcelas');
+  const parcelado = sel && (parseInt(sel.value) || 1) > 1;
+  const wrap = document.getElementById(p + '-parcelas-wrap');
+  if (wrap) wrap.style.display = parcelado ? '' : 'none';
+  document.querySelectorAll('#' + p + '-cond button').forEach(b =>
+    b.classList.toggle('on', (b.dataset.v === 'parcelado') === !!parcelado));
+}
 
 function abrirModalLanc() {
   populateFornSelects();
@@ -5239,6 +5328,7 @@ function abrirModalLanc() {
   populateFormasPagSelects();
   populateDreCatSelects();
   clearLancamento();   // garante tela em branco também na abertura
+  lancSyncCond('l');
   openModal('modal-novo-lanc');
 }
 function fecharModalLanc() { closeModal('modal-novo-lanc'); }
@@ -5250,6 +5340,7 @@ function abrirModalLancReceber() {
   populateFormasRecebSelects();
   populateDreCatSelects();
   clearLancReceber();  // garante tela em branco também na abertura
+  lancSyncCond('lr');
   openModal('modal-novo-lr');
 }
 function fecharModalLancReceber() { closeModal('modal-novo-lr'); }
@@ -5910,6 +6001,7 @@ function populateEmpresaSelects() {
   document.querySelectorAll('select.sel-empresa').forEach(sel => {
     const anterior = sel.value;
     sel.innerHTML = '<option value="">Selecione...</option>' +
+      (sel.dataset.geral ? `<option value="${EMPRESA_GERAL}">Consolidado (conta geral)</option>` : '') +
       empresasAtivas().map(e => `<option value="${e.id}">${e.apelido || e.nome}</option>`).join('');
     sel.value = anterior || atual || '';
   });
@@ -5930,9 +6022,14 @@ async function trocarEmpresa(id) {
 
 // Empresa que deve ser gravada em um lançamento novo.
 // Se o usuário está no consolidado, ele precisa escolher no formulário.
+// Opção "Consolidado (conta geral)" nos lançamentos a pagar/receber: a conta
+// não pertence a uma empresa só. Grava empresa_id vazio (null) — o registro
+// aparece no Consolidado e não em uma empresa específica.
+const EMPRESA_GERAL = '__geral';
 function empresaDoForm(selectId) {
   const sel = document.getElementById(selectId);
   const val = sel ? sel.value : '';
+  if (val === EMPRESA_GERAL) return '';
   if (val) return val;
   const atual = empresaAtual();
   if (atual) return atual;
@@ -6097,8 +6194,9 @@ async function saveLancamento() {
     alert('Você marcou este lançamento como Custo Fixo, mas nenhuma vigência foi incluída.\n\nPreencha o início da vigência e clique em "+ Incluir vigência".');
     return;
   }
-  const empresa_id = empresaDoForm('l-empresa');
-  if (empresa_id === null) return;
+  const _empL = empresaDoForm('l-empresa');
+  if (_empL === null) return;
+  const empresa_id = _empL || null;
   const parcelas = parseInt(document.getElementById('l-parcelas').value)||1;
   const lanc = {
     id: uid(),
@@ -6145,7 +6243,7 @@ function clearLancamento() {
   set('l-catdre','');
   set('l-tipo-pag','');
   set('l-banco','');
-  set('l-parcelas','1');
+  set('l-parcelas','1'); lancSyncCond('l');
   set('l-financeiro','nao');
   set('l-pago','nao');
   // Empresa volta para a que está ativa no seletor global (ou em branco no consolidado)
@@ -6264,6 +6362,8 @@ function editLancamento(id) {
   const l = db.lancamentos.find(x=>x.id===id);
   if(!l) return;
   document.getElementById('edit-lanc-id').value = id;
+  populateEmpresaSelects();
+  document.getElementById('edit-empresa').value = l.empresa_id || EMPRESA_GERAL;
   document.getElementById('edit-dtcompra').value = l.dtcompra;
   document.getElementById('edit-dtprev').value = l.dtprev||'';
   document.getElementById('edit-nf').value = l.nf||'';
@@ -6324,7 +6424,7 @@ async function updateLancamento() {
   }
   const _empEdit = empresaDoForm('edit-empresa');
   if (_empEdit === null) return;
-  l.empresa_id = _empEdit;
+  l.empresa_id = _empEdit || null;
   l.dtcompra = document.getElementById('edit-dtcompra').value;
   l.dtprev = document.getElementById('edit-dtprev').value;
   l.nf = document.getElementById('edit-nf').value;
@@ -7992,7 +8092,7 @@ function abrirRelatorioKPI(key) {
     ov.id = 'modal-rel-kpi';
     ov.innerHTML = '<div class="modal" id="modal-rel-kpi-inner" style="width:1000px;"></div>';
     document.body.appendChild(ov);
-    ov.addEventListener('click', e => { if (e.target === ov) closeModal('modal-rel-kpi'); });
+    // fecha só no X / botão Fechar
   }
   document.getElementById('modal-rel-kpi-inner').innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -8649,6 +8749,17 @@ function calcularDreParaMetas(ano, fonte) {
     if (grupoId && valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (l.valor||0) * dreSinalCat(catId, grupoId);
   });
 
+  // Inadimplência automática (mesma regra do DRE)
+  if (!fonte) {
+    const catInad = getCatInadimplenciaId();
+    const grupoInad = catInad ? getDreCatGrupo(catInad) : null;
+    if (catInad && grupoInad && valoresMes[1][grupoInad] !== undefined) {
+      const inad = inadimplenciaDoAno(ano);
+      const sinalI = dreSinalCat(catInad, grupoInad);
+      Object.keys(inad).forEach(mk => inad[mk].forEach(({ saldo }) => { valoresMes[parseInt(mk)][grupoInad] += saldo * sinalI; }));
+    }
+  }
+
   // Variação de estoque somada ao CPV (mesma regra do DRE)
   const varEstId = getGrupoVarEstoqueId();
   const cpvId = getGrupoCpvId();
@@ -9284,7 +9395,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ativarSelectsPesquisaveis();
 
   const ov = document.getElementById('cal-detail-overlay');
-  if (ov) ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+  // cal-detail-overlay: fecha só pelo botão Fechar
 
   // Event delegation para permissões de usuário
   document.addEventListener('click', e => {
@@ -10004,8 +10115,9 @@ async function saveLancReceber() {
   if (!validarBancoObrigatorio(recebido, banco)) return;
   const dtrecebidoNovo = campoValor('lr-dtrecebido');
   if (!validarDataRecebimentoObrigatoria(recebido, dtrecebidoNovo, 'lr-dtrecebido')) return;
-  const empresa_id = empresaDoForm('lr-empresa');
-  if (empresa_id === null) return;
+  const _empR = empresaDoForm('lr-empresa');
+  if (_empR === null) return;
+  const empresa_id = _empR || null;
   const parcelas=parseInt(document.getElementById('lr-parcelas').value)||1;
   const lanc={ id:uid(), empresa_id, dtvenda,
     dtprev:document.getElementById('lr-dtprev').value,
@@ -10039,7 +10151,7 @@ function clearLancReceber() {
   set('lr-cliente','');
   set('lr-prod','');
   set('lr-catdre','');
-  set('lr-parcelas','1');
+  set('lr-parcelas','1'); lancSyncCond('lr');
   set('lr-financeiro','nao');
   set('lr-recebido','nao');
   set('lr-tipo-pag','');
@@ -10137,6 +10249,8 @@ function clearLancReceberFiltros() {
 function editLancReceber(id) {
   const l=db.lancreceber.find(x=>x.id===id); if(!l) return;
   document.getElementById('edit-lr-id').value=id;
+  populateEmpresaSelects();
+  document.getElementById('elr-empresa').value = l.empresa_id || EMPRESA_GERAL;
   document.getElementById('elr-dtvenda').value=l.dtvenda||l.dtcompra||'';
   document.getElementById('elr-dtprev').value=l.dtprev||'';
   document.getElementById('elr-nf').value=l.nf||'';
@@ -10182,7 +10296,7 @@ async function updateLancReceber() {
   if (!validarDataRecebimentoObrigatoria(recebido, dtrecebidoEdit, 'elr-dtrecebido')) return;
   const _empLR = empresaDoForm('elr-empresa');
   if (_empLR === null) return;
-  l.empresa_id = _empLR;
+  l.empresa_id = _empLR || null;
   l.dtvenda=document.getElementById('elr-dtvenda').value;
   l.dtprev=document.getElementById('elr-dtprev').value;
   l.nf=document.getElementById('elr-nf').value;
@@ -10712,6 +10826,7 @@ async function saveDfcCategoria() {
     obs: document.getElementById('dfc-cat-obs').value };
   await sbFetch('dfc_categorias', 'POST', rec);
   db.dfc_cats.push(rec);
+  fecharFormModalSeAberto('form-dfccat');
   clearDfcCategoria(); renderDfcCategorias(); populateDfcCatSelects(); populateDfcCatProdSelects(); popularCategoriasAnalise(); popularFiltrosGrupoCategoriaTodos();
 }
 async function updateDfcCategoria(id) {
@@ -10726,6 +10841,7 @@ async function updateDfcCategoria(id) {
   cat.obs = document.getElementById('dfc-cat-obs').value;
   const res = await sbFetch('dfc_categorias', 'PATCH', { nome:cat.nome, grupo:cat.grupo, tipo:cat.tipo, obs:cat.obs }, `?id=eq.${id}`);
   if (!res) { alert('❌ Erro ao atualizar categoria.'); return; }
+  fecharFormModalSeAberto('form-dfccat');
   clearDfcCategoria(); renderDfcCategorias(); populateDfcCatSelects(); populateDfcCatProdSelects(); popularCategoriasAnalise(); popularFiltrosGrupoCategoriaTodos();
 }
 function editDfcCategoria(id) {
@@ -10738,8 +10854,7 @@ function editDfcCategoria(id) {
   document.getElementById('dfc-cat-obs').value = cat.obs || '';
   document.getElementById('dfc-cat-form-title').textContent = 'Editar Categoria';
   document.getElementById('dfc-cat-btn-salvar').textContent = 'Salvar Alterações';
-  abrirFormPanel('form-dfccat', 'btn-novo-dfccat');
-  window.scrollTo({top:0, behavior:'smooth'});
+  abrirFormModal('form-dfccat', 'Editar Categoria');
 }
 function clearDfcCategoria() {
   ['dfc-cat-nome','dfc-cat-obs','dfc-cat-edit-id'].forEach(id => document.getElementById(id).value = '');
@@ -11838,6 +11953,29 @@ function renderDre() {
     });
   });
 
+  // 3. Inadimplência automática: parcelas vencidas e não recebidas viram
+  //    custo no mês do vencimento (categoria "Inadimplência").
+  const catInad = getCatInadimplenciaId();
+  const grupoInad = catInad ? getDreCatGrupo(catInad) : null;
+  if (catInad && grupoInad && valoresMes[1][grupoInad] !== undefined) {
+    const inad = inadimplenciaDoAno(ano);
+    const sinalI = dreSinalCat(catInad, grupoInad);
+    Object.keys(inad).forEach(mk => {
+      const m = parseInt(mk);
+      inad[mk].forEach(({ p, saldo, data, recup }) => {
+        const item = {
+          tipo: 'receber', id: p.lancId, nf: p.nf || '', data, nome: getClienteNome(p.cliente),
+          prod: (recup ? 'Recuperação de inadimplência' : 'Inadimplência') + (p.totalParc > 1 ? ` (parc. ${p.parcIdx}/${p.totalParc})` : ''),
+          valor: saldo, status: recup ? 'Recebido em atraso' : 'Inadimplente'
+        };
+        valoresMes[m][grupoInad] += saldo * sinalI;
+        itensMes[m][grupoInad].push(item);
+        valoresMesCat[m][catInad] = (valoresMesCat[m][catInad] || 0) + saldo * sinalI;
+        (itensMesCat[m][catInad] = itensMesCat[m][catInad] || []).push(item);
+      });
+    });
+  }
+
   // Injeta a Variação de Estoque digitada manualmente (não vem de lançamentos).
   // O valor digitado (positivo ou negativo) é SOMADO diretamente ao grupo do CPV,
   // de modo que tanto o valor monetário do CPV quanto o % do CPV recalculam.
@@ -12245,6 +12383,23 @@ function renderAnaliseCategoria() {
       status: l.pago === 'sim' ? 'Pago' : 'A Pagar'
     });
   });
+
+  // Inadimplência automática (mesma regra do DRE)
+  const catInadAc = getCatInadimplenciaId();
+  if (catInadAc && valoresMes[catInadAc]) {
+    const inad = inadimplenciaDoAno(ano);
+    Object.keys(inad).forEach(mk => {
+      const m = parseInt(mk);
+      inad[mk].forEach(({ p, saldo, data, recup }) => {
+        valoresMes[catInadAc][m] += saldo;
+        itensMes[m][catInadAc].push({
+          tipo: 'receber', id: p.lancId, nf: p.nf || '', data, nome: getClienteNome(p.cliente),
+          prod: (recup ? 'Recuperação de inadimplência' : 'Inadimplência') + (p.totalParc > 1 ? ` (parc. ${p.parcIdx}/${p.totalParc})` : ''),
+          valor: saldo, status: recup ? 'Recebido em atraso' : 'Inadimplente'
+        });
+      });
+    });
+  }
 
   // Guarda para o drill-down (abrirDetalheAcCategoria), acessível após o render
   _acItensCache = itensMes;
@@ -13569,7 +13724,8 @@ const PAINEIS_MODAL = {
   'form-forn':    'Novo Fornecedor',
   'form-cli':     'Novo Cliente',
   'form-bnk':     'Nova Conta / Banco',
-  'form-empresa': 'Nova Empresa'
+  'form-empresa': 'Nova Empresa',
+  'form-dfccat':  'Nova Categoria'
 };
 
 let _formModalAtual = null;
@@ -13928,6 +14084,113 @@ function lerArquivoImport(ev) {
 }
 
 // Normaliza texto para comparação (minúsculo, sem acento, sem espaços extras)
+
+// ══════════════════════════════════════════════════════════════════════
+// RESULTADO FINANCEIRO + INADIMPLÊNCIA
+// ----------------------------------------------------------------------
+// O grupo "Despesas Financeiras" do DRE passa a se chamar "Resultado
+// Financeiro" e recebe 3 categorias:
+//   Despesas Financeiras (saída)  → subtrai do resultado
+//   Resultado Financeiro (entrada) → soma ao resultado
+//   Inadimplência (saída)          → subtrai do resultado
+// A Inadimplência é gerada automaticamente: toda parcela a receber vencida
+// e não recebida até o fim do mês do vencimento (descontados os recebimentos
+// parciais da Cobrança) vira custo NO MÊS DO VENCIMENTO — e lá fica.
+// Se o cliente paga depois, em outro mês, o valor entra como "Recuperação de
+// inadimplência" (abate o custo) NO MÊS DO PAGAMENTO. Assim o DRE dos meses
+// já fechados não muda quando a cobrança é recebida.
+// ══════════════════════════════════════════════════════════════════════
+function getCatInadimplenciaId() {
+  const c = (db.dfc_cats || []).find(x => normText(x.nome) === 'inadimplencia');
+  return c ? c.id : null;
+}
+// Pagamentos de uma parcela: recebimentos parciais da Cobrança + o restante
+// na data em que a parcela foi marcada como recebida.
+function _pagamentosParcelaReceber(p) {
+  const bx = ((cobrancaDados[_cobKey(p.lancId, p.parcIdx)] || {}).baixas || [])
+    .map(b => ({ data: b.data, valor: parseFloat(b.valor) || 0 })).filter(x => x.data && x.valor > 0);
+  if (p.isRecebido) {
+    const soma = bx.reduce((s, x) => s + x.valor, 0);
+    const resto = (p.valParc || 0) - soma;
+    if (resto > 0.005) bx.push({ data: p.dtrecebido || p.venc, valor: resto });
+  }
+  return bx.sort((a, b) => a.data.localeCompare(b.data));
+}
+// out[mes] = [{ p, saldo, data, recup }]  — saldo > 0 custo; < 0 recuperação
+function inadimplenciaDoAno(ano) {
+  const out = {};
+  const hoje = today();
+  const parcelas = getParcelasReceber(false).concat(getParcelasReceber(true));
+  parcelas.forEach(p => {
+    if (!p.venc || p.venc >= hoje) return;
+    const mesVenc = p.venc.slice(0, 7);
+    const pags = _pagamentosParcelaReceber(p);
+    const pagoNoPrazo = pags.filter(x => x.data.slice(0, 7) <= mesVenc).reduce((s, x) => s + x.valor, 0);
+    const inad = (p.valParc || 0) - pagoNoPrazo;
+    if (inad <= 0.005) return;
+    if (parseInt(mesVenc.slice(0, 4)) === ano) {
+      const m = parseInt(mesVenc.slice(5, 7));
+      (out[m] = out[m] || []).push({ p, saldo: inad, data: p.venc, recup: false });
+    }
+    let restante = inad;
+    pags.filter(x => x.data.slice(0, 7) > mesVenc).forEach(x => {
+      if (restante <= 0.005) return;
+      const v = Math.min(x.valor, restante);
+      restante -= v;
+      if (parseInt(x.data.slice(0, 4)) === ano) {
+        const m = parseInt(x.data.slice(5, 7));
+        (out[m] = out[m] || []).push({ p, saldo: -v, data: x.data, recup: true });
+      }
+    });
+  });
+  return out;
+}
+
+let _rfMigrado = false;
+async function garantirResultadoFinanceiro() {
+  if (_rfMigrado || !currentUser || currentUser.role !== 'admin') return;
+  _rfMigrado = true;
+  try {
+    const grupos = db.dre_grupos || [];
+    // 1. Renomeia o grupo (e a linha de %) de Despesas Financeiras
+    for (const g of grupos) {
+      const n = normText(g.nome);
+      let novo = null;
+      if (n === 'despesas financeiras' || n === 'despesa financeira') novo = 'Resultado Financeiro';
+      else if (n === 'despesas financeiras (%)' || n === 'despesa financeira (%)') novo = 'Resultado Financeiro (%)';
+      if (novo) {
+        const ok = await sbFetch('dre_grupos', 'PATCH', { nome: novo }, `?id=eq.${encodeURIComponent(g.id)}`);
+        if (ok) g.nome = novo;
+      }
+    }
+    const rf = grupos.find(g => normText(g.nome) === 'resultado financeiro' && (g.tipo === 'entrada' || g.tipo === 'saida'));
+    if (!rf) return;
+    // 2. Garante as 3 categorias dentro do grupo
+    const cats = [
+      { nome: 'Despesas Financeiras', tipo: 'saida',   obs: 'Juros, tarifas e encargos pagos — subtrai do resultado' },
+      { nome: 'Resultado Financeiro', tipo: 'entrada', obs: 'Rendimentos e juros recebidos — soma ao resultado' },
+      { nome: 'Inadimplência',        tipo: 'saida',   obs: 'Gerada automaticamente pelas parcelas vencidas e não recebidas' }
+    ];
+    let mudou = false;
+    for (const c of cats) {
+      const ex = db.dfc_cats.find(x => normText(x.nome) === normText(c.nome));
+      if (ex) {
+        if (!ex.grupo) {
+          const ok = await sbFetch('dfc_categorias', 'PATCH', { grupo: rf.id, tipo: c.tipo }, `?id=eq.${encodeURIComponent(ex.id)}`);
+          if (ok) { ex.grupo = rf.id; ex.tipo = c.tipo; mudou = true; }
+        }
+        continue;
+      }
+      const rec = { id: uid(), nome: c.nome, grupo: rf.id, tipo: c.tipo, obs: c.obs };
+      const ok = await sbFetch('dfc_categorias', 'POST', rec);
+      if (ok) { db.dfc_cats.push(rec); mudou = true; }
+    }
+    if (mudou) {
+      try { populateDfcCatSelects(); populateDreCatSelects(); popularCategoriasAnalise(); popularFiltrosGrupoCategoriaTodos(); } catch(e) {}
+    }
+  } catch (e) { console.error('Resultado Financeiro: falha ao ajustar grupos/categorias.', e); }
+}
+
 function normText(s) {
   return (s||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 }
@@ -15701,7 +15964,7 @@ function clearCustosFixosFiltros() {
 
 
 // ── Marcador de versão (para confirmar qual arquivo está no ar) ──
-window.APP_BUILD = '2026-10-25 · mega · premiacoes-manutencao';
+window.APP_BUILD = '2026-10-27 · mega · desfazer-inadimplencia';
 (function(){ var b = document.getElementById('sidebar-build'); if (b) b.textContent = 'build ' + window.APP_BUILD; })();
 
 // Fechar modais clicando fora
@@ -16035,8 +16298,8 @@ function _linhaCobranca(p, hoje) {
     <td><span class="badge ${sit.cls}">${sit.label}</span></td>
     <td class="actions">
       <button class="btn btn-sm btn-whats" title="Enviar mensagem no WhatsApp" onclick="abrirWhatsCobranca('${p.lancId}',${p.parcIdx})">📱</button>
-      <button class="btn btn-secondary btn-sm cob-fup-btn" onclick="abrirFollowupCobranca('${p.lancId}',${p.parcIdx})">💬${nFup?`<span class="cob-fup-count">${nFup}</span>`:''}</button>
-      <button class="btn btn-primary btn-sm" onclick="abrirBaixaCobranca('${p.lancId}',${p.parcIdx})">💵 Receber</button>
+      <button class="btn btn-secondary btn-sm cob-fup-btn" title="Registrar conversa de cobrança" onclick="abrirFollowupCobranca('${p.lancId}',${p.parcIdx})">💬 Follow-up${nFup?`<span class="cob-fup-count">${nFup}</span>`:''}</button>
+      <button class="btn btn-primary btn-sm" title="Receber o valor total ou em mais vezes" onclick="abrirBaixaCobranca('${p.lancId}',${p.parcIdx})">💵 Receber / parcial</button>
       <button class="btn btn-secondary btn-sm" onclick="editLancReceber('${p.lancId}')">Editar</button>
     </td>
   </tr>`;
@@ -16177,6 +16440,56 @@ async function addFollowupCobranca() {
   renderCobranca();
 }
 
+// Painel geral: todas as conversas registradas na cobrança, com a agenda
+// dos próximos contatos. "Abrir" leva ao follow-up da parcela.
+function abrirFollowupsGeral() {
+  renderFollowupsGeral();
+  openModal('modal-cob-fup-geral');
+}
+function renderFollowupsGeral() {
+  const filtro = document.getElementById('cob-fg-filtro').value;
+  const busca = (document.getElementById('cob-fg-busca').value || '').trim().toLowerCase();
+  const hoje = today();
+  const linhas = [];
+  Object.keys(cobrancaDados).forEach(k => {
+    const reg = cobrancaDados[k];
+    const i = k.lastIndexOf(':');
+    const lancId = k.slice(0, i), parcIdx = parseInt(k.slice(i + 1));
+    const l = db.lancreceber.find(x => x.id === lancId);
+    if (!l) return;
+    const fups = (reg.followups || []).slice().sort((a, b) => (b.data + (b.hora||'')).localeCompare(a.data + (a.hora||'')));
+    fups.forEach((f, idx) => linhas.push({ f, lancId, parcIdx, l, ultimo: idx === 0 }));
+  });
+  const lista = linhas.filter(x => {
+    // Agenda: vale o "próximo contato" da conversa mais recente da parcela
+    if (filtro === 'pendentes' && !(x.ultimo && x.f.proximo)) return false;
+    if (filtro === 'vencidos'  && !(x.ultimo && x.f.proximo && x.f.proximo < hoje)) return false;
+    if (busca) {
+      const t = [getClienteNome(x.l.cliente), x.f.obs, x.f.pessoa, x.f.canal, x.f.resultado].join(' ').toLowerCase();
+      if (!t.includes(busca)) return false;
+    }
+    return true;
+  }).sort((a, b) => filtro === 'todos'
+      ? (b.f.data + (b.f.hora||'')).localeCompare(a.f.data + (a.f.hora||''))
+      : (a.f.proximo || '').localeCompare(b.f.proximo || ''));
+  const tb = document.getElementById('tb-cob-fup-geral');
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhum follow-up para este filtro.</td></tr>'; return; }
+  tb.innerHTML = lista.map(x => {
+    const f = x.f, n = x.l.parcelas || 1;
+    const atrasado = f.proximo && f.proximo < hoje;
+    return `<tr>
+      <td style="white-space:nowrap;font-family:DM Mono,monospace;font-size:12px">${fmtDate(f.data)}${f.hora ? '<br>' + esc(f.hora) : ''}</td>
+      <td><b>${esc(getClienteNome(x.l.cliente))}</b>${f.pessoa ? `<br><span style="font-size:11px;color:#a8a29e">Falou com ${esc(f.pessoa)}</span>` : ''}</td>
+      <td style="font-family:DM Mono,monospace">${x.parcIdx}/${n}</td>
+      <td style="font-size:12px">${esc(f.canal || '—')}${f.resultado ? `<br><span style="color:#57534e">${esc(f.resultado)}</span>` : ''}</td>
+      <td style="font-size:12px;max-width:280px;white-space:normal">${esc(f.obs || '')}</td>
+      <td style="white-space:nowrap;font-weight:600;color:${atrasado ? '#dc2626' : '#1f2937'}">${f.proximo ? fmtDate(f.proximo) : '—'}</td>
+      <td style="font-size:11px;color:#57534e">${esc(f.usuario || '—')}</td>
+      <td><button class="btn btn-secondary btn-sm" onclick="closeModal('modal-cob-fup-geral'); abrirFollowupCobranca('${x.lancId}',${x.parcIdx})">Abrir</button></td>
+    </tr>`;
+  }).join('');
+}
+
 async function excluirFollowupCobranca(fid) {
   if (!confirm('Excluir este registro de conversa?')) return;
   const { lancId, parcIdx } = _cobCtx;
@@ -16207,6 +16520,7 @@ function abrirBaixaCobranca(lancId, parcIdx) {
   document.getElementById('cob-bx-data').value = today();
   document.getElementById('cob-bx-valor').value = '';
   document.getElementById('cob-bx-obs').value = '';
+  document.getElementById('cob-bx-quem').value = (currentUser && (currentUser.nome || currentUser.user)) || '';
   const selB = document.getElementById('cob-bx-banco'); if (selB) selB.value = l.banco || '';
   const selF = document.getElementById('cob-bx-forma'); if (selF) selF.value = '';
   renderBaixasCobranca();
@@ -16235,6 +16549,7 @@ function renderBaixasCobranca() {
       <span class="badge badge-blue">${esc(b.forma) || '—'}</span>
       <span style="font-size:12px;color:#57534e">${b.banco ? esc(getBancoNome(b.banco)) : '—'}</span>
       ${b.obs ? `<span style="font-size:11px;color:#a8a29e">${esc(b.obs)}</span>` : ''}
+      <span style="font-size:11px;color:#57534e;width:100%">Recebido por <b>${esc(b.recebidoPor || '—')}</b> em ${fmtDate(b.data)}${b.usuario ? ' · lançado por ' + esc(b.usuario) : ''}</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <strong style="font-family:DM Mono,monospace;color:#16a34a">${fmtBRL(b.valor)}</strong>
@@ -16258,8 +16573,10 @@ async function addBaixaCobranca() {
   const forma = document.getElementById('cob-bx-forma').value;
   const banco = document.getElementById('cob-bx-banco').value;
   const obs   = document.getElementById('cob-bx-obs').value.trim();
+  const recebidoPor = document.getElementById('cob-bx-quem').value.trim();
 
   if (!data)  { alert('Informe a data do recebimento.'); return; }
+  if (!recebidoPor) { alert('Informe o nome de quem recebeu o valor.'); return; }
   if (isNaN(valor) || valor <= 0) { alert('Informe um valor maior que zero.'); return; }
   if (!forma) { alert('Selecione a forma de recebimento (PIX, dinheiro, cheque...).'); return; }
   if (!banco) { alert('Selecione o banco/conta em que o valor entrou.'); return; }
@@ -16271,7 +16588,8 @@ async function addBaixaCobranca() {
     if (!confirm(`O valor lançado (${fmtBRL(valor)}) é maior que o saldo da parcela (${fmtBRL(saldo)}).\n\nDeseja continuar assim mesmo?`)) return;
   }
 
-  const nova = { id: uid(), data, valor, forma, banco, obs,
+  const nova = { id: uid(), data, valor, forma, banco, obs, recebidoPor,
+                 registradoEm: new Date().toISOString(),
                  usuario: (currentUser && (currentUser.nome || currentUser.user)) || '—' };
   reg.baixas.push(nova);
   const ok = await cobSalvar(lancId, parcIdx);
@@ -16835,6 +17153,10 @@ async function registrarAuditoria(tabela, metodo, params, body, alvoAntes) {
       alvoId: alvo.id || '',
       alvo: alvo.desc || '',
       resumo: (metodo === 'DELETE') ? (alvo.desc || '') : _auditResumo(tabela, metodo, body),
+      // Dados para "Desfazer"
+      antes: alvo.snap || null,
+      campos: (metodo === 'PATCH' && body && !Array.isArray(body)) ? Object.keys(body) : null,
+      criados: (metodo === 'POST') ? (Array.isArray(body) ? body : [body]).map(o => o && o.id).filter(Boolean) : null,
       empresa: (typeof empresaAtual === 'function' && empresaAtual()) ? empresaNome(empresaAtual()) : ''
     };
     auditLog.unshift(reg);
@@ -16907,7 +17229,7 @@ function renderAuditoria(repopular) {
 
   const tb = document.getElementById('tb-auditoria');
   if (!lista.length) {
-    tb.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum registro com os filtros atuais.</td></tr>';
+    tb.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum registro com os filtros atuais.</td></tr>';
     return;
   }
   const rotulo = { POST: 'CRIOU', PATCH: 'ALTEROU', DELETE: 'EXCLUIU' };
@@ -16922,11 +17244,87 @@ function renderAuditoria(repopular) {
       <td><span class="aud-tabela">${esc(_auditNomeTabela(r.tabela))}</span></td>
       <td style="font-size:12px">${esc(r.alvo) || '<span style="color:#a8a29e">—</span>'}</td>
       <td style="font-size:12px;color:#57534e">${esc(r.resumo) || '<span style="color:#a8a29e">—</span>'}</td>
+      <td style="white-space:nowrap">${r.desfeito
+          ? `<span class="badge badge-gray" title="Desfeito por ${esc(r.desfeitoPor || '—')}">Desfeito</span>`
+          : (_auditPodeDesfazer(r)
+              ? `<button class="btn btn-secondary btn-sm" title="Desfazer esta ação no sistema" onclick="desfazerAcaoAuditoria('${esc(r.id)}')">↩ Desfazer</button>`
+              : `<span style="font-size:11px;color:#a8a29e" title="Registro feito antes desta função existir (sem cópia dos dados)">—</span>`)}
+        <button class="btn btn-danger btn-sm" title="Excluir este registro da auditoria" onclick="excluirRegistroAuditoria('${esc(r.id)}')">Excluir</button></td>
     </tr>`;
   }).join('') + (lista.length > LIMITE_LINHAS
-    ? `<tr><td colspan="6" style="text-align:center;padding:14px;background:#fffbeb;color:#92400e;font-size:12px">
+    ? `<tr><td colspan="7" style="text-align:center;padding:14px;background:#fffbeb;color:#92400e;font-size:12px">
          Mostrando os ${LIMITE_LINHAS} mais recentes de <strong>${lista.length}</strong>. Use os filtros para refinar.</td></tr>`
     : '');
+}
+
+// ── Desfazer uma ação registrada ──────────────────────────────────────
+//   CRIOU   → exclui o registro criado
+//   EXCLUIU → recria o registro com os dados guardados antes da exclusão
+//   ALTEROU → volta os campos alterados para o valor anterior
+function _auditPodeDesfazer(r) {
+  const cfg = AUDIT_TABELAS[r.tabela];
+  if (!cfg || !cfg.db) return false;
+  if (r.acao === 'POST')   return !!(r.criados && r.criados.length);
+  if (r.acao === 'DELETE') return !!r.antes;
+  if (r.acao === 'PATCH')  return !!(r.antes && r.campos && r.campos.length);
+  return false;
+}
+async function desfazerAcaoAuditoria(regId) {
+  if (!currentUser || currentUser.role !== 'admin') { alert('Apenas o administrador pode desfazer ações.'); return; }
+  const r = auditLog.find(x => x.id === regId); if (!r) return;
+  if (r.desfeito) { alert('Esta ação já foi desfeita.'); return; }
+  if (!_auditPodeDesfazer(r)) { alert('Esta ação não pode ser desfeita: o registro foi gravado antes desta função existir.'); return; }
+  const tab = r.tabela, nomeTab = _auditNomeTabela(tab);
+  const txt = { POST: `excluir o registro criado em ${nomeTab}`,
+                DELETE: `recriar o registro excluído em ${nomeTab}`,
+                PATCH: `voltar os dados anteriores do registro em ${nomeTab}` }[r.acao];
+  if (!confirm(`Desfazer esta ação?\n\n${r.usuario} · ${r.alvo || r.resumo || ''}\n\nO sistema vai ${txt}.`)) return;
+
+  let ok = true;
+  if (r.acao === 'POST') {
+    for (const id of r.criados) {
+      const res = await sbFetch(tab, 'DELETE', null, `?id=eq.${encodeURIComponent(id)}`);
+      if (!res) { ok = false; break; }
+    }
+  } else if (r.acao === 'DELETE') {
+    const existe = await sbFetch(tab, 'GET', null, `?select=id&id=eq.${encodeURIComponent(r.antes.id)}`);
+    if (existe && existe.length) { alert('Esse registro já existe novamente no sistema — nada a desfazer.'); ok = false; }
+    else ok = !!(await sbFetch(tab, 'POST', r.antes));
+  } else if (r.acao === 'PATCH') {
+    const volta = {};
+    r.campos.forEach(k => { if (k in r.antes) volta[k] = r.antes[k]; });
+    ok = !!(await sbFetch(tab, 'PATCH', volta, `?id=eq.${encodeURIComponent(r.antes.id)}`));
+  }
+  if (!ok) { if (_sbUltimoErro) alert('❌ Não foi possível desfazer a ação.' + sbErroMsg()); return; }
+
+  // Marca o registro da auditoria como desfeito
+  r.desfeito = true;
+  r.desfeitoPor = currentUser.nome || currentUser.user || '—';
+  r.desfeitoEm = new Date().toISOString();
+  await sbFetch('config', 'PATCH', { value: JSON.stringify(r) }, `?key=eq.${encodeURIComponent(AUDIT_PREFIX + r.ts + ':' + r.id)}`);
+
+  // Recarrega tudo para a tela refletir o desfazer
+  await loadAllData();
+  renderPaginaAtual();
+  alert('✅ Ação desfeita.');
+}
+
+// Exclui UM registro da auditoria (só o histórico — o lançamento em si não muda)
+async function excluirRegistroAuditoria(regId) {
+  if (!currentUser || currentUser.role !== 'admin') { alert('Apenas o administrador pode excluir registros da auditoria.'); return; }
+  const r = auditLog.find(x => x.id === regId); if (!r) return;
+  const rotulo = { POST: 'criou', PATCH: 'alterou', DELETE: 'excluiu' }[r.acao] || r.acao;
+  if (!confirm(`Excluir este registro da auditoria?\n\n${r.usuario} ${rotulo} em ${_auditNomeTabela(r.tabela)}${r.alvo ? ' — ' + r.alvo : ''}\n\nIsso apaga só o histórico; o lançamento não é alterado.`)) return;
+  const key = AUDIT_PREFIX + r.ts + ':' + r.id;
+  _auditEmCurso = true;
+  try {
+    const ok = await sbFetch('config', 'DELETE', null, `?key=eq.${encodeURIComponent(key)}`);
+    if (!ok) { alert('❌ Não foi possível excluir o registro.' + sbErroMsg()); return; }
+    auditLog = auditLog.filter(x => x.id !== regId);
+    renderAuditoria(true);
+  } finally {
+    _auditEmCurso = false;
+  }
 }
 
 async function limparAuditoriaAntiga() {
@@ -17449,11 +17847,29 @@ function imprimirFluxoDiario() {
 }
 
 
-document.querySelectorAll('.modal-overlay').forEach(ov => {
-  if (ov.dataset && ov.dataset.naoFechar) return;   // aviso bloqueante
-  if (MODAIS_SO_FECHA_NO_X.has(ov.id)) return;      // telas de lançamento: só no X
-  ov.addEventListener('click', e => { if(e.target === ov) { if (ov.id) closeModal(ov.id); else ov.classList.remove('open'); } });
-});
+// Janelas NÃO fecham mais ao clicar/soltar o mouse fora delas — só no X
+// (ou nos botões Fechar/Cancelar). Toda janela ganha um X no canto, se não tiver.
+function garantirXModal(ov) {
+  if (!ov || !ov.id) return;
+  const box = ov.querySelector(':scope > .modal, :scope > .cal-detail-box, :scope > div');
+  if (!box || box.querySelector('.modal-x-auto, .lanc-x, [data-fechar-x]')) return;
+  // Já tem um ✕ próprio no cabeçalho?
+  const temX = [...box.querySelectorAll('button')].some(b => /^[✕×]$/.test((b.textContent || '').trim()));
+  if (temX) return;
+  if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
+  const x = document.createElement('button');
+  x.type = 'button'; x.className = 'modal-x-auto'; x.title = 'Fechar'; x.setAttribute('aria-label', 'Fechar');
+  x.innerHTML = '&times;';
+  x.onclick = () => {
+    if (ov.id === 'modal-form-generico') fecharFormModal();
+    else if (ov.id) closeModal(ov.id); else ov.classList.remove('open');
+  };
+  box.appendChild(x);
+}
+document.querySelectorAll('.modal-overlay').forEach(garantirXModal);
+new MutationObserver(muts => muts.forEach(m => {
+  if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('modal-overlay') && m.target.classList.contains('open')) garantirXModal(m.target);
+})).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
 </script>
 </body>
 </html>
