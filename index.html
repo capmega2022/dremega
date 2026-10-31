@@ -6959,6 +6959,7 @@ async function updateLancamento() {
   l.valor = parseFloat(document.getElementById('edit-valor').value)||0;
   l.parcelas = parseInt(document.getElementById('edit-parcelas').value)||1;
   l.financeiro = document.getElementById('edit-financeiro').value;
+  const _antPagoLanc = l.pago;
   l.pago = pago;
   l.obs = document.getElementById('edit-obs').value;
   l.tipo_pag = document.getElementById('edit-tipo-pag') ? document.getElementById('edit-tipo-pag').value : (l.tipo_pag||'');
@@ -6973,6 +6974,23 @@ async function updateLancamento() {
   l.dtpago = pago === 'sim' ? dtpagoEdit : '';
   if (l.parcelas > 1 && pago === 'sim') {
     l.parcela_datas = _marcarTodasParcelasPagas(l.parcela_datas, l.parcelas, dtpagoEdit);
+  } else if (l.parcelas > 1 && !_travaCC && _antPagoLanc === 'sim') {
+    // trocou de "Pago" para "Em aberto": reabre as parcelas (menos as pagas com cartão)
+    const _pp = _parseParcelas(l.parcela_datas), _orig = ccOrigensSet();
+    const _pagos = [], _dts = [];
+    for (let k = 0; k < l.parcelas; k++) {
+      const viaCC = _orig.has(`${l.id}|${k + 1}`);
+      _pagos.push(viaCC ? _pp.pagos[k] === true : false);
+      _dts.push(viaCC ? (_pp.dtpagos[k] || '') : '');
+    }
+    l.parcela_datas = JSON.stringify({ datas: _pp.datas, valores: _pp.valores, pagos: _pagos, dtpagos: _dts });
+  }
+  if (l.parcelas > 1) {
+    // status do lançamento acompanha as parcelas (pago só quando todas estão pagas)
+    const _pp2 = _parseParcelas(l.parcela_datas);
+    const _todas = _pp2.pagos.slice(0, l.parcelas).length === l.parcelas && _pp2.pagos.slice(0, l.parcelas).every(x => x === true);
+    l.pago = _todas ? 'sim' : 'nao';
+    if (!_todas) l.dtpago = '';
   }
   const okU = await sbFetch('lancamentos', 'PATCH', {
     empresa_id: l.empresa_id,
@@ -8684,11 +8702,15 @@ function renderDashboard() {
     return true;
   });
   const _pfA = p=>{const d=(p.venc||p.dtcompra||'').split('-');return(!kpiAno||d[0]==kpiAno)&&(!kpiMes||parseInt(d[1])==parseInt(kpiMes));};
-  const _pfPag=getParcelas(false).filter(_pfA).concat(getParcelas(true).filter(_pfA));
+  // Contas pagas com cartão de crédito entram nos totais só uma vez: quando a
+  // fatura do cartão é paga pelo banco (a conta original fica fora da soma).
+  const _ccOri = ccOrigensSet();
+  const _naoViaCC = p => !_ccOri.has(`${p.lancId}|${p.parcIdx}`);
+  const _pfPag=getParcelas(false).filter(_pfA).concat(getParcelas(true).filter(_pfA)).filter(_naoViaCC);
   // Total Comprado = tudo que foi comprado no mês pesquisado, filtrado pela
   // DATA DA COMPRA (dtcompra) e NÃO pelo vencimento das parcelas.
   const _pfCompra = p=>{const d=(p.dtcompra||'').split('-');return(!kpiAno||d[0]==kpiAno)&&(!kpiMes||parseInt(d[1])==parseInt(kpiMes));};
-  const totalComprado=getParcelas(false).filter(_pfCompra).concat(getParcelas(true).filter(_pfCompra)).reduce((s,p)=>s+p.valParc,0);
+  const totalComprado=getParcelas(false).filter(_pfCompra).concat(getParcelas(true).filter(_pfCompra)).filter(_naoViaCC).reduce((s,p)=>s+p.valParc,0);
   const totalAPagar=_pfPag.filter(p=>!p.isPago).reduce((s,p)=>s+p.valParc,0);
   const totalPago=_pfPag.filter(p=>p.isPago).reduce((s,p)=>s+p.valParc,0);
   const filtroLabel = (kpiAno || kpiMes)
