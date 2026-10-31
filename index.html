@@ -6739,7 +6739,7 @@ async function saveLancamento() {
   // à empresa ativa no seletor — senão ele foi salvo corretamente no banco,
   // mas só deve aparecer quando essa outra empresa (ou o Consolidado) for selecionada.
   const pertence = pertenceEmpresaAtiva(lanc.empresa_id);
-  if (pertence) db.lancamentos.push(lanc);
+  if (pertence) db.lancamentos.push(lanc); else _sincOutras('_lancOutras', lanc);
   clearLancamento(); closeModal('modal-novo-lanc'); renderLancamentos(); renderApagar(); renderPagas(); renderCustosFixos(); populateYearSelects();
   if (!pertence) alert(`✅ Lançamento salvo em "${empresaNome(lanc.empresa_id)}". Ele não aparece aqui porque essa não é a empresa ativa no momento.`);
 }
@@ -6991,6 +6991,7 @@ async function updateLancamento() {
   // Se a empresa foi trocada para uma diferente da ativa no seletor, o
   // registro tem que sumir da lista atual (senão fica aparecendo na empresa errada).
   if (!pertenceEmpresaAtiva(l.empresa_id)) db.lancamentos = db.lancamentos.filter(x => x.id !== l.id);
+  _sincOutras('_lancOutras', l);
   bumpDbVer();
   closeModal('modal-lanc'); renderLancamentos(); renderApagar(); renderPagas(); renderCustosFixos();
 }
@@ -10472,6 +10473,14 @@ const _parcBancoCache = { ver: -1, pagar: null, receber: null };
 function _parcBancoValidar() {
   if (_parcBancoCache.ver !== _dbVer) { _parcBancoCache.ver = _dbVer; _parcBancoCache.pagar = null; _parcBancoCache.receber = null; }
 }
+// Mantém db._lancOutras / db._lrOutras em dia quando um lançamento é gravado
+// em empresa diferente da ativa, para o saldo das contas não mudar.
+function _sincOutras(lista, rec) {
+  if (!empresaAtual() || !rec) return;
+  db[lista] = (db[lista] || []).filter(x => x.id !== rec.id);
+  if (!pertenceEmpresaAtiva(rec.empresa_id)) db[lista].push(rec);
+  bumpDbVer();
+}
 function getParcelasBanco(pago=true) {
   if (!(db._lancOutras || []).length) return getParcelas(pago);
   _parcBancoValidar();
@@ -10715,7 +10724,7 @@ async function saveLancReceber() {
   const rLR = await sbFetch('lancreceber','POST',lanc);
   if(!rLR) { alert('❌ Erro ao salvar lançamento. Verifique sua conexão e tente novamente.'); return; }
   const pertence = pertenceEmpresaAtiva(lanc.empresa_id);
-  if (pertence) db.lancreceber.push(lanc);
+  if (pertence) db.lancreceber.push(lanc); else _sincOutras('_lrOutras', lanc);
   clearLancReceber(); closeModal('modal-novo-lr'); renderLancReceber(); renderAReceber(); renderRecebido();
   populateYearSelectsReceber(); renderDashboard();
   if (!pertence) alert(`✅ Lançamento salvo em "${empresaNome(lanc.empresa_id)}". Ele não aparece aqui porque essa não é a empresa ativa no momento.`);
@@ -10897,6 +10906,8 @@ async function updateLancReceber() {
   // Se a empresa foi trocada para uma diferente da ativa no seletor, o
   // registro tem que sumir da lista atual (senão fica aparecendo na empresa errada).
   if (!pertenceEmpresaAtiva(l.empresa_id)) db.lancreceber = db.lancreceber.filter(x => x.id !== l.id);
+  _sincOutras('_lrOutras', l);
+  bumpDbVer();
   closeModal('modal-lancreceber'); renderLancReceber();
 }
 async function deleteLancReceber(id) {
@@ -13860,7 +13871,7 @@ function debugBancoSaldo(nomeBanco) {
   console.log('=== DIAGNÓSTICO:', banco.nome, '(id:', banco.id, ') ===');
   console.log('Saldo inicial:', banco.saldo_inicial || 0);
 
-  const recTodas = getParcelasReceber(true).filter(p => p.banco === banco.id);
+  const recTodas = getParcelasReceberBanco(true).filter(p => p.banco === banco.id);
   const recComData = recTodas.filter(p => !!p.dtrecebido);
   const recSemData = recTodas.filter(p => !p.dtrecebido);
   console.log('--- RECEBIDAS (banco = ' + banco.nome + ') ---');
@@ -13869,7 +13880,7 @@ function debugBancoSaldo(nomeBanco) {
   console.log('  SEM data de recebimento (NÃO entram no Fluxo de Caixa!):', recSemData.length, '| Soma:', recSemData.reduce((s,p)=>s+p.valParc,0));
   if (recSemData.length) console.table(recSemData.map(p => ({lancId:p.lancId, cliente:p.cliente, valParc:p.valParc, parcIdx:p.parcIdx, totalParc:p.totalParc, venc:p.venc})));
 
-  const pagTodas = getParcelas(true).filter(p => p.banco === banco.id);
+  const pagTodas = getParcelasBanco(true).filter(p => p.banco === banco.id);
   const pagComData = pagTodas.filter(p => !!p.dtpago);
   const pagSemData = pagTodas.filter(p => !p.dtpago);
   console.log('--- PAGAS (banco = ' + banco.nome + ') ---');
@@ -16621,7 +16632,7 @@ async function cfSincronizarLancamentos(orig, ativo, vigencias, geradosAntes) {
     if (!ok) continue;
     gerados.push({ mes: k, lancId: rec.id });
     novos.push(rec);
-    if (pertenceEmpresaAtiva(rec.empresa_id)) db.lancamentos.push(rec);
+    if (pertenceEmpresaAtiva(rec.empresa_id)) db.lancamentos.push(rec); else _sincOutras('_lancOutras', rec);
   }
   bumpDbVer();
   return { gerados: gerados.filter(g => !g.removido || noBanco[g.lancId] === undefined), novos: novos.length };
@@ -19601,11 +19612,13 @@ function renderFluxoDiario(repopular) {
   };
 
   if (base === 'realizado') {
-    getParcelasReceber(true).forEach(p => {
+    // Com uma conta bancária escolhida, o movimento é sempre consolidado
+    // (todas as empresas), igual ao saldo da conta.
+    (banco ? getParcelasReceberBanco(true) : getParcelasReceber(true)).forEach(p => {
       if (banco && p.banco !== banco) return;
       somar(p.dtrecebido, 'receita', p.valParc);
     });
-    getParcelas(true).forEach(p => {
+    (banco ? getParcelasBanco(true) : getParcelas(true)).forEach(p => {
       if (banco && p.banco !== banco) return;
       somar(p.dtpago, 'despesa', p.valParc);
     });
@@ -19928,13 +19941,13 @@ function _fdLancamentosDoDia(dia, tipo) {
 
   if (tipo === 'receita' || tipo === 'ambos') {
     (base === 'realizado'
-      ? getParcelasReceber(true).filter(p => (!banco || p.banco === banco) && bate(p.dtrecebido))
+      ? (banco ? getParcelasReceberBanco(true) : getParcelasReceber(true)).filter(p => (!banco || p.banco === banco) && bate(p.dtrecebido))
       : getParcelasReceber(false).concat(getParcelasReceber(true)).filter(p => bate(p.venc))
     ).forEach(p => rec.push(p));
   }
   if (tipo === 'despesa' || tipo === 'ambos') {
     (base === 'realizado'
-      ? getParcelas(true).filter(p => (!banco || p.banco === banco) && bate(p.dtpago))
+      ? (banco ? getParcelasBanco(true) : getParcelas(true)).filter(p => (!banco || p.banco === banco) && bate(p.dtpago))
       : getParcelas(false).concat(getParcelas(true)).filter(p => bate(p.venc))
     ).forEach(p => des.push(p));
   }
