@@ -5217,9 +5217,10 @@ const EMPRESA_KEY = 'mega_empresa_ativa';
 // que são compartilhadas entre todas as empresas.
 const TABELAS_POR_EMPRESA = [
   'lancamentos','lancreceber','dfc_lancamentos',
-  'faturamento','recebimentos','pedidos_cancelados','reposicoes',
-  'cartoes','cartao_despesas'
+  'faturamento','recebimentos','pedidos_cancelados','reposicoes'
 ];
+// Cartões de crédito (cadastro e despesas) ficam SEMPRE no consolidado,
+// assim como os bancos: não mudam ao trocar a empresa no topo do menu.
 
 function empresaAtual() {
   try { return localStorage.getItem(EMPRESA_KEY) || ''; } catch(e) { return ''; }
@@ -17250,7 +17251,8 @@ function ccRotuloFatura(chave) {
 }
 function ccLancFatura(cid, mes) {
   const k = ccChave(cid, mes);
-  return db.lancamentos.find(l => l.cartao_fatura === k);
+  return db.lancamentos.find(l => l.cartao_fatura === k)
+      || (db._lancOutras || []).find(l => l.cartao_fatura === k);
 }
 function ccFaturaPaga(cid, mes) {
   const l = ccLancFatura(cid, mes);
@@ -17293,6 +17295,7 @@ async function ccSincronizarFatura(cid, mes) {
       const ok = await sbFetch('lancamentos', 'DELETE', null, `?id=eq.${l.id}`);
       if (!ok) return false;
       db.lancamentos = db.lancamentos.filter(x => x.id !== l.id);
+      db._lancOutras = (db._lancOutras || []).filter(x => x.id !== l.id);
     } else {
       const ok = await sbFetch('lancamentos', 'PATCH', dados, `?id=eq.${l.id}`);
       if (!ok) return false;
@@ -17300,14 +17303,14 @@ async function ccSincronizarFatura(cid, mes) {
     }
   } else if (total > 0) {
     const rec = {
-      id: uid(), empresa_id: c.empresa_id || empresaAtual() || null, ...dados,
+      id: uid(), empresa_id: c.empresa_id || null, ...dados,
       nf: '', prod: '', parcelas: 1, financeiro: 'nao',
       pago: 'nao', dtpago: '', tipo_pag: CC_FORMA_PAG, banco: '',
       cat_dre: '', subcat: '', cartao_fatura: ccChave(cid, mes)
     };
     const ok = await sbFetch('lancamentos', 'POST', rec);
     if (!ok) return false;
-    db.lancamentos.push(rec);
+    if (pertenceEmpresaAtiva(rec.empresa_id)) db.lancamentos.push(rec); else _sincOutras('_lancOutras', rec);
   }
   bumpDbVer();
   return true;
@@ -17501,9 +17504,7 @@ async function ccSalvarCartao() {
   if (!bandeira) { alert('Escolha a bandeira do cartão (Mastercard, Visa, Elo...).'); return; }
   if (!(fech >= 1 && fech <= 31)) { alert('Informe o dia do fechamento (1 a 31).'); return; }
   if (!(venc >= 1 && venc <= 31)) { alert('Informe o dia do vencimento (1 a 31).'); return; }
-  const _empCC = id ? ((ccCartao(id) || {}).empresa_id || empresaAtual()) : exigirEmpresaAtiva('um cartão de crédito');
-  if (!id && !_empCC) return;
-  if ((db.cartoes || []).some(c => c.id !== id && (c.empresa_id || '') === (_empCC || '') && (c.nome || '').toLowerCase() === nome.toLowerCase())) { alert('Já existe um cartão com esse nome nesta empresa.'); return; }
+  if ((db.cartoes || []).some(c => c.id !== id && (c.nome || '').toLowerCase() === nome.toLowerCase())) { alert('Já existe um cartão com esse nome.'); return; }
   const dados = { nome, dia_fechamento: fech, dia_vencimento: venc, limite, bandeira, banco_id };
   if (id) {
     const c = ccCartao(id);
@@ -17516,7 +17517,7 @@ async function ccSalvarCartao() {
     for (const m of mesesC) await ccSincronizarFatura(id, m);
     if (mudouDias) alert('Dias atualizados. As despesas já lançadas continuam nas faturas em que estavam; as novas seguirão os novos dias.');
   } else {
-    const rec = { id: uid(), empresa_id: _empCC, ...dados };
+    const rec = { id: uid(), empresa_id: null, ...dados }; // cartão sempre consolidado
     const ok = await sbFetch('cartoes', 'POST', rec);
     if (!ok) { alert('❌ Erro ao salvar o cartão.' + sbErroDetalhe() + '\n\nSe for o primeiro uso, execute antes o script cartoes_credito.sql no Supabase.'); return; }
     db.cartoes.push(rec);
@@ -17705,7 +17706,7 @@ async function ccSalvarDespesa() {
   const origem_lanc = document.getElementById('cc-d-orig-lanc').value || null;
   const origem_parc = origem_lanc ? (parseInt(document.getElementById('cc-d-orig-parc').value, 10) || 1) : null;
   const recs = ps.map(p => ({
-    id: uid() + p.parcela, empresa_id: (ccCartao(cid) || {}).empresa_id || empresaAtual() || null, cartao_id: cid, grupo,
+    id: uid() + p.parcela, empresa_id: (ccCartao(cid) || {}).empresa_id || null, cartao_id: cid, grupo,
     data, descricao, cat_dre, obs, origem_lanc, origem_parc, ...p
   }));
   const ok = await sbFetch('cartao_despesas', 'POST', recs);
@@ -18093,7 +18094,7 @@ async function ccImpConfirmar() {
   if (ccFaturaPaga(cid, mes)) { alert(`A fatura de ${ccMesLabel(mes)} já foi paga. Desfaça o pagamento para importar nela.`); return; }
   const c = ccCartao(cid);
   if (!confirm(`Importar ${sel.length} lançamento(s) na fatura de ${ccMesLabel(mes)} do cartão ${c.nome}?`)) return;
-  const emp = c.empresa_id || empresaAtual() || null;
+  const emp = c.empresa_id || null;
   const recs = sel.map((l, k) => ({
     id: uid() + 'i' + k, empresa_id: emp, cartao_id: cid, grupo: uid() + 'g' + k,
     data: l.data, descricao: l.desc, cat_dre: l.cat || '', obs: 'Importado da fatura',
