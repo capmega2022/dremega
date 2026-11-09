@@ -4863,6 +4863,29 @@ const BRAND_LOGO_DATA_URI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAA
 const PAGINAS_OCULTAS = ['dfc-lancamentos'];
 
 function paginaOculta(p) { return PAGINAS_OCULTAS.includes(p); }
+// Telas de contas bancárias: só no Consolidado (somem do menu com empresa ativa).
+const PAGINAS_SO_CONSOLIDADO = ['bancos', 'transferencias'];
+function aplicarBancosSoConsolidado() {
+  const emp = empresaAtual();
+  if (typeof applyNavPermissions === 'function' && typeof currentUser !== 'undefined' && currentUser) applyNavPermissions();
+  else PAGINAS_SO_CONSOLIDADO.forEach(pg => {
+    const nav = document.getElementById('nav-' + pg);
+    if (nav && emp) nav.style.display = 'none';
+  });
+  // Filtro por conta no Fluxo Diário: só no Consolidado
+  const fdb = document.getElementById('fd-banco');
+  if (fdb) {
+    const grp = fdb.closest('.form-group');
+    if (emp) { fdb.value = ''; if (grp) grp.style.display = 'none'; }
+    else if (grp) grp.style.display = '';
+  }
+  // Fluxo Futuro: saldo das contas como ponto de partida só no Consolidado
+  const ffs = document.getElementById('ff-usar-saldo');
+  if (ffs) {
+    const grp = ffs.closest('.form-group');
+    if (grp) grp.style.display = emp ? 'none' : '';
+  }
+}
 
 const PAGES_CONFIG = [
   { id:'dashboard',         label:'Dashboard',           grupo:'geral'   },
@@ -5701,6 +5724,11 @@ function showPage(p) {
   setTimeout(() => { const _nv = document.getElementById('nav-' + p); if (_nv && document.getElementById('page-' + p) && document.getElementById('page-' + p).classList.contains('active')) { document.querySelectorAll('.nav-item.active, .nav-sub-item.active').forEach(x => { if (x !== _nv) x.classList.remove('active'); }); _nv.classList.add('active'); } }, 0);
   // Telas ocultas não abrem nem por chamada direta
   if (paginaOculta(p)) return;
+  // Bancos/Caixas e Transferências existem apenas no Consolidado.
+  if (PAGINAS_SO_CONSOLIDADO.includes(p) && empresaAtual()) {
+    alert('Bancos / Caixas e Transferências ficam disponíveis apenas no Consolidado.\n\nSelecione "Consolidado (todas)" no topo do menu para acessar.');
+    return;
+  }
   // Verificar permissão (exceto admin e páginas de administração)
   // A auditoria é exclusiva do administrador
   if (p === 'auditoria' && (!currentUser || currentUser.role !== 'admin')) {
@@ -5935,6 +5963,7 @@ function abrirModalLanc() {
   populateFormasPagSelects();
   populateDreCatSelects();
   clearLancamento();   // garante tela em branco também na abertura
+  travarEmpresaNovosLanc();
   lancSyncCond('l');
   openModal('modal-novo-lanc');
 }
@@ -5947,6 +5976,7 @@ function abrirModalLancReceber() {
   populateFormasRecebSelects();
   populateDreCatSelects();
   clearLancReceber();  // garante tela em branco também na abertura
+  travarEmpresaNovosLanc();
   lancSyncCond('lr');
   openModal('modal-novo-lr');
 }
@@ -6567,6 +6597,7 @@ function popularSeletorEmpresa() {
   sel.value = existe ? atual : '';
   pintarSeletorEmpresa();
   atualizarTagsEmpresa();
+  aplicarBancosSoConsolidado();
 }
 
 // Etiqueta que aparece ao lado do título das telas de análise (DRE, DFC,
@@ -6612,6 +6643,28 @@ function populateEmpresaSelects() {
       empresasAtivas().map(e => `<option value="${e.id}">${e.apelido || e.nome}</option>`).join('');
     sel.value = anterior || atual || '';
   });
+  travarEmpresaNovosLanc();
+}
+
+// Formulários de NOVO lançamento (a pagar, a receber, DFC): com uma empresa
+// ativa no topo, a empresa do lançamento fica fixa nela — assim o registro
+// salvo sempre aparece na tela. Para lançar em outra empresa, troque a
+// empresa no topo ou use o Consolidado (onde o campo fica livre).
+const EMPRESA_SELECTS_NOVOS = ['l-empresa', 'lr-empresa', 'dfc-lan-empresa'];
+function travarEmpresaNovosLanc() {
+  const atual = empresaAtual();
+  EMPRESA_SELECTS_NOVOS.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    if (atual) {
+      sel.value = atual;
+      sel.disabled = true;
+      sel.title = 'Empresa ativa no topo do menu. Para lançar em outra empresa, troque a empresa no topo ou use o Consolidado.';
+    } else {
+      sel.disabled = false;
+      sel.title = '';
+    }
+  });
 }
 
 // Troca a empresa ativa: salva a escolha, recarrega os dados já filtrados
@@ -6623,6 +6676,8 @@ async function trocarEmpresa(id) {
   } catch(e) {}
   pintarSeletorEmpresa();
   atualizarTagsEmpresa();
+  aplicarBancosSoConsolidado();
+  if (id && PAGINAS_SO_CONSOLIDADO.includes(_paginaAtual)) _paginaAtual = 'dashboard';
   await loadAllData();
   renderPaginaAtual();
 }
@@ -6635,6 +6690,8 @@ async function trocarEmpresa(id) {
 const EMPRESA_GERAL = '__geral';
 function empresaDoForm(selectId) {
   const sel = document.getElementById(selectId);
+  // Novo lançamento com empresa ativa: grava sempre na empresa ativa.
+  if (EMPRESA_SELECTS_NOVOS.includes(selectId) && empresaAtual()) return empresaAtual();
   const val = sel ? sel.value : '';
   if (val === EMPRESA_GERAL) return '';
   if (val) return val;
@@ -8577,7 +8634,7 @@ async function clearMeta(type) {
   const totalSaldo = db.bancos.reduce((s,b) => s + getBancoSaldo(b), 0);
   const totalSaldoCls = totalSaldo >= 0 ? 'saldo-positivo' : 'saldo-negativo';
 
-  document.getElementById('dash-kpis-bottom').innerHTML += `
+  if (!empresaAtual()) document.getElementById('dash-kpis-bottom').innerHTML += `
     <div class="card" style="grid-column:1/-1;padding:14px 16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="kpi-section-title" style="color:#ea580c;background:#f5f4f2;border-left:3px solid #ea580c;margin:0;">🏦 Saldo por Conta</div>
@@ -8804,7 +8861,7 @@ function renderDashboard() {
   const _pfA = p=>{const d=(p.venc||p.dtcompra||'').split('-');return(!kpiAno||d[0]==kpiAno)&&(!kpiMes||parseInt(d[1])==parseInt(kpiMes));};
   // Contas pagas com cartão de crédito entram nos totais só uma vez: quando a
   // fatura do cartão é paga pelo banco (a conta original fica fora da soma).
-  const _ccOri = ccOrigensSet();
+  const _ccOri = ccOrigensFluxoSet();
   const _naoViaCC = p => !_ccOri.has(`${p.lancId}|${p.parcIdx}`);
   const _pfPag=getParcelas(false).filter(_pfA).concat(getParcelas(true).filter(_pfA)).filter(_naoViaCC);
   // Total Comprado = tudo que foi comprado no mês pesquisado, filtrado pela
@@ -8960,7 +9017,7 @@ function renderDashboard() {
   const totalSaldo = db.bancos.reduce((s,b) => s + getBancoSaldo(b), 0);
   const totalSaldoCls = totalSaldo >= 0 ? 'saldo-positivo' : 'saldo-negativo';
 
-  document.getElementById('dash-kpis-bottom').innerHTML += `
+  if (!empresaAtual()) document.getElementById('dash-kpis-bottom').innerHTML += `
     <div class="card" style="grid-column:1/-1;padding:14px 16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="kpi-section-title" style="color:#ea580c;background:#f5f4f2;border-left:3px solid #ea580c;margin:0;">🏦 Saldo por Conta</div>
@@ -9426,6 +9483,21 @@ function calcularDreParaMetas(ano, fonte) {
     const catId = l.cat_dre || (prodObj ? prodObj.cat : null);
     const grupoId = catId ? getDreCatGrupo(catId) : null;
     if (grupoId && valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (l.valor||0) * dreSinalCat(catId, grupoId);
+  });
+
+  // Despesas lançadas direto no cartão de crédito (mesma regra do DRE):
+  // competência = data da compra; as que vieram de Contas a Pagar ficam de
+  // fora (a conta original já entrou acima).
+  const _empCC = (fonte && fonte.empresaVar !== undefined) ? (fonte.empresaVar || '') : empresaAtual();
+  (db.cartao_despesas || []).forEach(d => {
+    if (d.origem_lanc) return;
+    if (_empCC && (d.empresa_id || '') !== _empCC) return;
+    const catId = d.cat_dre || null; if (!catId) return;
+    const grupoId = getDreCatGrupo(catId); if (!grupoId) return;
+    const dtRef = d.data; if (!dtRef) return;
+    const p = dtRef.split('-'); if (parseInt(p[0]) !== ano) return;
+    const m = parseInt(p[1]);
+    if (valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (Number(d.valor)||0) * dreSinalCat(catId, grupoId);
   });
 
   // Inadimplência automática (mesma regra do DRE)
@@ -10370,6 +10442,7 @@ function applyNavPermissions() {
     if (!match) return;
     const pg = match[1];
     if (paginaOculta(pg)) { item.style.display = 'none'; return; }
+    if (PAGINAS_SO_CONSOLIDADO.includes(pg) && empresaAtual()) { item.style.display = 'none'; return; }
     if (pg === 'usuarios' || pg === 'empresas') return;
     if (isAdmin) { item.style.display = ''; return; }
     item.style.display = allowed.includes(pg) ? '' : 'none';
@@ -11819,7 +11892,7 @@ function renderDfc() {
   // 2. Contas a Pagar → Categoria do lançamento, senão do produto, senão Custos
   if (inclPagar) {
     // Contas a pagar quitadas com cartão saem do caixa só pela fatura (evita contar 2x)
-    const _ccOriDfc = ccOrigensSet();
+    const _ccOriDfc = ccOrigensFluxoSet();
     db.lancamentos.forEach(l => {
       if (dfcFiltroPago === 'apagar' && l.pago === 'sim') return;
       // Fatura do cartão: abre o valor pelo grupo/categoria de cada despesa,
@@ -14598,7 +14671,7 @@ function renderFluxoFuturo() {
   const usarSaldo = usarSaldoEl ? usarSaldoEl.checked : true;
 
   const hoje = today();
-  const saldoBase = usarSaldo ? db.bancos.reduce((s, b) => s + getBancoSaldo(b), 0) : 0;
+  const saldoBase = (usarSaldo && !empresaAtual()) ? db.bancos.reduce((s, b) => s + getBancoSaldo(b), 0) : 0;
 
   // Monta a lista de datas do horizonte (hoje + N-1 dias)
   const datas = [];
@@ -17396,6 +17469,17 @@ function ccEhFormaCartao(f) {
 function ccOrigensSet() {
   return new Set((db.cartao_despesas || []).filter(d => d.origem_lanc).map(d => `${d.origem_lanc}|${d.origem_parc || 1}`));
 }
+// Para DFC / Fluxo de Caixa / totais: a conta paga com cartão só sai da soma
+// quando a fatura que a cobre está na mesma visão (assim o valor entra uma
+// única vez — pela fatura). Se a fatura não está na visão (empresa ativa e
+// cartão do consolidado), a conta original continua contando, para o valor
+// não sumir do fluxo da empresa.
+function ccOrigensFluxoSet() {
+  const faturasNaVisao = new Set(db.lancamentos.filter(l => l.cartao_fatura).map(l => l.cartao_fatura));
+  return new Set((db.cartao_despesas || [])
+    .filter(d => d.origem_lanc && faturasNaVisao.has(ccChave(d.cartao_id, d.fatura)))
+    .map(d => `${d.origem_lanc}|${d.origem_parc || 1}`));
+}
 
 function ccAddMes(ym, n) {
   const [y, m] = ym.split('-').map(Number);
@@ -18039,6 +18123,7 @@ async function ccSalvarDespesa() {
   if (!data) { alert('Informe a data da compra.'); return; }
   if (!descricao) { alert('Informe a descrição.'); return; }
   if (!valor) { alert('Informe o valor.'); return; }
+  if (!cat_dre && !document.getElementById('cc-d-orig-lanc').value) { alert('Selecione a categoria: sem ela a despesa do cartão não entra no DRE.'); return; }
   if (valor < 0 && document.getElementById('cc-d-parcelada').value === 'sim') { alert('Crédito/estorno (valor negativo) não pode ser parcelado.'); return; }
   const ps = ccMontarParcelas();
   if (!ps[0].fatura) { alert('Selecione a fatura.'); return; }
@@ -18497,7 +18582,7 @@ async function elPagarComCartao() {
 }
 
 // ── Marcador de versão (para confirmar qual arquivo está no ar) ──
-window.APP_BUILD = '2026-10-31 · mega · cartoes-credito';
+window.APP_BUILD = '2026-11-09 · mega · bancos-consolidado-cartao-dre';
 (function(){ var b = document.getElementById('sidebar-build'); if (b) b.textContent = 'build ' + window.APP_BUILD; })();
 
 // Fechar modais clicando fora
@@ -19986,7 +20071,7 @@ function renderFluxoDiario(repopular) {
 
   // Contas quitadas com cartão de crédito saem do caixa só quando a fatura é
   // paga (a fatura já está em Contas a Pagar) — não conta a conta original.
-  const _ccOriFd = ccOrigensSet();
+  const _ccOriFd = ccOrigensFluxoSet();
   const _viaCCFd = p => _ccOriFd.has(`${p.lancId}|${p.parcIdx}`);
   if (base === 'realizado') {
     // Com uma conta bancária escolhida, o movimento é sempre consolidado
@@ -20319,7 +20404,7 @@ function _fdLancamentosDoDia(dia, tipo) {
   const data = `${ano}-${String(mes).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
   const rec = [], des = [];
   const bate = (d) => d === data;
-  const _ccOriDia = ccOrigensSet(); // pagas com cartão: saem pela fatura
+  const _ccOriDia = ccOrigensFluxoSet(); // pagas com cartão: saem pela fatura
 
   if (tipo === 'receita' || tipo === 'ambos') {
     (base === 'realizado'
