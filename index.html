@@ -3701,9 +3701,33 @@ async function viewDRE() {
     if (gd) pos[gd.posicao][m] += v;
     else { semDre[m] += v; contasSem.add(l.plano_conta_id); }
   }
+  // Inadimplência automática: vendas (Receita Operacional Bruta) em aberto que venceram e não foram recebidas
+  // entram na conta "Inadimplência" no mês do VENCIMENTO, só nesse mês. Ao receber, saem da conta.
+  const inad = contaInadimplencia();
+  if (inad) {
+    let ab = [];
+    try { ab = await store.abertos(); } catch (e) { toast(e.message, true); }
+    const gdI = M.gdre[inad.grupo_dre_id];
+    for (const l of ab) {
+      if (pid != null && l.planilha_id !== pid) continue;
+      if (!ehInadimplente(l, S.ano)) continue;
+      const m = Number(vencimento(l).slice(5, 7)) - 1, v = -Number(l.valor);
+      (conta[inad.id] ||= z())[m] += v;
+      pos[gdI.posicao][m] += v;
+      comDados.add(m);
+    }
+  }
   S.dre.dados = { pos, conta, semDre, contasSem, comDados };
   renderDRE();
 }
+// conta "Inadimplência" do plano de contas (precisa estar ligada a um grupo DRE)
+const contaInadimplencia = () => S.plano_contas.find(p => normTxt(p.nome) === 'INADIMPLENCIA' && M.gdre[p.grupo_dre_id]);
+// venda em aberto, vencida (antes de hoje), com vencimento no ano (e no mês, se informado)
+const ehInadimplente = (l, ano, m = null) => {
+  const v = vencimento(l);
+  return emAberto(l) && sinal(l) > 0 && M.gdre[M.plano[l.plano_conta_id]?.grupo_dre_id]?.posicao === 'ROB'
+    && v < HOJE && v.slice(0, 4) === String(ano) && (m == null || Number(v.slice(5, 7)) - 1 === m);
+};
 
 // meses ocultos na DRE (vale para KF, DK e Consolidado)
 const mesesOcultosDRE = () => new Set(VIS.dre?.ocultos || []);
@@ -6059,6 +6083,11 @@ const ACOES = {
   },
   dreCel: d => {          // DRE: clique nos números
     const pid = S.empresaVis === 'all' ? null : S.empresaVis, oc = mesesOcultosDRE(), m = d.m === 'tot' ? null : Number(d.m);
+    if (d.c && Number(d.c) === contaInadimplencia()?.id)             // inadimplência: vendas vencidas em aberto, pelo mês do vencimento
+      return abrirLista({ titulo: planoLabel(Number(d.c)) + ' · vendas vencidas não recebidas', ordem: 'venc',
+        sub: `${nomeNaTela(S.empresaVis, 'DRE')} · vencimento em ${m == null ? (oc.size ? 'meses exibidos de ' + S.ano : S.ano) : MESES_NOME[m] + '/' + S.ano}`,
+        cor: corEmpresa(S.empresaVis), ini: '2000-01-01', fim: `${S.ano}-12-31`, pid,
+        pred: l => ehInadimplente(l, S.ano, m) && (m != null || !oc.has(Number(vencimento(l).slice(5, 7)) - 1)) });
     const noMes = l => { const mm = Number(l.data_lancamento.slice(5, 7)) - 1; return m == null ? !oc.has(mm) : mm === m; };
     const pos = l => M.gdre[M.plano[l.plano_conta_id]?.grupo_dre_id]?.posicao;
     const pred = d.c ? (l => noMes(l) && l.plano_conta_id === Number(d.c)) : d.k === 'SEM' ? (l => noMes(l) && !pos(l)) : (l => noMes(l) && pos(l) === d.k);
