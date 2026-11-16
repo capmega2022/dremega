@@ -1576,8 +1576,9 @@ const bannerEmpresa = (id, prefixo, cons) => `<div class="emp-banner ${id === 'a
   ${prefixo ? '' : `<span class="lbl">${id === 'all' ? 'VISÃO' : 'EMPRESA'}</span>`}<b>${esc(nomeNaTela(id, prefixo, cons))}</b>
   ${id === 'all' ? `<em>${esc(S.planilhas.map(p => siglaEmpresa(p.id)).join(' + '))}</em>` : ''}</div>`;
 // bancos que aparecem para uma empresa: os ligados a ela e os sem empresa definida
-const bancosDaEmpresa = pid => pid == null || pid === 'all' ? S.bancos : S.bancos.filter(b => !b.planilha_id || b.planilha_id === pid);
-const bancosSoDaEmpresa = pid => pid == null || pid === 'all' ? S.bancos : S.bancos.filter(b => b.planilha_id === pid);
+// Bancos são sempre consolidados: nenhum banco pertence a uma empresa, todos aparecem para todas as empresas.
+const bancosDaEmpresa = () => S.bancos;
+const bancosSoDaEmpresa = pid => pid == null || pid === 'all' ? S.bancos : [];
 const gruposOrdenados = () => [...S.grupos].sort((a, b) => {
   const ca = S.plano_contas.find(p => p.grupo_id === a.id)?.codigo ?? 'z', cb = S.plano_contas.find(p => p.grupo_id === b.id)?.codigo ?? 'z';
   return ca.localeCompare(cb, 'pt-BR', { numeric: true });
@@ -4243,7 +4244,7 @@ function renderBancos() {
   const filtrado = !!(B.empresa || B.tipo || B.busca.trim());
   const q = B.busca.trim().toLowerCase();
   let lista = movs.filter(m => sel === 'all' || m.banco === sel);
-  if (B.empresa) lista = lista.filter(m => String(m.emp) === B.empresa);
+  B.empresa = '';                                            // bancos sempre consolidados: sem filtro por empresa
   if (B.tipo) lista = lista.filter(m => m.tipo === B.tipo);
   if (q) lista = lista.filter(m => `${m.desc} ${m.conta}`.toLowerCase().includes(q));
   const saldoAnt = sel === 'all' ? tot.ini : (saldos[sel] || 0);
@@ -4281,13 +4282,12 @@ function renderBancos() {
     </div>
     <div class="cards">
       ${card('all', 'Todos os bancos', tot.ini, tot, '<span class="logo ini" style="width:32px;height:32px;background:#fff;color:var(--orange)">Σ</span>', 'total')}
-      ${(B.empresa ? bancosSoDaEmpresa(Number(B.empresa)) : S.bancos).map(b => card(b.id, b.nome, saldos[b.id] || 0, mv[b.id], iconeBanco(b, 32), '', b.planilha_id)).join('')}
+      ${S.bancos.map(b => card(b.id, b.nome, saldos[b.id] || 0, mv[b.id], iconeBanco(b, 32))).join('')}
     </div>
     ${sel !== 'all' && S.bk.fxDados?.V.banco === sel ? `<section class="bk-fx-emb">${renderBkFluxo(true)}</section>` : ''}
     <div class="barra">
       <h3 style="margin:0;font-size:15px">Extrato · ${esc(nomeSel)}</h3>
       <div class="filtros">
-        <select data-chg="bkEmpresa">${opcoes(S.planilhas, B.empresa, p => p.nome, 'Todas as empresas')}</select>
         <select data-chg="bkTipo">
           <option value="">Todos os movimentos</option>
           <option value="E" ${B.tipo === 'E' ? 'selected' : ''}>Só entradas</option>
@@ -4329,14 +4329,15 @@ function renderBancosShell(corpo) {
 /* ---------- Bancos · fluxo de caixa diário (receita, despesa e resultado de cada dia) ---------- */
 // Visão: todos os bancos, os bancos de uma empresa ou um banco. Só entra o que passou pelo banco (pago/recebido).
 const visBk = v => v.startsWith('e:') ? { pid: Number(v.slice(2)), banco: null, rot: siglaEmpresa(Number(v.slice(2))), cor: corEmpresa(Number(v.slice(2))) }
-  : v.startsWith('b:') ? { pid: null, banco: Number(v.slice(2)), rot: M.banco[Number(v.slice(2))]?.nome ?? '', cor: corEmpresa(M.banco[Number(v.slice(2))]?.planilha_id ?? 'all') }
+  : v.startsWith('b:') ? { pid: null, banco: Number(v.slice(2)), rot: M.banco[Number(v.slice(2))]?.nome ?? '', cor: '#2f3034' }
   : { pid: null, banco: null, rot: 'Todos os bancos', cor: '#2f3034' };
 async function viewBkFluxo() {
   await carregarBkFluxo();
   if (S.bk.aba === 'fluxo') renderBancosShell(renderBkFluxo()); else renderBancos();
 }
 async function carregarBkFluxo() {
-  const F = S.bk.fx ||= { vis: S.planilhaId ? 'e:' + S.planilhaId : 'all', mes: `${hoje.getFullYear()}-${pad(hoje.getMonth() + 1)}` };
+  const F = S.bk.fx ||= { vis: 'all', mes: `${hoje.getFullYear()}-${pad(hoje.getMonth() + 1)}` };
+  if (F.vis.startsWith('e:')) F.vis = 'all';
   const [a, m] = F.mes.split('-').map(Number), ini = `${F.mes}-01`, fim = `${F.mes}-${pad(ultimoDia(a, m - 1))}`, V = visBk(F.vis);
   let lancs = [];
   try { lancs = await store.lancs({ ini, fim, planilha_id: V.pid, banco_id: V.banco }); } catch (e) { toast(e.message, true); }
@@ -4366,8 +4367,7 @@ function renderBkFluxo(embutido = false) {
     <div class="bfx-top">
       ${embutido ? `<div class="bfx-nome">${M.banco[V.banco] ? iconeBanco(M.banco[V.banco], 26) : ''}<b>${esc(V.rot)}</b><span class="mut">fluxo diário</span></div>` : `<label>Selecione<select data-chg="bkFxVis" data-banco class="bk-vis">
         <option value="all" ${F.vis === 'all' ? 'selected' : ''}>Todos os bancos</option>
-        <optgroup label="Empresas">${S.planilhas.map(p => `<option value="e:${p.id}" ${F.vis === 'e:' + p.id ? 'selected' : ''}>${esc(siglaEmpresa(p.id))} — todos os bancos da empresa</option>`).join('')}</optgroup>
-        <optgroup label="Bancos">${S.bancos.map(b => `<option value="b:${b.id}" ${F.vis === 'b:' + b.id ? 'selected' : ''}>${esc(b.nome)}${b.planilha_id ? ' · ' + esc(siglaEmpresa(b.planilha_id)) : ''}</option>`).join('')}</optgroup>
+        <optgroup label="Bancos">${S.bancos.map(b => `<option value="b:${b.id}" ${F.vis === 'b:' + b.id ? 'selected' : ''}>${esc(b.nome)}</option>`).join('')}</optgroup>
       </select></label>`}
       <div class="ano"><button data-act="bkFxMes" data-d="-1" aria-label="Mês anterior">‹</button><select data-chg="bkFxMesSel" class="bfx-mes">${meses.map(x => `<option value="${x}" ${x === F.mes ? 'selected' : ''}>${MESES[Number(x.slice(5)) - 1]}/${x.slice(2, 4)}</option>`).join('')}</select><button data-act="bkFxMes" data-d="1" aria-label="Próximo mês">›</button></div>
       ${embutido ? '' : botoesPDF()}
@@ -4451,7 +4451,7 @@ function renderTransferencias() {
 /* ---------- janela de transferência (nova / editar) ---------- */
 // Escolhe a conta que sai e a que entra (com ícones), mostra o saldo de cada uma antes e depois e valida antes de gravar.
 let TRF = null;
-const rotBancoTr = b => b.nome + (b.planilha_id && M.planilha[b.planilha_id] && !normTxt(b.nome).split(' ').includes(normTxt(siglaEmpresa(b.planilha_id))) ? ` · ${siglaEmpresa(b.planilha_id)}` : '');
+const rotBancoTr = b => b.nome;
 function abrirTransf(id = null) {
   const t = id ? S.trLista.find(x => x.id === id) : null;
   const dataPadrao = (hoje.getFullYear() === S.ano && hoje.getMonth() === S.mes) ? HOJE : periodoMes().ini;
@@ -4521,13 +4521,11 @@ function atualizarTr() {
       <div><small>Depois</small><b class="${b < 0 ? 'neg' : sinalV > 0 && val ? 'pos' : ''}">${brl(b)}</b></div>`;
   };
   $('tf_so').innerHTML = caixa(o, -1); $('tf_sd').innerHTML = caixa(d, 1);
-  for (const [cx, id] of [['tf_cs', o], ['tf_cd', d]]) $(cx).style.setProperty('--ec', id && M.banco[id]?.planilha_id ? corEmpresa(M.banco[id].planilha_id) : 'transparent');
+  for (const cx of ['tf_cs', 'tf_cd']) $(cx).style.setProperty('--ec', 'transparent');
   const av = [];
   if (o && d && o === d) av.push(['erro', 'A conta de origem e a de destino precisam ser diferentes.']);
   else {
     if (o && S0 && val && (S0[o] || 0) - val < -0.004) av.push(['alerta', `A conta de origem ficará negativa (${brl((S0[o] || 0) - val)}).`]);
-    const po = M.banco[o]?.planilha_id, pd = M.banco[d]?.planilha_id;
-    if (po && pd && po !== pd) av.push(['info', `Transferência entre empresas: <b>${esc(siglaEmpresa(po))} → ${esc(siglaEmpresa(pd))}</b>.`]);
   }
   $('tf_aviso').innerHTML = av.map(([c, t]) => `<div class="tr-av ${c}">${t}</div>`).join('');
   const ok = $('tf_ok');
@@ -5188,15 +5186,13 @@ const CAD = {
     busca: r => r.nome,
   },
   bancos: {
-    titulo: 'Bancos', sub: 'Contas e caixas onde o dinheiro entra e sai. Ligue cada banco a uma empresa: nos lançamentos só aparecem os bancos da empresa, e o saldo inicial deles forma o caixa inicial do Fluxo Acumulado.',
+    titulo: 'Bancos', sub: 'Contas e caixas onde o dinheiro entra e sai. Os bancos são consolidados: todos aparecem para todas as empresas, e o saldo inicial deles forma o caixa inicial do Fluxo Acumulado consolidado.',
     campos: [
       { k: 'nome', l: 'Nome do banco', t: 'text', req: true, cls: 'w-lg', ph: 'Ex.: VIACREDI KF' },
-      { k: 'planilha_id', l: 'Empresa', t: 'select', num: true, vazio: '— todas as empresas —', opts: () => S.planilhas.map(p => [p.id, siglaEmpresa(p.id)]) },
       { k: 'saldo_inicial', l: 'Saldo inicial (R$)', t: 'money' },
       { k: 'logo', l: 'Ícone', t: 'image' },
     ],
     cols: [['', r => iconeBanco(r, 28)], ['Nome', r => esc(r.nome)],
-           ['Empresa', r => r.planilha_id && M.planilha[r.planilha_id] ? `<span class="tag" style="background:${esc(corEmpresa(r.planilha_id))}">${esc(siglaEmpresa(r.planilha_id))}</span>` : '<span class="mut">todas</span>'],
            ['Saldo inicial', r => brl(r.saldo_inicial)]],
     busca: r => r.nome,
   },
