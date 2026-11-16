@@ -1100,6 +1100,66 @@ td.bk-ed:hover .bk-ed-i{opacity:1}
 .pci-st{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
 .pci-st.ok{background:#e3f4e2;color:#2e7d32}.pci-st.at{background:#e3eefb;color:#1667b7}.pci-st.ig{background:#eeeef0;color:#74757b}.pci-st.er{background:#fde4e2;color:#c62828}
 .pci-novo{color:#7a4a00;font-weight:700}
+/* ---------- cobrança ---------- */
+.cob-topo{display:flex;gap:8px;flex-wrap:wrap}
+.btn.cob-av{background:#b91c1c}.btn.cob-av:hover{background:#991b1b}
+.btn.cob-fg{background:#1e40af}.btn.cob-fg:hover{background:#1e3a8a}
+.btn.cob-mg{background:#15803d}.btn.cob-mg:hover{background:#166534}
+.cob-filtros{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.cob-filtros>label{display:flex;flex-direction:column;gap:4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+.cob-filtros select,.cob-filtros input{border:1px solid #cfd0d4;border-radius:6px;padding:6px 8px;font-size:13px;font-weight:500;background:#fff;min-height:34px}
+.cob-filtros .seg button{text-transform:none;letter-spacing:0}
+.cob-filtros .sp{flex:1}
+table.cob th{font-size:12px}
+table.cob tr.cob-mes td{background:#f1f1f3;height:32px;border-top:2px solid var(--line)}
+table.cob tr.cob-mes .meta{float:right;font-weight:600;color:var(--muted)}
+td.acoes{white-space:nowrap}
+td.acoes .mini{padding:4px 8px;margin-right:3px}
+.mini.wa{border-color:#25d366}
+.mini.ok{border-color:#4caa4a;color:#22702b}
+.cob-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+.cob-tag.atr{background:#fdecea;color:#b91c1c}
+.cob-tag.par{background:#eaf5ea;color:#22702b;margin-left:6px}
+.cob-tag.hoje{background:#fff4e5;color:#b45309}
+.cob-tag.ab{background:#eef0f3;color:#44535b}
+.cob-n{display:inline-block;min-width:17px;padding:0 4px;margin-left:5px;border-radius:9px;background:var(--orange);color:#fff;font-size:10px;line-height:16px;text-align:center}
+.cob-ult{font-size:11.5px;line-height:1.25}
+.cob-ult small{color:var(--muted)}
+.cob-atalhos{display:flex;gap:6px;flex-wrap:wrap}
+.modal.m-cob{width:min(780px,100%)}
+.modal.m-cob-lg{width:min(1120px,100%)}
+.mcorpo textarea{border:1px solid #cfd0d4;border-radius:6px;padding:8px 10px;font:inherit;font-size:13px;font-weight:500;min-height:90px;resize:vertical;text-transform:none;letter-spacing:0;color:var(--text)}
+.mcorpo>.seg{align-self:center}
+.cob-fups{padding:0 20px 16px;max-height:320px;overflow:auto}
+.cob-fup{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:8px;background:#fafafb}
+.cob-fup-h{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px}
+.cob-fup-t{margin:6px 0;white-space:pre-wrap;font-size:13px}
+.cob-fup-r{font-size:11px;color:var(--muted)}
+.cob-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cob-chip{border:1px dashed var(--orange);background:var(--orange-l);color:var(--orange-d);border-radius:12px;padding:3px 9px;font-size:11px;font-weight:600}
+.cob-av{max-height:52vh;overflow:auto}
+.cob-av-l{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 20px;border-bottom:1px solid #eee}
+/* ---------- divisão de resultados ---------- */
+.dv-sec{margin:16px 0 6px;font-size:14px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:8px}
+table.dvt td{text-align:right;font-variant-numeric:tabular-nums}
+table.dvt td.l{text-align:left;font-weight:600}
+table.dvt td.tot{font-weight:700;background:#f7f7f9}
+table.dvt tr.liq td{background:#fff7ed;font-weight:800;color:var(--orange-d)}
+table.dvt input{width:92px;text-align:right;border:1px solid #cfd0d4;border-radius:5px;padding:4px 6px}
+table.dv5 td.c{text-align:center;cursor:pointer;font-weight:800;color:#c9cacf;user-select:none;min-width:38px}
+table.dv5 td.c.s{background:#dcfce7;color:#16a34a}
+table.dv5 td.c.n{background:#fee2e2;color:#dc2626}
+table.dv5 td.c:hover{box-shadow:inset 0 0 0 2px var(--orange)}
+table.dv5 td.it{white-space:normal;min-width:340px}
+table.dv5 td.it input{width:calc(100% - 52px);border:1px solid transparent;background:transparent;padding:4px 6px;border-radius:5px}
+table.dv5 td.it input:focus{border-color:#cfd0d4;background:#fff}
+table.dv5 tr.nota td{background:#fff7ed;font-weight:800;text-align:center}
+.dv-ok{color:#16a34a !important;font-weight:700}.dv-ruim{color:#dc2626 !important;font-weight:700}
+.dv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:16px}
+.dv-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.dv-card h3{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+table.dvf td{text-align:center}
+table.dvf input{width:80px;text-align:right;border:1px solid #cfd0d4;border-radius:5px;padding:4px 6px}
 </style>
 </head>
 <body>
@@ -1345,6 +1405,7 @@ class LocalStore {
   async insert(t, row) { this.unico(t, row, null); const r = { ...row, id: ++this.db._seq }; this.db[t].push(r); this.salvar(); return r; }
   async insertMany(t, rows) { const out = []; for (const row of rows) out.push(await this.insert(t, row)); return out; }
   async lancsOrigem(origem) { return this.db.lancamentos.filter(l => l.origem === origem).map(l => ({ ...l })).sort((a, b) => a.data_lancamento.localeCompare(b.data_lancamento)); }
+  async abertos() { return this.db.lancamentos.filter(l => !l.data_pagamento).map(l => ({ ...l })).sort((a, b) => a.data_lancamento.localeCompare(b.data_lancamento) || a.id - b.id); }
   async update(t, id, row) {
     if (Object.keys(row).some(k => (UNICOS[t] || []).includes(k))) this.unico(t, row, id);
     const i = this.db[t].findIndex(r => r.id === id);
@@ -1417,6 +1478,7 @@ class SupaStore {
   async insert(t, row) { const { data, error } = await this.c.from(t).insert(row).select().single(); this.erro(error); return data; }
   async insertMany(t, rows) { if (!rows.length) return []; const { data, error } = await this.c.from(t).insert(rows).select(); this.erro(error); return data; }
   async lancsOrigem(origem) { return this.todos(() => this.c.from('lancamentos').select('*').eq('origem', origem).order('data_lancamento').order('id')); }
+  async abertos() { return this.todos(() => this.c.from('lancamentos').select('*').is('data_pagamento', null).order('data_lancamento').order('id')); }
   async update(t, id, row) { const { error } = await this.c.from(t).update(row).eq('id', id); this.erro(error); }
   async remove(t, id) { const { error } = await this.c.from(t).delete().eq('id', id); this.erro(error); }
   async lancs({ ini, fim, planilha_id, banco_id } = {}) {
@@ -1484,6 +1546,8 @@ const S = {
   dre: { pct: true, abertos: new Set(), dados: null },
   bk: { sel: 'all', ini: null, fim: null, empresa: '', tipo: '', busca: '' },
   gdre: { modo: 'estrutura', busca: '', filtro: '' },
+  cob: { emp: 'all', sit: 'atraso', mes: '', ano: '', cli: '', busca: '', min: '', lista: [], fup: {}, cont: {}, msg: { remetente: '', empresa: '', modelos: [] }, ctx: null, fg: { filtro: 'pendentes', busca: '' } },
+  dv: null,
 };
 const M = { banco: {}, grupo: {}, plano: {}, gdre: {}, planilha: {} };
 
@@ -1522,7 +1586,7 @@ const gruposOrdenados = () => [...S.grupos].sort((a, b) => {
 /* ============================== LAYOUT ============================== */
 const VIEWS = [
   ['dash', 'Dashboard'], ['lancamentos', 'Lançamentos'], ['custos', 'Custos Fixos'], ['fluxo', 'Fluxo de Caixa'], ['fluxoAcum', 'Fluxo Acumulado'], ['dre', 'DRE'], ['markup', 'Markup'],
-  ['bancos', 'Bancos'], ['transferencias', 'Transferências'], ['cadastros', 'Cadastros'],
+  ['bancos', 'Bancos'], ['transferencias', 'Transferências'], ['cobranca', 'Cobrança'], ['divFerr', 'Divisão – Ferramentaria'], ['divManut', 'Divisão – Manut. Motores'], ['cadastros', 'Cadastros'],
 ];
 const CAD_TABS = [['plano_contas', 'Plano de Contas'], ['grupos', 'Grupos (Classificação)'], ['grupos_dre', 'Grupos DRE'], ['bancos', 'Bancos'], ['planilhas', 'Empresas']];
 
@@ -1565,6 +1629,9 @@ async function rerender() {
   if (v === 'dre') return viewDRE();
   if (v === 'bancos') return viewBancos();
   if (v === 'transferencias') return viewTransferencias();
+  if (v === 'cobranca') return viewCobranca();
+  if (v === 'divFerr') return viewDivisao('ferr');
+  if (v === 'divManut') return viewDivisao('manut');
   if (v === 'cadastros') return renderCadastros();
 }
 
@@ -1646,6 +1713,8 @@ function renderLocal() {
   else if (v === 'dre') renderDRE();
   else if (v === 'bancos') { if (S.bk.aba === 'fluxo') renderBancosShell(renderBkFluxo()); else renderBancos(); }
   else if (v === 'transferencias') renderTransferencias();
+  else if (v === 'cobranca') renderCobranca();
+  else if ((v === 'divFerr' || v === 'divManut') && S.dv) renderDivisao();
 }
 
 /* ====================== EDIÇÃO DIRETO NA TABELA ====================== */
@@ -2456,6 +2525,651 @@ async function excluirLanc(id) {
   if (!l || !confirm(`Excluir o lançamento "${l.item || 'sem descrição'}" de ${brl(l.valor)}?`)) return;
   try { await store.remove('lancamentos', id); toast('Lançamento excluído.'); await viewLancamentos(); }
   catch (e) { toast(e.message, true); }
+}
+
+/* ======================= DIVISÃO DE RESULTADOS ======================= */
+// Duas telas com a mesma estrutura (5S + regra de prêmio), uma por setor:
+//   ferr  → Ferramentaria: meta de VENDA (faixas por % da meta atingido)
+//   manut → Manutenção de Motores: faixas pelo CPV % (CPV ÷ Receita, pela DRE)
+// Venda/Receita = Receita Operacional Bruta da DRE da empresa; CPV = CMV + Variação do Estoque da DRE.
+// Tudo fica em "parametros": {pfx}5s_itens, {pfx}5s:{ano}, premio_meta:{ano} e as faixas de cada setor.
+const uidC = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const DV_SET = {
+  ferr: {
+    view: 'divFerr', titulo: 'Ferramentaria', busca: 'FERRAMENTARIA', pfx: 'premio_', tipo: 'meta', faixasKey: 'premio_faixas',
+    faixasPadrao: [{ ating: 100, pct: 2 }, { ating: 95, pct: 1.5 }, { ating: 90, pct: 1 }, { ating: 85, pct: 0.5 }],
+    itensPadrao: [
+      'Não deixar máquinas e ferramentas ao redor da mesa de trabalho.',
+      'Respeitar as marcações onde os produtos são destinados (compactar caso seja necessário).',
+      'Manter apenas o que está sendo usado sobre a mesa de trabalho.',
+      'Deixar organizado a bancada e guardar as ferramentas.',
+      'Não permitir que os produtos acabem sem notificar o departamento de compras.',
+      'Utilizar equipamento de proteção individual (EPI).',
+      'Ao retirar o material do almoxarifado e não usá-lo, devolva-o exatamente como foi retirado e no mesmo local.',
+      'Não deixar peças novas junto com o orçamento do cliente.',
+      'Desligar as luzes do almoxarifado ao meio dia e término de trabalho.',
+      'Esvaziar as lixeiras e caixa de armazenagem de papelão toda sexta-feira.',
+    ],
+  },
+  manut: {
+    view: 'divManut', titulo: 'Manutenção de Motores', busca: 'MANUTENCAO', pfx: 'premio_mm_', tipo: 'cpv', faixasKey: 'premio_mm_faixas_cpv',
+    faixasPadrao: [{ ate: 59.99, pct: 1.5 }, { ate: 65, pct: 1 }, { ate: 71, pct: 0.5 }],
+    itensPadrao: [
+      'Organização da sala de pintura.',
+      'Lavagem do saco do aspirador + esvaziar o tambor (todas as sextas-feiras).',
+      'As peças usadas devem ser limpas e armazenadas adequadamente.',
+      'Manter apenas o que está sendo usado sobre a mesa de trabalho.',
+      'Deixar organizado a bancada e guardar as ferramentas.',
+      'Não é permitido colocar materiais sobre a mesa de teste.',
+      'Respeitar as marcações onde os produtos são destinados (compactar caso seja necessário).',
+      'Não permitir que os produtos acabem sem notificar o departamento de compras.',
+      'Utilizar equipamentos de segurança individual (EPI).',
+      'Ao retirar o material do almoxarifado e não usá-lo, devolva-o exatamente como foi retirado, no mesmo local onde foi retirado.',
+      'Desligar o compressor ao término do dia de trabalho.',
+      'Desligar os ventiladores e as luzes ao meio-dia.',
+      'Verificar e providenciar, se necessário, a carga da empilhadeira no final do dia.',
+      'Não deixar peças novas junto com o orçamento do cliente.',
+    ],
+  },
+};
+const dvEmpresa = s => S.planilhas.find(p => normTxt(p.nome).includes(DV_SET[s].busca));
+const dvN = v => v == null || !Number.isFinite(v) ? '—' : v.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+
+async function viewDivisao(s) {
+  const cfg = DV_SET[s], emp = dvEmpresa(s), ano = S.ano;
+  const D = S.dv = { s, emp, ano, itens: [], faixas: [], marc: {}, meta: {}, rec: Array(12).fill(0), cpv: Array(12).fill(0), comDados: new Set() };
+  try {
+    const [itens, faixas, marc, meta, lancs] = await Promise.all([
+      store.getParam(cfg.pfx + '5s_itens'), store.getParam(cfg.faixasKey), store.getParam(`${cfg.pfx}5s:${ano}`),
+      cfg.tipo === 'meta' ? store.getParam(`premio_meta:${ano}`) : null,
+      emp ? store.lancs({ ini: `${ano}-01-01`, fim: `${ano}-12-31`, planilha_id: emp.id }) : []]);
+    D.itens = Array.isArray(itens) ? itens : cfg.itensPadrao.map(t => ({ id: uidC(), texto: t }));
+    D.faixas = Array.isArray(faixas) ? faixas : cfg.faixasPadrao.map(f => ({ ...f }));
+    D.marc = marc || {}; D.meta = meta || {};
+    const cmv = Array(12).fill(0), vest = Array(12).fill(0);
+    for (const l of lancs) {
+      const m = Number(l.data_lancamento.slice(5, 7)) - 1, gd = M.gdre[M.plano[l.plano_conta_id]?.grupo_dre_id], v = sinal(l) * Number(l.valor);
+      if (!gd) continue;
+      if (gd.posicao === 'ROB') { D.rec[m] += v; D.comDados.add(m); }
+      else if (gd.posicao === 'CMV') cmv[m] += v;
+      else if (gd.posicao === 'VEST') vest[m] += v;
+    }
+    D.cpv = cmv.map((v, m) => -(v + vest[m]));
+    if (!Array.isArray(itens)) store.setParam(cfg.pfx + '5s_itens', D.itens).catch(() => {});
+    if (!Array.isArray(faixas)) store.setParam(cfg.faixasKey, D.faixas).catch(() => {});
+  } catch (e) {
+    toast(e.message, true);
+    if (!D.itens.length) D.itens = cfg.itensPadrao.map(t => ({ id: uidC(), texto: t }));
+    if (!D.faixas.length) D.faixas = cfg.faixasPadrao.map(f => ({ ...f }));
+  }
+  renderDivisao();
+}
+
+function dvNota(m) {
+  const D = S.dv, n = D.itens.length; if (!n) return null;
+  let marcados = 0, ok = 0;
+  D.itens.forEach(it => { const v = (D.marc[it.id] || {})[m]; if (v) marcados++; if (v === 'S') ok++; });
+  return marcados ? ok / n * 10 : null;
+}
+const dvDesconto = nota => nota === null ? 0 : nota < 6 ? 50 : nota < 7 ? 30 : nota < 8 ? 25 : 0;
+function dvPctFaixa(v) {
+  const D = S.dv;
+  if (DV_SET[D.s].tipo === 'meta') return [...D.faixas].sort((a, b) => b.ating - a.ating).find(f => v >= f.ating)?.pct || 0;
+  const x = Math.round(v * 100) / 100;
+  return [...D.faixas].sort((a, b) => a.ate - b.ate).find(f => x <= f.ate)?.pct || 0;
+}
+function dvCalcular() {
+  const D = S.dv, meta = DV_SET[D.s].tipo === 'meta';
+  return Array.from({ length: 12 }, (_, i) => {
+    const m = i + 1, r = { m };
+    if (meta) {
+      r.meta = Number(D.meta[m]) || 0; r.real = D.rec[i];
+      r.ating = r.meta > 0 ? r.real / r.meta * 100 : null;
+      r.pct = r.ating === null ? 0 : dvPctFaixa(r.ating); r.base = r.real;
+    } else {
+      r.rec = D.rec[i]; r.cpv = D.cpv[i];
+      r.cpvp = r.rec > 0 ? r.cpv / r.rec * 100 : null;
+      r.pct = r.cpvp === null ? 0 : dvPctFaixa(r.cpvp); r.base = r.rec;
+    }
+    r.bruto = r.base * r.pct / 100;
+    r.nota = dvNota(m); r.desc = dvDesconto(r.nota);
+    r.liq = r.bruto * (1 - r.desc / 100);
+    return r;
+  });
+}
+
+function renderDivisao() {
+  const D = S.dv, cfg = DV_SET[D.s], meta = cfg.tipo === 'meta', L = dvCalcular();
+  const soma = k => L.reduce((a, r) => a + (Number(r[k]) || 0), 0);
+  const tMeta = soma('meta'), tBase = soma('base'), tCpv = soma('cpv'), tBruto = soma('bruto'), tLiq = soma('liq');
+  const tRealMeta = L.filter(r => r.meta > 0).reduce((a, r) => a + r.real, 0);          // % da meta só dos meses que têm meta
+  const atingAno = tMeta > 0 ? dvN(tRealMeta / tMeta * 100) + '%' : '—';
+  const notas = L.map(r => r.nota).filter(n => n !== null), notaMed = notas.length ? notas.reduce((a, b) => a + b, 0) / notas.length : null;
+  const mesesPremio = L.filter(r => r.liq > 0.004).length;
+  const cel = (v, cls = '') => `<td class="${cls}">${v}</td>`;
+  const linhas = meta
+    ? [['Meta de venda (R$)', L.map(r => `<td><input data-chg="dvMeta" data-m="${r.m}" inputmode="decimal" value="${r.meta ? num2(r.meta) : ''}" placeholder="0,00"></td>`).join(''), brl(tMeta)],
+       ['Venda realizada', L.map(r => cel(num2(r.real))).join(''), brl(tBase)],
+       ['% da meta atingido', L.map(r => cel(r.ating === null ? '—' : dvN(r.ating) + '%', r.ating === null ? 'mut' : r.pct ? 'dv-ok' : 'dv-ruim')).join(''), atingAno]]
+    : [['Receita', L.map(r => cel(num2(r.rec))).join(''), brl(tBase)],
+       ['CPV (R$)', L.map(r => cel(num2(r.cpv))).join(''), brl(tCpv)],
+       ['CPV %', L.map(r => cel(r.cpvp === null ? '—' : dvN(r.cpvp) + '%', r.cpvp === null ? 'mut' : r.pct ? 'dv-ok' : 'dv-ruim')).join(''), tBase > 0 ? dvN(tCpv / tBase * 100) + '%' : '—']];
+  linhas.push(
+    [meta ? '% prêmio (faixa)' : '% prêmio (faixa CPV)', L.map(r => cel(r.pct ? dvN(r.pct) + '%' : '—')).join(''), ''],
+    ['Prêmio bruto', L.map(r => cel(num2(r.bruto))).join(''), brl(tBruto)],
+    ['Nota 5S', L.map(r => cel(dvN(r.nota), r.nota === null ? 'mut' : r.nota >= 8 ? 'dv-ok' : 'dv-ruim')).join(''), dvN(notaMed)],
+    ['Desconto pela nota', L.map(r => cel(r.desc ? '-' + r.desc + '%' : '—')).join(''), '']);
+  const resumo = `<table class="facum dvt">
+    <thead><tr><th style="text-align:left">${esc(cfg.titulo)} · ${D.ano}</th>${MESES.map(m => `<th>${m}</th>`).join('')}<th>TOTAL</th></tr></thead>
+    <tbody>${linhas.map(([rot, cols, tot]) => `<tr><td class="l">${rot}</td>${cols}<td class="tot">${tot}</td></tr>`).join('')}
+      <tr class="liq"><td class="l">Prêmio a pagar</td>${L.map(r => cel(num2(r.liq))).join('')}<td class="tot">${brl(tLiq)}</td></tr></tbody></table>`;
+
+  const c5 = (it, m) => { const v = (D.marc[it.id] || {})[m] || ''; return `<td class="c ${v === 'S' ? 's' : v === 'N' ? 'n' : ''}" data-act="dv5s" data-id="${esc(it.id)}" data-m="${m}" title="Clique para marcar: vazio → S → N → vazio">${v || '·'}</td>`; };
+  const t5s = `<table class="facum dv5">
+    <thead><tr><th style="text-align:left">Regras do 5S</th>${MESES.map(m => `<th>${m}</th>`).join('')}</tr></thead>
+    <tbody>${D.itens.map((it, i) => `<tr><td class="it"><span class="mut">${i + 1}</span> <input data-chg="dv5sTxt" data-id="${esc(it.id)}" value="${esc(it.texto)}" title="${esc(it.texto)}"><button class="ib del" data-act="dv5sDel" data-id="${esc(it.id)}" title="Excluir item">✕</button></td>${MESES.map((_, k) => c5(it, k + 1)).join('')}</tr>`).join('')
+      || `<tr><td colspan="13" class="vazio">Nenhum item. Clique em "+ Incluir item".</td></tr>`}
+      <tr class="nota"><td class="l" style="text-align:left">NOTA</td>${MESES.map((_, k) => { const n = dvNota(k + 1); return `<td class="${n === null ? 'mut' : n >= 8 ? 'dv-ok' : 'dv-ruim'}">${dvN(n)}</td>`; }).join('')}</tr>
+    </tbody></table>`;
+
+  const campo = meta ? 'ating' : 'ate', pre = meta ? '≥' : '≤';
+  const ord = D.faixas.map((f, i) => ({ f, i })).sort((a, b) => meta ? b.f.ating - a.f.ating : a.f.ate - b.f.ate);
+  const tFaixas = `<table class="dvf"><thead><tr>${meta ? '<th>Atingir (% da meta)</th><th>Paga (% da venda)</th>' : '<th>CPV até (% da receita)</th><th>Paga (% da receita)</th>'}<th></th></tr></thead>
+    <tbody>${ord.map(({ f, i }) => `<tr><td>${pre} <input data-chg="dvFaixa" data-i="${i}" data-k="${campo}" inputmode="decimal" value="${num2(f[campo])}"> %</td>
+      <td><input data-chg="dvFaixa" data-i="${i}" data-k="pct" inputmode="decimal" value="${num2(f.pct)}"> %</td>
+      <td><button class="ib del" data-act="dvFaixaDel" data-i="${i}" title="Excluir faixa">✕</button></td></tr>`).join('') || '<tr><td colspan="3" class="vazio">Nenhuma faixa.</td></tr>'}</tbody></table>`;
+  const tDesc = `<table class="dvf"><thead><tr><th>Nota do mês</th><th>Desconto no prêmio</th></tr></thead><tbody>
+    <tr><td>Menor que 6</td><td>50%</td></tr><tr><td>De 6 até menor que 7</td><td>30%</td></tr><tr><td>De 7 até menor que 8</td><td>25%</td></tr><tr><td>8 ou mais</td><td>Sem desconto</td></tr></tbody></table>`;
+
+  const alerta = !D.emp
+    ? `<div class="mk-alerta ruim"><b>Empresa não encontrada.</b> Cadastre em Cadastros › Empresas uma empresa com "${esc(cfg.titulo)}" no nome para trazer ${meta ? 'as vendas' : 'a receita e o CPV'} da DRE.</div>`
+    : !D.comDados.size ? `<div class="mk-alerta neutro">Sem receita (Receita Operacional Bruta) lançada em ${D.ano} para ${esc(D.emp.nome)}. ${meta ? 'A venda realizada' : 'A receita e o CPV'} aparece${meta ? '' : 'm'} assim que houver lançamentos ligados aos grupos da DRE.</div>` : '';
+  $('main').innerHTML = `
+    ${D.emp ? bannerEmpresa(D.emp.id, 'DIVISÃO') : ''}
+    <h2 class="tit">Divisão de Resultados — ${esc(cfg.titulo)}</h2>
+    <p class="sub">${meta ? 'Prêmio = venda realizada da Ferramentaria × % da faixa atingida, com desconto pela nota do 5S do mês.'
+      : 'Prêmio = receita da Manutenção de Motores × % da faixa do CPV (CPV ÷ receita, pela DRE), com desconto pela nota do 5S do mês.'}</p>
+    <div class="barra">${barraAno()}<span class="sp"></span>${botoesPDF()}</div>
+    <div class="kpis">
+      <div class="kp hero"><div class="l">Prêmio a pagar no ano</div><div class="v">${brl(tLiq)}</div><div class="d">${mesesPremio} ${mesesPremio === 1 ? 'mês' : 'meses'} com prêmio</div></div>
+      <div class="kp rec"><div class="l">${meta ? 'Venda realizada' : 'Receita'}</div><div class="v">${brl(tBase)}</div><div class="d">Receita Operacional Bruta da DRE</div></div>
+      <div class="kp desp"><div class="l">${meta ? '% da meta atingido' : 'CPV % do ano'}</div><div class="v">${meta ? atingAno : (tBase > 0 ? dvN(tCpv / tBase * 100) + '%' : '—')}</div><div class="d">${meta ? 'meses com meta · meta ' + brl(tMeta) : 'CPV ' + brl(tCpv)}</div></div>
+      <div class="kp"><div class="l">Prêmio bruto</div><div class="v">${brl(tBruto)}</div><div class="d">antes do desconto do 5S</div></div>
+      <div class="kp"><div class="l">Nota média do 5S</div><div class="v ${notaMed !== null && notaMed < 8 ? 'neg' : ''}">${dvN(notaMed)}</div><div class="d">${notas.length} ${notas.length === 1 ? 'mês avaliado' : 'meses avaliados'}</div></div>
+    </div>
+    ${alerta}
+    <div class="dv-sec">${meta ? 'Meta de venda e prêmio — Jan a Dez' : 'Receita, CPV e prêmio — Jan a Dez'}</div>
+    <div class="tabwrap">${resumo}</div>
+    <div class="dv-sec">Avaliação do Programa 5S (${esc(cfg.titulo)})<button class="mini" data-act="dv5sNovo">+ Incluir item</button></div>
+    <p class="sub" style="margin-bottom:6px">Clique na célula para marcar: vazio → <b class="dv-ok">S</b> → <b class="dv-ruim">N</b> → vazio. Nota = itens "S" ÷ total de itens × 10.</p>
+    <div class="tabwrap">${t5s}</div>
+    <div class="dv-grid">
+      <div class="dv-card"><h3>Faixas de pagamento ${meta ? '(meta)' : '(CPV)'}<button class="mini" data-act="dvFaixaNova">+ Faixa</button></h3>
+        <div class="tabwrap">${tFaixas}</div><p class="mut" style="margin:8px 0 0">${meta ? 'Abaixo da menor faixa não paga.' : 'Acima da maior faixa não paga.'}</p></div>
+      <div class="dv-card"><h3>Desconto pela nota do 5S</h3><div class="tabwrap">${tDesc}</div></div>
+    </div>`;
+}
+
+async function dvSalvar(chave, valor, msg) {
+  try { await store.setParam(chave, valor); if (msg) toast(msg); }
+  catch (e) { toast('Não foi possível salvar: ' + e.message, true); }
+}
+let dv5sT = null;
+function dv5sMarcar(id, m) {
+  const D = S.dv; if (!D) return;
+  const r = D.marc[id] = D.marc[id] || {};
+  r[m] = r[m] === 'S' ? 'N' : r[m] === 'N' ? '' : 'S';
+  if (!r[m]) delete r[m];
+  const y = window.scrollY; renderDivisao(); window.scrollTo(0, y);
+  clearTimeout(dv5sT);
+  const chave = `${DV_SET[D.s].pfx}5s:${D.ano}`, marc = D.marc;
+  dv5sT = setTimeout(() => dvSalvar(chave, marc), 600);
+}
+async function dv5sNovo() {
+  const D = S.dv; if (!D) return;
+  D.itens.push({ id: uidC(), texto: 'Novo item' });
+  renderDivisao();
+  const ins = document.querySelectorAll('table.dv5 td.it input'), ult = ins[ins.length - 1];
+  if (ult) { ult.focus(); ult.select(); }
+  await dvSalvar(DV_SET[D.s].pfx + '5s_itens', D.itens, 'Item incluído no 5S.');
+}
+async function dv5sTexto(el) {
+  const D = S.dv, it = D?.itens.find(x => x.id === el.dataset.id); if (!it) return;
+  const t = el.value.trim();
+  if (!t) { el.value = it.texto; return toast('O item não pode ficar vazio.', true); }
+  it.texto = t;
+  await dvSalvar(DV_SET[D.s].pfx + '5s_itens', D.itens, 'Item do 5S alterado.');
+}
+async function dv5sExcluir(id) {
+  const D = S.dv, it = D?.itens.find(x => x.id === id); if (!it) return;
+  if (!confirm(`Excluir o item "${it.texto}"?`)) return;
+  D.itens = D.itens.filter(x => x.id !== id);
+  renderDivisao();
+  await dvSalvar(DV_SET[D.s].pfx + '5s_itens', D.itens, 'Item excluído do 5S.');
+}
+async function dvMetaMes(el) {
+  const D = S.dv; if (!D) return;
+  const m = Number(el.dataset.m), v = parseValor(el.value);
+  if (el.value.trim() && !(v >= 0)) return toast('Informe um valor válido.', true);
+  if (v > 0) D.meta[m] = v; else delete D.meta[m];
+  renderDivisao();
+  await dvSalvar(`premio_meta:${D.ano}`, D.meta, `${MESES_NOME[m - 1]}: meta ${brl(v || 0)}`);
+}
+async function dvFaixaEditar(el) {
+  const D = S.dv, f = D?.faixas[Number(el.dataset.i)]; if (!f) return;
+  const v = parseValor(el.value);
+  if (!(v >= 0)) return toast('Informe um percentual válido.', true);
+  f[el.dataset.k] = v;
+  renderDivisao();
+  await dvSalvar(DV_SET[D.s].faixasKey, D.faixas, 'Faixa alterada.');
+}
+async function dvFaixaNova() {
+  const D = S.dv; if (!D) return;
+  D.faixas.push(DV_SET[D.s].tipo === 'meta' ? { ating: 80, pct: 0 } : { ate: 75, pct: 0 });
+  renderDivisao();
+  await dvSalvar(DV_SET[D.s].faixasKey, D.faixas, 'Faixa incluída.');
+}
+async function dvFaixaExcluir(i) {
+  const D = S.dv; if (!D?.faixas[i] || !confirm('Excluir esta faixa?')) return;
+  D.faixas.splice(i, 1);
+  renderDivisao();
+  await dvSalvar(DV_SET[D.s].faixasKey, D.faixas, 'Faixa excluída.');
+}
+
+/* ============================== COBRANÇA ============================== */
+// Contas a receber em aberto (receitas sem data de pagamento): agenda dos vencidos, follow-up das conversas,
+// nova previsão de recebimento, recebimento total ou parcial e mensagens de cobrança pelo WhatsApp.
+// O cliente é a descrição (Item) do lançamento. Follow-ups, telefones e modelos de mensagem ficam em "parametros".
+const COB_FUP = 'cobranca_followups', COB_CONT = 'cobranca_contatos', COB_MSG = 'cobranca_mensagens', COB_AVISO = 'cap_cob_aviso_v1';
+const COB_CANAIS = ['Telefone', 'WhatsApp', 'E-mail', 'Presencial', 'Mensagem / SMS', 'Outro'];
+const COB_RESULT = ['Promessa de pagamento', 'Negociação em andamento', 'Sem contato / não atendeu', 'Pagamento confirmado', 'Contesta o débito', 'Mensagem enviada', 'Outro'];
+const COB_VARS = [['{Nome do Cliente}', 'cliente (descrição do lançamento)'], ['{Seu Nome}', 'quem está cobrando'], ['{Nome da Empresa}', 'sua empresa'],
+  ['{Valor}', 'saldo em aberto, sem o R$'], ['{Valor Total}', 'valor cheio da parcela'], ['{Data de Vencimento}', 'vencimento'], ['{Mês}', 'mês de competência'],
+  ['{Parcela}', 'ex.: 2/3'], ['{Dias de Atraso}', 'dias vencidos']];
+const diasEntre = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5);
+const cobCliente = l => (l.item || '').trim() || M.plano[l.plano_conta_id]?.nome || 'Sem descrição';
+const cobChave = l => normTxt(cobCliente(l)) || 'SEM DESCRICAO';
+const cobOriginal = l => { const o = Number(l.ajustes?.valor); return o > Number(l.valor) + 0.004 ? o : Number(l.valor); };
+const cobParcial = l => r2(cobOriginal(l) - Number(l.valor));
+const cobAtraso = l => vencimento(l) < HOJE ? diasEntre(vencimento(l), HOJE) : 0;
+const cobFups = id => (S.cob.fup[id] || []).slice().sort((a, b) => (b.data + (b.hora || '')).localeCompare(a.data + (a.hora || '')));
+const cobAchar = id => S.cob.lista.find(l => l.id === Number(id));
+
+function cobModelosPadrao() {
+  const pgto = 'Opções de pagamento:\n- PIX: [informe a chave PIX da Mega]\n- Transferência bancária: [informe banco, agência e conta]\n- Dinheiro, diretamente na loja.\n\n(Não esqueça de enviar o comprovante de pagamento assim que realizá-lo)';
+  return [
+    { id: 'pad1', titulo: '1 semana de antecedência', gatilho: -7, texto: 'Olá, {Nome do Cliente}! 👋\n\nAqui é {Seu Nome}, da {Nome da Empresa}.\n\nPassando para lembrar que no dia {Data de Vencimento} vence o valor de R$ {Valor}, referente ao serviço do mês de {Mês}.\n\n' + pgto + '\n\nEstamos enviando este aviso antecipadamente para que você possa se programar com tranquilidade 😊\n\nQualquer dúvida, fico à disposição.' },
+    { id: 'pad2', titulo: '3 dias de atraso', gatilho: 3, texto: 'Olá, {Nome do Cliente}! 👋\n\nAqui é {Seu Nome}, da {Nome da Empresa}.\n\nVerificamos que o valor de R$ {Valor}, com vencimento em {Data de Vencimento}, ainda não foi identificado em nosso sistema.\n\nPedimos, por gentileza, que verifique a situação do pagamento. Caso já tenha realizado, desconsidere esta mensagem e, se possível, nos envie o comprovante 😊\n\n' + pgto + '\n\nFicamos no aguardo. Qualquer dúvida, estamos à disposição.' },
+    { id: 'pad3', titulo: '5 dias de atraso', gatilho: 5, texto: 'Olá, {Nome do Cliente}! 👋\n\nAqui é {Seu Nome}, da {Nome da Empresa}.\n\nAté o momento, o valor de R$ {Valor}, com vencimento em {Data de Vencimento}, segue em aberto em nosso sistema.\n\nSolicitamos, por gentileza, a regularização o quanto antes para evitar transtornos e mantermos o serviço normalmente.\n\n' + pgto + '\n\nCaso esteja enfrentando alguma dificuldade, pedimos que nos informe para que possamos verificar a melhor forma de resolver.\n\nAgradecemos a atenção.' },
+  ];
+}
+const cobMsgNormal = o => ({ remetente: o?.remetente || '', empresa: o?.empresa || '', modelos: Array.isArray(o?.modelos) && o.modelos.length ? o.modelos : cobModelosPadrao() });
+
+async function viewCobranca() {
+  const C = S.cob;
+  try {
+    const [ab, fup, cont, msg] = await Promise.all([store.abertos(), store.getParam(COB_FUP), store.getParam(COB_CONT), store.getParam(COB_MSG)]);
+    C.lista = ab.filter(l => sinal(l) > 0);
+    C.fup = fup || {}; C.cont = cont || {}; C.msg = cobMsgNormal(msg);
+  } catch (e) { toast(e.message, true); }
+  renderCobranca();
+  if (!C.avisoFeito) { C.avisoFeito = true; cobAviso(false); }
+}
+
+function cobFiltrada(semSituacao = false) {
+  const C = S.cob, q = normTxt(C.busca), min = parseInt(C.min, 10);
+  return C.lista.filter(l => {
+    const v = vencimento(l);
+    if (C.emp !== 'all' && l.planilha_id !== C.emp) return false;
+    if (C.cli && cobChave(l) !== C.cli) return false;
+    if (!semSituacao) {
+      if (C.sit === 'atraso' && !(v < HOJE)) return false;
+      if (C.sit === 'hoje' && v !== HOJE) return false;
+      if (C.sit === 'semana' && !(v >= HOJE && v <= addDias(HOJE, 7))) return false;
+    }
+    if (C.ano && v.slice(0, 4) !== C.ano) return false;
+    if (C.mes && Number(v.slice(5, 7)) !== Number(C.mes)) return false;
+    if (min > 0 && cobAtraso(l) < min) return false;
+    if (q && !normTxt(`${cobCliente(l)} ${M.plano[l.plano_conta_id]?.nome || ''} ${siglaEmpresa(l.planilha_id)}`).includes(q)) return false;
+    return true;
+  });
+}
+
+function renderCobranca() {
+  const C = S.cob, lista = cobFiltrada().sort((a, b) => vencimento(a).localeCompare(vencimento(b)) || cobCliente(a).localeCompare(cobCliente(b), 'pt-BR'));
+  const atr = lista.filter(l => vencimento(l) < HOJE);
+  const saldo = lista.reduce((a, l) => a + Number(l.valor), 0), parcial = lista.reduce((a, l) => a + cobParcial(l), 0);
+  const clientes = new Set(atr.map(cobChave)), maior = atr.reduce((m, l) => Math.max(m, cobAtraso(l)), 0);
+  const anos = [...new Set([String(hoje.getFullYear()), ...C.lista.map(l => vencimento(l).slice(0, 4))])].sort().reverse();
+  const clis = [...new Map(C.lista.filter(l => C.emp === 'all' || l.planilha_id === C.emp).map(l => [cobChave(l), cobCliente(l)])).entries()].sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'));
+  const sit = [['atraso', 'Em atraso'], ['hoje', 'Vencem hoje'], ['semana', 'Próximos 7 dias'], ['todas', 'Todas em aberto']];
+  const grupos = new Map();
+  lista.forEach(l => { const k = vencimento(l).slice(0, 7); if (!grupos.has(k)) grupos.set(k, []); grupos.get(k).push(l); });
+  let corpo = '';
+  for (const [k, itens] of grupos) {
+    corpo += `<tr class="cob-mes"><td colspan="12"><b>${MESES_NOME[Number(k.slice(5, 7)) - 1]} de ${k.slice(0, 4)}</b><span class="meta">${itens.length} cobrança(s) · ${brl(itens.reduce((a, l) => a + Number(l.valor), 0))}</span></td></tr>`;
+    corpo += itens.map(cobLinha).join('');
+  }
+  $('main').innerHTML = `
+    <h2 class="tit">Cobrança</h2>
+    <p class="sub">Contas a receber em aberto · agenda dos vencidos, follow-up das conversas e recebimento total ou parcial. O cliente é a descrição (Item) do lançamento.</p>
+    <div class="barra">${abasEmpresa(C.emp, 'cobEmp', true)}<span class="sp"></span>
+      <div class="cob-topo"><button class="btn cob-av" data-act="cobAviso">🔔 Avisos de Atraso</button><button class="btn cob-fg" data-act="cobFupGeral">💬 Follow-ups</button><button class="btn cob-mg" data-act="cobMsgs">✉️ Mensagens</button></div></div>
+    <div class="kpis">
+      <div class="kp desp"><div class="l">Parcelas em atraso</div><div class="v">${atr.length}</div><div class="d">de ${lista.length} na lista</div></div>
+      <div class="kp hero"><div class="l">Saldo a cobrar</div><div class="v">${brl(saldo)}</div><div class="d">em aberto com os filtros atuais</div></div>
+      <div class="kp rec"><div class="l">Recebido parcial</div><div class="v">${brl(parcial)}</div><div class="d">já recebido destas parcelas</div></div>
+      <div class="kp"><div class="l">Clientes em atraso</div><div class="v">${clientes.size}</div><div class="d">na lista</div></div>
+      <div class="kp"><div class="l">Maior atraso</div><div class="v">${maior} ${maior === 1 ? 'dia' : 'dias'}</div><div class="d">parcela mais antiga</div></div>
+    </div>
+    <div class="cob-filtros">
+      <label>Situação<div class="seg">${sit.map(([v, t]) => `<button class="${C.sit === v ? 'on' : ''}" data-act="cobSit" data-v="${v}">${t}</button>`).join('')}</div></label>
+      <label>Mês (vencimento)<select data-chg="cobF" data-k="mes"><option value="">Todos</option>${MESES_NOME.map((m, i) => `<option value="${i + 1}" ${String(C.mes) === String(i + 1) ? 'selected' : ''}>${m}</option>`).join('')}</select></label>
+      <label>Ano (vencimento)<select data-chg="cobF" data-k="ano"><option value="">Todos</option>${anos.map(a => `<option ${C.ano === a ? 'selected' : ''}>${a}</option>`).join('')}</select></label>
+      <label>Cliente<select data-chg="cobF" data-k="cli" style="max-width:240px"><option value="">Todos</option>${clis.map(([k, n]) => `<option value="${esc(k)}" ${C.cli === k ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
+      <label>Atraso mínimo (dias)<input data-chg="cobF" data-k="min" inputmode="numeric" value="${esc(C.min)}" style="width:110px" placeholder="0"></label>
+      <label>Buscar<input id="cob_busca" value="${esc(C.busca)}" placeholder="cliente, conta, empresa…" style="width:200px"></label>
+      <button class="mini" data-act="cobLimpar">Limpar filtros</button>
+      <span class="sp"></span>${botoesPDF()}
+    </div>
+    <div class="tabwrap congela"><table class="cob">
+      <thead><tr><th style="text-align:left">Cliente / descrição</th><th>Empresa</th><th style="text-align:left">Conta</th><th>Parcela</th><th>Valor</th><th>Recebido</th><th>Saldo</th><th>Vencimento</th><th>Atraso</th><th style="text-align:left">Último contato</th><th>Situação</th><th></th></tr></thead>
+      <tbody>${corpo || `<tr><td colspan="12" class="vazio">${C.lista.length ? 'Nenhuma conta a receber com os filtros atuais. 🎉' : 'Nenhuma conta a receber em aberto.'}</td></tr>`}</tbody>
+    </table></div>`;
+}
+
+function cobLinha(l) {
+  const par = cobParcial(l), dias = cobAtraso(l), f = cobFups(l.id), ult = f[0], v = vencimento(l);
+  const st = v < HOJE ? '<span class="cob-tag atr">Vencido</span>' : v === HOJE ? '<span class="cob-tag hoje">Vence hoje</span>' : '<span class="cob-tag ab">A vencer</span>';
+  return `<tr>
+    <td><b>${esc(cobCliente(l))}</b>${par > 0.004 ? '<span class="cob-tag par">parcial</span>' : ''}</td>
+    <td style="text-align:center"><span class="tag" style="background:${esc(corEmpresa(l.planilha_id))}">${esc(siglaEmpresa(l.planilha_id))}</span></td>
+    <td class="mut">${esc(M.plano[l.plano_conta_id]?.nome || '')}</td>
+    <td style="text-align:center">${esc(l.parcela || '—')}</td>
+    <td class="tnum" style="text-align:right">${num2(cobOriginal(l))}</td>
+    <td class="tnum ${par > 0.004 ? 'pos' : 'mut'}" style="text-align:right">${par > 0.004 ? num2(par) : '—'}</td>
+    <td class="tnum neg" style="text-align:right;font-weight:700">${num2(l.valor)}</td>
+    <td style="text-align:center">${fmtData(v)} <button class="ib" data-act="cobPrev" data-id="${l.id}" title="Editar a previsão de recebimento">✏️</button></td>
+    <td style="text-align:center">${dias > 0 ? `<span class="cob-tag atr">${dias}d</span>` : '<span class="mut">—</span>'}</td>
+    <td class="cob-ult">${ult ? `${fmtData(ult.data)}${ult.hora ? ' ' + esc(ult.hora) : ''}<br><small>${esc(ult.resultado || ult.canal || '')}</small>` : '<small>sem registro</small>'}</td>
+    <td style="text-align:center">${st}</td>
+    <td class="acoes">
+      <button class="mini wa" data-act="cobWhats" data-id="${l.id}" title="Enviar mensagem no WhatsApp">📱</button>
+      <button class="mini" data-act="cobFup" data-id="${l.id}" title="Registrar conversa de cobrança">💬 Follow-up${f.length ? `<span class="cob-n">${f.length}</span>` : ''}</button>
+      <button class="mini ok" data-act="cobReceber" data-id="${l.id}" title="Receber o valor total">💵 Receber</button>
+      <button class="mini" data-act="cobParcial" data-id="${l.id}" title="Receber só uma parte (o restante continua em aberto)">Parcial</button>
+    </td></tr>`;
+}
+
+// ---- 1) previsão de recebimento ----
+function cobPrevisao(id) {
+  const l = cobAchar(id); if (!l) return;
+  S.cob.ctx = l.id;
+  abrirModal(`
+    <div class="mh rec" style="--ec:${esc(corEmpresa(l.planilha_id))}"><div><small>Previsão de recebimento · ${esc(siglaEmpresa(l.planilha_id))}</small><b>${esc(cobCliente(l))}</b></div><button class="ib x" data-act="fecharModal" title="Fechar (Esc)">✕</button></div>
+    <div class="mresumo"><div><span>Conta</span><b>${esc(planoLabel(l.plano_conta_id))}</b></div><div><span>Previsão atual</span><b>${fmtData(vencimento(l))}</b></div><div class="mv"><span>Saldo</span><b class="pos">${brl(l.valor)}</b></div></div>
+    <div class="mcorpo">
+      <label class="span2"><span>Nova data prevista <i>*</i></span><input type="date" id="cp_data" value="${vencimento(l) < HOJE ? HOJE : vencimento(l)}" autofocus></label>
+      <div class="span2 cob-atalhos">${[1, 7, 15, 30].map(n => `<button type="button" class="mini" data-act="cobPrevSoma" data-n="${n}">+${n} ${n === 1 ? 'dia' : 'dias'}</button>`).join('')}</div>
+    </div>
+    <div class="mf"><span class="sp"></span><button class="btn sec" data-act="fecharModal">Cancelar</button><button class="btn" data-primary data-act="cobPrevSalvar">Salvar previsão</button></div>`, 'm-ed');
+}
+async function cobPrevSalvar() {
+  const l = cobAchar(S.cob.ctx), nova = $('cp_data')?.value; if (!l) return;
+  if (!nova) return toast('Informe a nova data prevista.', true);
+  try { await store.update('lancamentos', l.id, comAjuste(l, { data_programada: nova })); }
+  catch (e) { return toast(e.message, true); }
+  fecharModal(true); toast(`Nova previsão: ${fmtData(nova)} · ${cobCliente(l)}`);
+  await viewCobranca();
+}
+
+// ---- 2) follow-up das conversas ----
+function cobFollowup(id) {
+  const l = cobAchar(id); if (!l) return;
+  S.cob.ctx = l.id;
+  const ct = S.cob.cont[cobChave(l)] || {};
+  abrirModal(`
+    <div class="mh" style="--ec:#1e40af"><div><small>Follow-up de cobrança · ${esc(siglaEmpresa(l.planilha_id))}</small><b>${esc(cobCliente(l))}</b></div><button class="ib x" data-act="fecharModal" title="Fechar (Esc)">✕</button></div>
+    <div class="mresumo"><div><span>Parcela</span><b>${esc(l.parcela || 'única')} · vence ${fmtData(vencimento(l))}</b></div><div><span>Atraso</span><b class="${cobAtraso(l) ? 'neg' : ''}">${cobAtraso(l) ? cobAtraso(l) + ' dia(s)' : 'em dia'}</b></div><div class="mv"><span>Saldo</span><b class="pos">${brl(l.valor)}</b></div></div>
+    <div class="mcorpo">
+      <label><span>Data <i>*</i></span><input type="date" id="cf_data" value="${HOJE}"></label>
+      <label><span>Hora</span><input type="time" id="cf_hora" value="${new Date().toTimeString().slice(0, 5)}"></label>
+      <label><span>Canal</span><select id="cf_canal">${COB_CANAIS.map(c => `<option>${c}</option>`).join('')}</select></label>
+      <label><span>Resultado</span><select id="cf_res">${COB_RESULT.map(c => `<option>${c}</option>`).join('')}</select></label>
+      <label><span>Falou com</span><input id="cf_pessoa" placeholder="Nome de quem atendeu"></label>
+      <label><span>Próximo contato</span><input type="date" id="cf_prox"></label>
+      <label class="span2"><span>Resumo da conversa <i>*</i></span><textarea id="cf_obs" placeholder="O que foi combinado com o cliente…"></textarea></label>
+      <label><span>Telefone / WhatsApp do cliente</span><input id="cf_tel" value="${esc(ct.tel || '')}" placeholder="(47) 99999-9999"></label>
+      <label><span>Contato do cliente</span><input id="cf_contato" value="${esc(ct.contato || '')}" placeholder="Nome do responsável"></label>
+    </div>
+    <div class="mf"><span class="sp"></span><button class="btn sec" data-act="fecharModal">Fechar</button><button class="btn" data-primary data-act="cobFupSalvar">+ Registrar conversa</button></div>
+    <div class="mlbl" style="padding:0 20px">Histórico de conversas</div>
+    <div class="cob-fups" id="cf_lista">${cobFupsHTML(l.id)}</div>`, 'm-cob');
+}
+function cobFupsHTML(id) {
+  const f = cobFups(id);
+  if (!f.length) return '<div class="vazio">Nenhuma conversa registrada ainda.</div>';
+  return f.map(x => `<div class="cob-fup">
+    <div class="cob-fup-h"><b>${fmtData(x.data)}${x.hora ? ' · ' + esc(x.hora) : ''}</b><span><span class="cob-tag ab">${esc(x.canal || '—')}</span> ${x.resultado ? `<span class="cob-tag hoje">${esc(x.resultado)}</span>` : ''}
+      <button class="ib del" data-act="cobFupDel" data-f="${esc(x.id)}" title="Excluir este registro">✕</button></span></div>
+    <div class="cob-fup-t">${esc(x.obs)}</div>
+    <div class="cob-fup-r">${x.pessoa ? 'Falou com: ' + esc(x.pessoa) + ' · ' : ''}${x.proximo ? 'Próximo contato: ' + fmtData(x.proximo) + ' · ' : ''}Registrado por ${esc(x.usuario || '—')}</div></div>`).join('');
+}
+async function cobGravarFups(id, lista) {
+  const atual = (await store.getParam(COB_FUP)) || {};
+  if (lista.length) atual[id] = lista; else delete atual[id];
+  await store.setParam(COB_FUP, atual);
+  S.cob.fup = atual;
+}
+async function cobGravarContato(l, tel, contato) {
+  const k = cobChave(l), ant = S.cob.cont[k] || {};
+  if ((ant.tel || '') === tel && (ant.contato || '') === contato) return;
+  const atual = (await store.getParam(COB_CONT)) || {};
+  if (tel || contato) atual[k] = { tel, contato, nome: cobCliente(l) }; else delete atual[k];
+  await store.setParam(COB_CONT, atual);
+  S.cob.cont = atual;
+}
+async function cobFupSalvar() {
+  const l = cobAchar(S.cob.ctx); if (!l) return;
+  const data = $('cf_data').value, obs = $('cf_obs').value.trim();
+  if (!data) return toast('Informe a data da conversa.', true);
+  if (!obs) return toast('Escreva um resumo da conversa.', true), $('cf_obs').focus();
+  const novo = { id: uidC(), data, hora: $('cf_hora').value || '', canal: $('cf_canal').value, resultado: $('cf_res').value, pessoa: $('cf_pessoa').value.trim(),
+    obs, proximo: $('cf_prox').value || '', usuario: nomeUsuario() || S.usuario || '—', cli: cobCliente(l) };
+  try {
+    await cobGravarFups(l.id, [...(S.cob.fup[l.id] || []), novo]);
+    await cobGravarContato(l, $('cf_tel').value.trim(), $('cf_contato').value.trim());
+  } catch (e) { return toast('Não foi possível salvar o follow-up: ' + e.message, true); }
+  toast('Conversa registrada.');
+  ['cf_pessoa', 'cf_obs', 'cf_prox'].forEach(i => { if ($(i)) $(i).value = ''; });
+  $('cf_lista').innerHTML = cobFupsHTML(l.id);
+  renderCobranca();
+}
+async function cobFupExcluir(fid) {
+  const id = S.cob.ctx; if (!id || !confirm('Excluir este registro de conversa?')) return;
+  try { await cobGravarFups(id, (S.cob.fup[id] || []).filter(f => f.id !== fid)); }
+  catch (e) { return toast(e.message, true); }
+  if ($('cf_lista')) $('cf_lista').innerHTML = cobFupsHTML(id);
+  renderCobranca();
+}
+
+// ---- painel geral de follow-ups (agenda dos próximos contatos) ----
+function cobFupGeral() {
+  S.cob.fg = S.cob.fg || { filtro: 'pendentes', busca: '' };
+  abrirModal(`
+    <div class="mh" style="--ec:#1e40af"><div><small>Cobrança</small><b>Follow-ups — conversas e próximos contatos</b></div><button class="ib x" data-act="fecharModal" title="Fechar (Esc)">✕</button></div>
+    <div class="mcorpo" style="grid-template-columns:auto 1fr">
+      <div class="seg" id="fg_seg">${[['pendentes', 'Próximos contatos'], ['vencidos', 'Contato atrasado'], ['todos', 'Todas as conversas']].map(([v, t]) => `<button class="${S.cob.fg.filtro === v ? 'on' : ''}" data-act="cobFgFiltro" data-v="${v}">${t}</button>`).join('')}</div>
+      <input id="cob_fg_busca" value="${esc(S.cob.fg.busca)}" placeholder="Buscar cliente, conversa, pessoa…">
+    </div>
+    <div class="tabwrap" style="margin:0 20px 18px;max-height:60vh;overflow:auto"><table class="cob"><thead><tr><th>Data</th><th style="text-align:left">Cliente</th><th>Parcela</th><th style="text-align:left">Canal / resultado</th><th style="text-align:left">Conversa</th><th>Próximo contato</th><th>Por</th><th></th></tr></thead><tbody id="fg_corpo"></tbody></table></div>`, 'm-cob-lg');
+  cobFgDesenhar();
+}
+function cobFgDesenhar() {
+  const G = S.cob.fg, q = normTxt(G.busca), linhas = [];
+  for (const [id, lista] of Object.entries(S.cob.fup)) {
+    const l = cobAchar(id);
+    [...lista].sort((a, b) => (b.data + (b.hora || '')).localeCompare(a.data + (a.hora || ''))).forEach((f, i) => linhas.push({ f, id, l, ultimo: i === 0 }));
+  }
+  const vis = linhas.filter(x => {
+    if (G.filtro === 'pendentes' && !(x.ultimo && x.f.proximo && x.l)) return false;
+    if (G.filtro === 'vencidos' && !(x.ultimo && x.f.proximo && x.f.proximo < HOJE && x.l)) return false;
+    if (q && !normTxt([x.l ? cobCliente(x.l) : x.f.cli, x.f.obs, x.f.pessoa, x.f.canal, x.f.resultado].join(' ')).includes(q)) return false;
+    return true;
+  }).sort((a, b) => G.filtro === 'todos' ? (b.f.data + (b.f.hora || '')).localeCompare(a.f.data + (a.f.hora || '')) : (a.f.proximo || '').localeCompare(b.f.proximo || ''));
+  const corpo = $('fg_corpo'); if (!corpo) return;
+  corpo.innerHTML = vis.map(({ f, id, l }) => `<tr>
+    <td style="text-align:center">${fmtData(f.data)}${f.hora ? '<br><small class="mut">' + esc(f.hora) + '</small>' : ''}</td>
+    <td style="white-space:normal"><b>${esc(l ? cobCliente(l) : f.cli || '—')}</b>${f.pessoa ? `<br><small class="mut">Falou com ${esc(f.pessoa)}</small>` : ''}${l ? '' : '<br><small class="pos">recebido / fora da cobrança</small>'}</td>
+    <td style="text-align:center">${esc(l?.parcela || '—')}</td>
+    <td>${esc(f.canal || '—')}${f.resultado ? `<br><small class="mut">${esc(f.resultado)}</small>` : ''}</td>
+    <td style="white-space:normal;max-width:320px">${esc(f.obs || '')}</td>
+    <td style="text-align:center" class="${f.proximo && f.proximo < HOJE ? 'neg' : ''}"><b>${f.proximo ? fmtData(f.proximo) : '—'}</b></td>
+    <td class="mut">${esc(f.usuario || '—')}</td>
+    <td>${l ? `<button class="mini" data-act="cobFup" data-id="${esc(id)}">Abrir</button>` : ''}</td></tr>`).join('')
+    || '<tr><td colspan="8" class="vazio">Nenhum follow-up para este filtro.</td></tr>';
+}
+
+// ---- 3) receber (total ou parcial): usa a mesma janela de pagamento/recebimento dos lançamentos ----
+function cobReceber(id, parcial) {
+  const l = cobAchar(id); if (!l) return;
+  abrirPagamento(l, viewCobranca);
+  if (parcial) { ACOES.pagDividir(); toast('Informe o valor recebido agora: o restante continua em aberto na cobrança.'); }
+}
+
+// ---- 4) aviso de clientes em atraso (uma vez por dia ao abrir a Cobrança, ou pelo botão) ----
+function cobClientesAtraso() {
+  const mapa = new Map();
+  S.cob.lista.filter(l => vencimento(l) < HOJE).forEach(l => {
+    const k = cobChave(l);
+    if (!mapa.has(k)) mapa.set(k, { nome: cobCliente(l), qtd: 0, total: 0, dias: 0 });
+    const r = mapa.get(k); r.qtd++; r.total += Number(l.valor); r.dias = Math.max(r.dias, cobAtraso(l));
+  });
+  return [...mapa.values()].sort((a, b) => b.total - a.total);
+}
+function cobAviso(forcar) {
+  const lista = cobClientesAtraso();
+  if (!lista.length) { if (forcar) toast('🎉 Nenhum cliente em atraso no momento.'); return; }
+  if (!forcar) { let visto = null; try { visto = localStorage.getItem(COB_AVISO); } catch (e) {} if (visto === HOJE) return; }
+  const total = lista.reduce((a, c) => a + c.total, 0), qtd = lista.reduce((a, c) => a + c.qtd, 0);
+  abrirModal(`
+    <div class="mh" style="--ec:#b91c1c"><div><small>Aviso de atraso</small><b>Clientes com pagamento em atraso</b></div><button class="ib x" data-act="cobAvisoFechar" title="Fechar">✕</button></div>
+    <div class="mresumo"><div><span>Clientes</span><b>${lista.length}</b></div><div><span>Parcelas</span><b>${qtd}</b></div><div class="mv"><span>Total em atraso</span><b class="neg">${brl(total)}</b></div></div>
+    <div class="cob-av">${lista.slice(0, 40).map(c => `<div class="cob-av-l"><div><b>${esc(c.nome)}</b><br><small class="mut">${c.qtd} parcela(s) · atraso de até ${c.dias} dia(s)</small></div><b class="neg">${brl(c.total)}</b></div>`).join('')}
+      ${lista.length > 40 ? `<div class="cob-av-l mut">+ ${lista.length - 40} outro(s) cliente(s)…</div>` : ''}</div>
+    <div class="mf"><span class="mut">Este aviso aparece uma vez por dia ao abrir a Cobrança.</span><span class="sp"></span><button class="btn" data-primary data-act="cobAvisoFechar">Ciente, fechar</button></div>`, 'm-ed', null, true);
+}
+function cobAvisoFechar() { try { localStorage.setItem(COB_AVISO, HOJE); } catch (e) {} fecharModal(true); }
+
+// ---- 5) mensagens de cobrança pelo WhatsApp ----
+const cobFoneWhats = t => { let d = String(t || '').replace(/\D/g, ''); if (d && d.length <= 11) d = '55' + d; return d; };
+function cobMontarMsg(texto, l) {
+  const C = S.cob, dias = cobAtraso(l), semRS = v => num2(v);
+  const mapa = {
+    '{Nome do Cliente}': cobCliente(l), '{Seu Nome}': C.msg.remetente || nomeUsuario() || '', '{Nome da Empresa}': C.msg.empresa || 'Mega',
+    '{Valor}': semRS(l.valor), '{Valor Total}': semRS(cobOriginal(l)), '{Data de Vencimento}': fmtData(vencimento(l)),
+    '{Mês}': (MESES_NOME[Number(l.data_lancamento.slice(5, 7)) - 1] || '').toLowerCase(), '{Parcela}': l.parcela || '1/1', '{Dias de Atraso}': String(dias),
+  };
+  let out = String(texto || '');
+  for (const [k, v] of Object.entries(mapa)) out = out.split(k).join(v);
+  return out;
+}
+function cobModeloSugerido(dias) {
+  const mods = S.cob.msg.modelos || [];
+  const cand = mods.filter(m => m.gatilho != null && m.gatilho !== '' && Number(m.gatilho) <= dias).sort((a, b) => Number(b.gatilho) - Number(a.gatilho));
+  return cand[0] || mods[0] || null;
+}
+function cobWhats(id) {
+  const l = cobAchar(id); if (!l) return;
+  S.cob.ctx = l.id;
+  const v = vencimento(l), dias = v < HOJE ? diasEntre(v, HOJE) : -diasEntre(HOJE, v), sug = cobModeloSugerido(dias), ct = S.cob.cont[cobChave(l)] || {};
+  abrirModal(`
+    <div class="mh" style="--ec:#25d366"><div><small>Mensagem de cobrança · WhatsApp</small><b>${esc(cobCliente(l))}</b></div><button class="ib x" data-act="fecharModal" title="Fechar (Esc)">✕</button></div>
+    <div class="mresumo"><div><span>Vencimento</span><b class="${dias > 0 ? 'neg' : ''}">${fmtData(v)}${dias > 0 ? ` · ${dias}d de atraso` : ''}</b></div><div><span>Parcela</span><b>${esc(l.parcela || 'única')}</b></div><div class="mv"><span>Saldo</span><b class="pos">${brl(l.valor)}</b></div></div>
+    <div class="mcorpo">
+      <label><span>Modelo</span><select id="wa_mod" data-chg="cobWaModelo">${(S.cob.msg.modelos || []).map(m => `<option value="${esc(m.id)}" ${sug?.id === m.id ? 'selected' : ''}>${esc(m.titulo)}</option>`).join('') || '<option value="">(nenhum modelo)</option>'}</select></label>
+      <label><span>WhatsApp do cliente <i>*</i></span><input id="wa_fone" value="${esc(ct.tel || '')}" placeholder="(47) 99999-9999"></label>
+      <label class="span2"><span>Mensagem</span><textarea id="wa_txt" style="min-height:220px">${esc(sug ? cobMontarMsg(sug.texto, l) : '')}</textarea></label>
+      <label class="chk mchk"><input type="checkbox" id="wa_reg" checked> Registrar o envio no follow-up desta parcela</label>
+    </div>
+    <div class="mf"><button class="btn sec" data-act="cobWaCopiar">Copiar mensagem</button><span class="sp"></span><button class="btn sec" data-act="fecharModal">Cancelar</button><button class="btn ok" data-primary data-act="cobWaEnviar">📱 Abrir no WhatsApp</button></div>`, 'm-cob');
+}
+function cobWaModelo() {
+  const l = cobAchar(S.cob.ctx), m = (S.cob.msg.modelos || []).find(x => x.id === $('wa_mod').value);
+  if (l && m) $('wa_txt').value = cobMontarMsg(m.texto, l);
+}
+async function cobWaCopiar() {
+  const t = $('wa_txt')?.value || '';
+  try { await navigator.clipboard.writeText(t); toast('Mensagem copiada.'); }
+  catch (e) { $('wa_txt').select(); toast('Selecione o texto e copie (Ctrl+C).', true); }
+}
+async function cobWaEnviar() {
+  const l = cobAchar(S.cob.ctx); if (!l) return;
+  const texto = $('wa_txt').value.trim(), telTxt = $('wa_fone').value.trim(), fone = cobFoneWhats(telTxt);
+  if (!texto) return toast('A mensagem está vazia.', true);
+  if (!fone) return toast('Informe o número de WhatsApp do cliente.', true), $('wa_fone').focus();
+  if (fone.length < 12) return toast('O número parece incompleto. Use DDD + número.', true), $('wa_fone').focus();
+  window.open(`https://wa.me/${fone}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+  const sel = $('wa_mod'), titulo = sel?.selectedOptions[0]?.text || 'Mensagem', reg = $('wa_reg').checked;
+  try {
+    await cobGravarContato(l, telTxt, S.cob.cont[cobChave(l)]?.contato || '');
+    if (reg) await cobGravarFups(l.id, [...(S.cob.fup[l.id] || []), { id: uidC(), data: HOJE, hora: new Date().toTimeString().slice(0, 5), canal: 'WhatsApp', resultado: 'Mensagem enviada',
+      pessoa: '', obs: `[${titulo}] ${texto}`, proximo: '', usuario: nomeUsuario() || S.usuario || '—', cli: cobCliente(l) }]);
+  } catch (e) { toast('A mensagem foi aberta, mas não foi possível registrar: ' + e.message, true); }
+  fecharModal(true); renderCobranca();
+}
+
+// ---- gestão dos modelos de mensagem ----
+function cobMsgs(sel) {
+  const C = S.cob, mods = C.msg.modelos || [], atual = mods.find(m => m.id === sel) || (sel === '' ? null : mods[0]);
+  C.msgSel = atual?.id || '';
+  abrirModal(`
+    <div class="mh" style="--ec:#15803d"><div><small>Cobrança</small><b>Modelos de mensagem (WhatsApp)</b></div><button class="ib x" data-act="fecharModal" title="Fechar (Esc)">✕</button></div>
+    <div class="mcorpo">
+      <label><span>Quem assina ({Seu Nome})</span><input id="mg_rem" value="${esc(C.msg.remetente || nomeUsuario() || '')}"></label>
+      <label><span>Nome da empresa ({Nome da Empresa})</span><input id="mg_emp" value="${esc(C.msg.empresa || 'Mega')}"></label>
+      <label><span>Modelo</span><select id="mg_sel" data-chg="cobMsgSel">${mods.map(m => `<option value="${esc(m.id)}" ${m.id === C.msgSel ? 'selected' : ''}>${esc(m.titulo)}</option>`).join('')}<option value="" ${C.msgSel ? '' : 'selected'}>+ Novo modelo…</option></select></label>
+      <label><span>Sugerir quando o atraso for (dias)</span><input id="mg_gat" inputmode="numeric" value="${atual?.gatilho ?? ''}" placeholder="ex.: 3 · use -7 para 7 dias antes"></label>
+      <label class="span2"><span>Título <i>*</i></span><input id="mg_tit" value="${esc(atual?.titulo || '')}"></label>
+      <div class="mlbl">Variáveis <span class="mut">— clique para inserir no texto</span></div>
+      <div class="span2 cob-chips">${COB_VARS.map(([v, d]) => `<button type="button" class="cob-chip" data-act="cobVar" data-v="${esc(v)}" title="${esc(d)}">${esc(v)}</button>`).join('')}</div>
+      <label class="span2"><span>Texto da mensagem <i>*</i></span><textarea id="mg_txt" style="min-height:220px">${esc(atual?.texto || '')}</textarea></label>
+    </div>
+    <div class="mf"><button class="btn sec perigo" data-act="cobMsgDel">Excluir</button><button class="btn sec" data-act="cobMsgPadrao">Restaurar padrão</button><span class="sp"></span><button class="btn sec" data-act="fecharModal">Fechar</button><button class="btn" data-primary data-act="cobMsgSalvar">Salvar modelo</button></div>`, 'm-cob');
+}
+function cobVarInserir(v) {
+  const ta = $('mg_txt'); if (!ta) return;
+  const i = ta.selectionStart ?? ta.value.length, f = ta.selectionEnd ?? i;
+  ta.value = ta.value.slice(0, i) + v + ta.value.slice(f); ta.focus(); ta.selectionStart = ta.selectionEnd = i + v.length;
+}
+async function cobMsgGravar(msg) {
+  try { await store.setParam(COB_MSG, S.cob.msg); toast(msg); return true; }
+  catch (e) { toast('Não foi possível salvar os modelos: ' + e.message, true); return false; }
+}
+async function cobMsgSalvar() {
+  const C = S.cob, titulo = $('mg_tit').value.trim(), texto = $('mg_txt').value.trim(), g = $('mg_gat').value.trim();
+  if (!titulo) return toast('Dê um título ao modelo.', true), $('mg_tit').focus();
+  if (!texto) return toast('Escreva o texto da mensagem.', true), $('mg_txt').focus();
+  if (g && !Number.isFinite(parseInt(g, 10))) return toast('Informe os dias como número (ex.: 3 ou -7).', true);
+  C.msg.remetente = $('mg_rem').value.trim(); C.msg.empresa = $('mg_emp').value.trim();
+  const gatilho = g === '' ? null : parseInt(g, 10);
+  let m = C.msg.modelos.find(x => x.id === C.msgSel);
+  if (m) Object.assign(m, { titulo, texto, gatilho });
+  else { m = { id: uidC(), titulo, texto, gatilho }; C.msg.modelos.push(m); }
+  if (await cobMsgGravar('Modelo salvo.')) cobMsgs(m.id);
+}
+async function cobMsgExcluir() {
+  const C = S.cob, m = C.msg.modelos.find(x => x.id === C.msgSel);
+  if (!m) return toast('Selecione um modelo para excluir.', true);
+  if (!confirm(`Excluir o modelo "${m.titulo}"?`)) return;
+  C.msg.modelos = C.msg.modelos.filter(x => x.id !== m.id);
+  if (!C.msg.modelos.length) C.msg.modelos = cobModelosPadrao();
+  if (await cobMsgGravar('Modelo excluído.')) cobMsgs();
+}
+async function cobMsgPadrao() {
+  if (!confirm('Substituir a lista atual pelos três modelos padrão (antecedência, 3 dias e 5 dias de atraso)?')) return;
+  S.cob.msg.modelos = cobModelosPadrao();
+  if (await cobMsgGravar('Modelos padrão restaurados.')) cobMsgs();
 }
 
 /* ============================ CUSTOS FIXOS ============================ */
@@ -4249,6 +4963,8 @@ function infoRelatorio() {
   if (v === 'bancos' && S.bk.aba === 'fluxo') return { t: 'Bancos - Fluxo de Caixa Diário', emp: S.bk.fxDados?.V.rot, per: fmtMes(S.bk.fx?.mes) };
   if (v === 'bancos') return { t: 'Bancos e Extrato', emp: S.bk.sel === 'all' ? 'Todos os bancos' : M.banco[S.bk.sel]?.nome, per: `${fmtData(S.bk.ini)} a ${fmtData(S.bk.fim)}` };
   if (v === 'transferencias') return { t: 'Transferências entre contas', per };
+  if (v === 'cobranca') return { t: 'Cobrança - contas a receber em aberto', emp: S.cob.emp === 'all' ? 'Todas as empresas' : nomeEmpresa(S.cob.emp), per: `Posição em ${fmtData(HOJE)}`, cor: corEmpresa(S.cob.emp) };
+  if ((v === 'divFerr' || v === 'divManut') && S.dv) return { t: 'Divisão de Resultados - ' + DV_SET[S.dv.s].titulo, emp: S.dv.emp?.nome || DV_SET[S.dv.s].titulo, per: String(S.dv.ano), cor: S.dv.emp ? corEmpresa(S.dv.emp.id) : undefined };
   if (v === 'cadastros' && S.cadTab === 'plano_contas') {
     const F = S.pcF, f = [F.grupo && M.grupo[F.grupo]?.nome, F.tipo && (F.tipo === 'RECEITA' ? 'Só receitas' : 'Só despesas'), F.dre && (F.dre === 'sem' ? 'Sem grupo DRE' : 'DRE: ' + (M.gdre[F.dre]?.nome ?? '')), S.buscaCad.trim() && `Busca: "${S.buscaCad.trim()}"`].filter(Boolean);
     return { t: 'Cadastro - Plano de Contas', emp: f.length ? 'Filtro: ' + f.join(' · ') : 'Todas as contas', per: `${document.querySelectorAll('#main .tabwrap tbody tr td.pc-edt:first-child').length} conta(s)` };
@@ -4326,7 +5042,7 @@ function secoesPDF() {
   const out = [];
   if (v === 'bancos' && S.bk.sel !== 'all' && S.bk.fxDados?.V.banco === Number(S.bk.sel))
     out.push({ titulo: `Fluxo de caixa diário · ${S.bk.fxDados.V.rot} · ${fmtMes(S.bk.fx.mes)}`, nota: analiseBfx(), el: tabelaBfxPDF() });
-  const tit = { dre: 'Demonstrativo de Resultados', fluxoAcum: 'Fluxo de caixa mês a mês', fluxo: 'Movimento diário do caixa', bancos: 'Extrato', lancamentos: 'Lançamentos', transferencias: 'Transferências', markup: 'Formação do markup' }[v] || '';
+  const tit = { dre: 'Demonstrativo de Resultados', fluxoAcum: 'Fluxo de caixa mês a mês', fluxo: 'Movimento diário do caixa', bancos: 'Extrato', lancamentos: 'Lançamentos', transferencias: 'Transferências', markup: 'Formação do markup', cobranca: 'Contas a receber em aberto', divFerr: 'Meta de venda e prêmio', divManut: 'Receita, CPV e prêmio' }[v] || '';
   tabs.forEach((t, i) => out.push({ titulo: i === 0 ? tit : '', el: limparTabela(t) }));
   return out;
 }
@@ -5277,6 +5993,34 @@ const ACOES = {
     catch (e) { toast(e.message, true); }
     finally { setTimeout(() => document.querySelector('.atu-btn')?.classList.remove('girando'), 300); }
   },
+  cobEmp: d => { S.cob.emp = d.id === 'all' ? 'all' : Number(d.id); S.cob.cli = ''; renderCobranca(); },
+  cobSit: d => { S.cob.sit = d.v; renderCobranca(); },
+  cobLimpar: () => { Object.assign(S.cob, { sit: 'atraso', mes: '', ano: '', cli: '', busca: '', min: '' }); renderCobranca(); },
+  cobPrev: d => cobPrevisao(d.id),
+  cobPrevSoma: d => { const el = $('cp_data'); if (el) el.value = addDias(el.value || HOJE, Number(d.n)); },
+  cobPrevSalvar: () => cobPrevSalvar(),
+  cobFup: d => cobFollowup(d.id),
+  cobFupSalvar: () => cobFupSalvar(),
+  cobFupDel: d => cobFupExcluir(d.f),
+  cobFupGeral: () => cobFupGeral(),
+  cobFgFiltro: d => { S.cob.fg.filtro = d.v; document.querySelectorAll('#fg_seg button').forEach(b => b.classList.toggle('on', b.dataset.v === d.v)); cobFgDesenhar(); },
+  cobReceber: d => cobReceber(d.id, false),
+  cobParcial: d => cobReceber(d.id, true),
+  cobAviso: () => cobAviso(true),
+  cobAvisoFechar: () => cobAvisoFechar(),
+  cobWhats: d => cobWhats(d.id),
+  cobWaCopiar: () => cobWaCopiar(),
+  cobWaEnviar: () => cobWaEnviar(),
+  cobMsgs: () => cobMsgs(),
+  cobVar: d => cobVarInserir(d.v),
+  cobMsgSalvar: () => cobMsgSalvar(),
+  cobMsgDel: () => cobMsgExcluir(),
+  cobMsgPadrao: () => cobMsgPadrao(),
+  dv5s: d => dv5sMarcar(d.id, Number(d.m)),
+  dv5sNovo: () => dv5sNovo(),
+  dv5sDel: d => dv5sExcluir(d.id),
+  dvFaixaNova: () => dvFaixaNova(),
+  dvFaixaDel: d => dvFaixaExcluir(Number(d.i)),
   dreMes: d => { const s = mesesOcultosDRE(), m = Number(d.m); s.has(m) ? s.delete(m) : s.add(m); setMesesOcultosDRE(s); },
   dreMeses: d => {
     const com = S.dre.dados.comDados, todos = [...Array(12).keys()];
@@ -5336,6 +6080,12 @@ const MUDANCAS = {
   dreConta: el => alternarContaDRE(Number(el.dataset.id), el.value),
   gdreFiltro: el => { S.gdre.filtro = el.value; renderCadastros(); },
   imgUpload: el => carregarImagem(el.files[0], el.dataset.k),
+  cobF: el => { S.cob[el.dataset.k] = el.value.trim(); renderCobranca(); },
+  cobWaModelo: () => cobWaModelo(),
+  cobMsgSel: el => cobMsgs(el.value),
+  dvMeta: el => dvMetaMes(el),
+  dv5sTxt: el => dv5sTexto(el),
+  dvFaixa: el => dvFaixaEditar(el),
 };
 
 document.addEventListener('click', e => {
@@ -5585,6 +6335,8 @@ document.addEventListener('input', e => {
   if (id === 'cadBusca') buscaViva(e.target, v => S.buscaCad = v, renderCadastros);
   if (id === 'gdreBusca') buscaViva(e.target, v => S.gdre.busca = v, renderCadastros);
   if (id === 'bk_busca') { S.bk.busca = e.target.value; clearTimeout(bkT); bkT = setTimeout(buscaBancos, 250); }
+  if (id === 'cob_busca') { S.cob.busca = e.target.value; clearTimeout(bkT); bkT = setTimeout(() => { const el = $('cob_busca'); if (el) buscaViva(el, v => S.cob.busca = v, renderCobranca); }, 250); }
+  if (id === 'cob_fg_busca') { S.cob.fg.busca = e.target.value; cobFgDesenhar(); }
 });
 document.addEventListener('keydown', e => {
   if ($('modal2')) {                                         // janela por cima de outra janela
