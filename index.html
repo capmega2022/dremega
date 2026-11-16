@@ -1160,6 +1160,19 @@ table.dv5 tr.nota td{background:#fff7ed;font-weight:800;text-align:center}
 .dv-card h3{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 table.dvf td{text-align:center}
 table.dvf input{width:80px;text-align:right;border:1px solid #cfd0d4;border-radius:5px;padding:4px 6px}
+/* ---------- backup ---------- */
+.bk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:6px 0 14px}
+.bk-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.bk-card h3{margin:0;font-size:14px}
+.bk-card p{margin:0;font-size:12px;white-space:normal}
+.bk-v{font-size:15px}
+.bk-bt{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bk-seg{flex-wrap:wrap}
+.bk-datas{display:flex;gap:10px}
+.bk-datas label,.bk-lbl{display:flex;flex-direction:column;gap:4px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+.bk-datas input,.bk-lbl select{border:1px solid #cfd0d4;border-radius:6px;padding:6px 8px;font-size:13px;font-weight:500;min-height:34px;text-transform:none;letter-spacing:0;color:var(--text)}
+.bk-rodape{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.bk-ult{font-size:13px}
 </style>
 </head>
 <body>
@@ -1437,6 +1450,7 @@ class LocalStore {
     return r2(s);
   }
   async getParam(chave) { return (this.db.parametros || []).find(p => p.chave === chave)?.valor ?? null; }
+  async parametros() { return (this.db.parametros || []).map(p => ({ ...p })); }
   async setParam(chave, valor) {
     const l = (this.db.parametros ||= []), i = l.findIndex(p => p.chave === chave);
     if (i >= 0) l[i].valor = valor; else l.push({ chave, valor });
@@ -1503,6 +1517,7 @@ class SupaStore {
     const { data: v, error } = await this.c.rpc('saldo_ate', { p_planilha: pid, p_data: data });
     this.erro(error); return Number(v) || 0;
   }
+  async parametros() { return this.todos(() => this.c.from('parametros').select('*').order('chave')); }
   async getParam(chave) {
     const { data, error } = await this.c.from('parametros').select('valor').eq('chave', chave).maybeSingle();
     this.erro(error); return data?.valor ?? null;
@@ -1589,7 +1604,7 @@ const VIEWS = [
   ['dash', 'Dashboard'], ['lancamentos', 'Lançamentos'], ['custos', 'Custos Fixos'], ['fluxo', 'Fluxo de Caixa'], ['fluxoAcum', 'Fluxo Acumulado'], ['dre', 'DRE'], ['markup', 'Markup'],
   ['bancos', 'Bancos'], ['transferencias', 'Transferências'], ['cobranca', 'Cobrança'], ['divFerr', 'Divisão – Ferramentaria'], ['divManut', 'Divisão – Manut. Motores'], ['cadastros', 'Cadastros'],
 ];
-const CAD_TABS = [['plano_contas', 'Plano de Contas'], ['grupos', 'Grupos (Classificação)'], ['grupos_dre', 'Grupos DRE'], ['bancos', 'Bancos'], ['planilhas', 'Empresas']];
+const CAD_TABS = [['plano_contas', 'Plano de Contas'], ['grupos', 'Grupos (Classificação)'], ['grupos_dre', 'Grupos DRE'], ['bancos', 'Bancos'], ['planilhas', 'Empresas'], ['backup', 'Backup']];
 
 function renderShell() {
   $('app').innerHTML = `
@@ -3171,6 +3186,136 @@ async function cobMsgPadrao() {
   if (!confirm('Substituir a lista atual pelos três modelos padrão (antecedência, 3 dias e 5 dias de atraso)?')) return;
   S.cob.msg.modelos = cobModelosPadrao();
   if (await cobMsgGravar('Modelos padrão restaurados.')) cobMsgs();
+}
+
+/* ============================== BACKUP ============================== */
+// Cópia de segurança em JSON: cadastros completos (empresas, bancos, classificações, grupos DRE, plano de contas, parâmetros)
+// + lançamentos e transferências do período escolhido. A pasta de destino é escolhida neste computador
+// (Chrome/Edge guardam a pasta no navegador); sem pasta, o arquivo vai para Downloads.
+// O backup automático roda ao entrar no sistema, conforme a frequência escolhida (vale para este computador).
+const BK_CFG = 'cap_backup_cfg_v1';
+const BK_PADRAO = { periodo: 'tudo', ini: '', fim: '', freq: 'diario', ultimo: '', ultimoArq: '', ultimoOnde: '' };
+const bkCfg = () => { try { return { ...BK_PADRAO, ...(JSON.parse(localStorage.getItem(BK_CFG)) || {}) }; } catch (e) { return { ...BK_PADRAO }; } };
+const bkSalvarCfg = c => { try { localStorage.setItem(BK_CFG, JSON.stringify(c)); } catch (e) {} };
+const BK_PASTA_OK = typeof window.showDirectoryPicker === 'function';
+const BK_FREQ = [['off', 'Desligado'], ['diario', 'Diário'], ['semanal', 'Semanal'], ['mensal', 'Mensal']];
+const BK_PER = [['tudo', 'Todo o período'], ['ano', 'Ano atual'], ['mes', 'Mês atual'], ['12m', 'Últimos 12 meses'], ['pers', 'Personalizado']];
+function bkIDB() {
+  return new Promise((ok, erro) => { const r = indexedDB.open('cap_backup', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => ok(r.result); r.onerror = () => erro(r.error); });
+}
+async function bkPastaGet() {
+  if (!BK_PASTA_OK) return null;
+  try { const db = await bkIDB(); return await new Promise(ok => { const q = db.transaction('kv').objectStore('kv').get('pasta'); q.onsuccess = () => ok(q.result || null); q.onerror = () => ok(null); }); }
+  catch (e) { return null; }
+}
+async function bkPastaSet(h) {
+  const db = await bkIDB();
+  await new Promise((ok, erro) => { const tx = db.transaction('kv', 'readwrite'); if (h) tx.objectStore('kv').put(h, 'pasta'); else tx.objectStore('kv').delete('pasta'); tx.oncomplete = ok; tx.onerror = () => erro(tx.error); });
+}
+function bkPeriodo(c) {
+  const a = hoje.getFullYear(), m = hoje.getMonth();
+  if (c.periodo === 'ano') return { ini: `${a}-01-01`, fim: `${a}-12-31`, rot: `ano de ${a}` };
+  if (c.periodo === 'mes') return { ini: `${a}-${pad(m + 1)}-01`, fim: `${a}-${pad(m + 1)}-${pad(ultimoDia(a, m))}`, rot: `${MESES_NOME[m].toLowerCase()} de ${a}` };
+  if (c.periodo === '12m') return { ini: addDias(HOJE, -365), fim: HOJE, rot: 'últimos 12 meses' };
+  if (c.periodo === 'pers' && c.ini && c.fim) return { ini: c.ini, fim: c.fim, rot: `${fmtData(c.ini)} a ${fmtData(c.fim)}` };
+  return { ini: null, fim: null, rot: 'todo o período' };
+}
+const bkDias = { diario: 1, semanal: 7, mensal: 30 };
+const bkVencido = c => c.freq !== 'off' && (!c.ultimo || diasEntre(c.ultimo.slice(0, 10), HOJE) >= (bkDias[c.freq] || 1));
+const bkProximo = c => c.freq === 'off' ? 'desligado' : !c.ultimo ? 'no próximo acesso' : fmtData(addDias(c.ultimo.slice(0, 10), bkDias[c.freq] || 1));
+
+async function bkGerar(auto = false) {
+  const c = bkCfg(), P = bkPeriodo(c);
+  if (c.periodo === 'pers' && (!c.ini || !c.fim || c.ini > c.fim)) throw new Error('Período personalizado inválido: informe as datas inicial e final.');
+  const [planilhas, bancos, grupos, grupos_dre, plano_contas, lancamentos, transferencias, parametros] = await Promise.all([
+    store.list('planilhas'), store.list('bancos'), store.list('grupos'), store.list('grupos_dre'), store.list('plano_contas'),
+    store.lancs({ ini: P.ini, fim: P.fim }), store.transfs({ ini: P.ini, fim: P.fim }), store.parametros()]);
+  const tabelas = { planilhas, bancos, grupos, grupos_dre, plano_contas, lancamentos, transferencias, parametros };
+  const totais = Object.fromEntries(Object.entries(tabelas).map(([k, v]) => [k, v.length]));
+  const dados = { sistema: 'C@P Financeiro · Mega', versao: 1, geradoEm: new Date().toISOString(), geradoPor: S.usuario || '', automatico: auto,
+    periodo: { ini: P.ini, fim: P.fim, descricao: P.rot, observacao: 'O período vale para lançamentos e transferências; os cadastros vão completos.' }, totais, tabelas };
+  const agora = new Date(), hm = `${pad(agora.getHours())}h${pad(agora.getMinutes())}`;
+  const nome = `backup-mega-${HOJE}_${hm}${P.ini ? `_periodo-${P.ini}_a_${P.fim}` : ''}.json`;
+  const json = JSON.stringify(dados, null, 1);
+  const pasta = await bkPastaGet();
+  let onde = 'Downloads', aviso = '';
+  if (pasta) {
+    try {
+      let perm = await pasta.queryPermission({ mode: 'readwrite' });
+      if (perm !== 'granted' && !auto) perm = await pasta.requestPermission({ mode: 'readwrite' });
+      if (perm === 'granted') {
+        const fh = await pasta.getFileHandle(nome, { create: true }), w = await fh.createWritable();
+        await w.write(json); await w.close(); onde = `pasta "${pasta.name}"`;
+      } else aviso = 'Sem permissão para gravar na pasta escolhida: o arquivo foi para Downloads. Abra Cadastros › Backup e clique em "Fazer backup agora" para autorizar a pasta.';
+    } catch (e) { aviso = `Não foi possível gravar na pasta (${e.message}): o arquivo foi para Downloads.`; }
+  }
+  if (onde === 'Downloads') {
+    const url = URL.createObjectURL(new Blob([json], { type: 'application/json' })), a = document.createElement('a');
+    a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+  bkSalvarCfg({ ...bkCfg(), ultimo: `${HOJE} ${pad(agora.getHours())}:${pad(agora.getMinutes())}`, ultimoArq: nome, ultimoOnde: onde });
+  return { nome, onde, totais, aviso };
+}
+async function bkAgora() {
+  const bt = document.querySelector('[data-act=bkpAgora]'); if (bt) { bt.disabled = true; bt.textContent = 'Gerando backup…'; }
+  try {
+    const r = await bkGerar(false);
+    toast(`Backup salvo em ${r.onde}: ${r.totais.lancamentos} lançamento(s), ${r.totais.plano_contas} conta(s).`);
+    if (r.aviso) setTimeout(() => toast(r.aviso, true), 3400);
+  } catch (e) { toast('Backup não gerado: ' + e.message, true); }
+  if (S.view === 'cadastros' && S.cadTab === 'backup') renderCadastros();
+}
+async function bkAutomatico() {
+  const c = bkCfg(); if (!bkVencido(c)) return;
+  try {
+    const r = await bkGerar(true);
+    toast(`Backup automático salvo em ${r.onde} (${r.nome}).`);
+    if (r.aviso) setTimeout(() => toast(r.aviso, true), 3400);
+  } catch (e) { toast('Backup automático não foi feito: ' + e.message, true); }
+}
+async function bkEscolherPasta() {
+  if (!BK_PASTA_OK) return toast('Este navegador não permite escolher pasta. Use o Chrome ou o Edge; enquanto isso o backup vai para Downloads.', true);
+  try {
+    const h = await window.showDirectoryPicker({ id: 'cap-backup-mega', mode: 'readwrite' });
+    await bkPastaSet(h); toast(`Pasta de backup: ${h.name}`);
+  } catch (e) { if (e.name !== 'AbortError') toast('Não foi possível usar a pasta: ' + e.message, true); }
+  renderCadastros();
+}
+async function bkUsarDownloads() { try { await bkPastaSet(null); } catch (e) {} toast('Os backups voltam a ir para Downloads.'); renderCadastros(); }
+function bkSet(k, v) { const c = bkCfg(); c[k] = v; bkSalvarCfg(c); renderCadastros(); }
+
+async function renderBackup(sub) {
+  const c = bkCfg(), P = bkPeriodo(c), pasta = await bkPastaGet();
+  if (S.view !== 'cadastros' || S.cadTab !== 'backup') return;
+  $('main').innerHTML = `${sub}
+    <section class="cad">
+      <h2 class="tit">Backup</h2>
+      <p class="sub">Cópia de segurança do sistema em arquivo (.json): empresas, bancos, classificações, grupos DRE, plano de contas, parâmetros (custos fixos, cobrança, divisões…) e os lançamentos e transferências do período escolhido.</p>
+      <div class="bk-grid">
+        <div class="bk-card">
+          <h3>📁 Pasta de destino</h3>
+          <div class="bk-v">${pasta ? `Pasta <b>${esc(pasta.name)}</b>` : '<b>Downloads</b> do navegador'}</div>
+          <p class="mut">${BK_PASTA_OK ? 'A pasta fica guardada neste computador. Se o navegador pedir, clique em "Permitir" (de preferência "em todas as visitas").' : 'Este navegador não permite escolher pasta (use Chrome ou Edge). O arquivo vai para Downloads.'}</p>
+          <div class="bk-bt"><button class="btn sec" data-act="bkpPasta" ${BK_PASTA_OK ? '' : 'disabled'}>${pasta ? 'Trocar pasta…' : 'Escolher pasta…'}</button>${pasta ? '<button class="mini" data-act="bkpDownloads">Usar Downloads</button>' : ''}</div>
+        </div>
+        <div class="bk-card">
+          <h3>🗓️ Período dos lançamentos</h3>
+          <div class="seg bk-seg">${BK_PER.map(([v, t]) => `<button class="${c.periodo === v ? 'on' : ''}" data-act="bkpPer" data-v="${v}">${t}</button>`).join('')}</div>
+          ${c.periodo === 'pers' ? `<div class="bk-datas"><label>De<input type="date" data-chg="bkpData" data-k="ini" value="${esc(c.ini)}"></label><label>Até<input type="date" data-chg="bkpData" data-k="fim" value="${esc(c.fim)}"></label></div>` : ''}
+          <p class="mut">Entram os lançamentos e transferências de <b>${esc(P.rot)}</b>${P.ini && c.periodo !== 'pers' ? ` (${fmtData(P.ini)} a ${fmtData(P.fim)})` : ''}. Os cadastros vão sempre completos.</p>
+        </div>
+        <div class="bk-card">
+          <h3>⏱️ Backup automático</h3>
+          <label class="bk-lbl">Frequência<select data-chg="bkpFreq">${BK_FREQ.map(([v, t]) => `<option value="${v}" ${c.freq === v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+          <p class="mut">Feito ao entrar no sistema neste computador, com a pasta e o período acima. Próximo: <b>${esc(bkProximo(c))}</b>.</p>
+        </div>
+      </div>
+      <div class="bk-rodape">
+        <button class="btn" data-act="bkpAgora">⬇ Fazer backup agora</button>
+        <div class="bk-ult">${c.ultimo ? `Último backup neste computador: <b>${esc(fmtData(c.ultimo.slice(0, 10)))} às ${esc(c.ultimo.slice(11))}</b> · ${esc(c.ultimoOnde || '')}<br><small class="mut">${esc(c.ultimoArq || '')}</small>` : '<span class="mut">Nenhum backup feito neste computador ainda.</span>'}</div>
+      </div>
+    </section>`;
 }
 
 /* ============================ CUSTOS FIXOS ============================ */
@@ -5239,6 +5384,7 @@ function campoHTML(c, val, row) {
 function renderCadastros() {
   const sub = `<div class="subnav">${CAD_TABS.map(([k, l]) => `<button class="${S.cadTab === k ? 'on' : ''}" data-act="cadTab" data-t="${k}">${l}</button>`).join('')}</div>`;
   if (S.cadTab === 'grupos_dre') return renderGruposDRE(sub);
+  if (S.cadTab === 'backup') return renderBackup(sub);
   const t = S.cadTab, cfg = CAD[t];
   const ed = S.cadEdit ? S[t].find(r => r.id === S.cadEdit) : null;
   const q = S.buscaCad.trim().toLowerCase();
@@ -6017,6 +6163,10 @@ const ACOES = {
   dv5sDel: d => dv5sExcluir(d.id),
   dvFaixaNova: () => dvFaixaNova(),
   dvFaixaDel: d => dvFaixaExcluir(Number(d.i)),
+  bkpPasta: () => bkEscolherPasta(),
+  bkpDownloads: () => bkUsarDownloads(),
+  bkpPer: d => bkSet('periodo', d.v),
+  bkpAgora: () => bkAgora(),
   dreMes: d => { const s = mesesOcultosDRE(), m = Number(d.m); s.has(m) ? s.delete(m) : s.add(m); setMesesOcultosDRE(s); },
   dreMeses: d => {
     const com = S.dre.dados.comDados, todos = [...Array(12).keys()];
@@ -6082,6 +6232,8 @@ const MUDANCAS = {
   dvMeta: el => dvMetaMes(el),
   dv5sTxt: el => dv5sTexto(el),
   dvFaixa: el => dvFaixaEditar(el),
+  bkpFreq: el => bkSet('freq', el.value),
+  bkpData: el => bkSet(el.dataset.k, el.value),
 };
 
 document.addEventListener('click', e => {
@@ -6410,6 +6562,7 @@ async function iniciarApp() {
   await renovarCustosFixos();
   await irPara('dash');
   await mostrarPendencias();
+  setTimeout(bkAutomatico, 2500);                           // backup automático (conforme Cadastros › Backup)
 }
 
 async function boot() {
