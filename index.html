@@ -337,7 +337,7 @@ td.item-l{white-space:normal}
 .lf-tipo.rec{color:var(--text)}.lf-tipo.rec b{background:var(--green)}
 .lf-tipo.desp{color:var(--text)}.lf-tipo.desp b{background:var(--red)}
 .lf-dica{margin-left:auto;font-size:11px;color:var(--muted)}
-.lf-grid{display:grid;grid-template-columns:minmax(170px,1.1fr) 140px minmax(260px,2fr) minmax(180px,1.6fr) 130px 140px 140px auto;gap:10px;align-items:end}
+.lf-grid{display:grid;grid-template-columns:minmax(160px,1.1fr) 140px minmax(240px,2fr) minmax(170px,1.5fr) 110px 130px 140px 140px auto;gap:10px;align-items:end}
 .lf-grid label{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;color:#55565b;text-transform:uppercase;letter-spacing:.3px;min-width:0}
 .lf-grid input,.lf-grid .bsel-btn{border:1px solid #cfd0d4;border-radius:6px;padding:8px 10px;font-size:13px;font-weight:500;text-transform:none;letter-spacing:0;background:#fff;min-height:38px;width:100%;min-width:0}
 .lf-grid input:focus,.lf-grid .bsel-btn:focus-visible{outline:2px solid var(--orange);outline-offset:-1px;border-color:var(--orange)}
@@ -673,7 +673,7 @@ table.bfx td.res.bom.clk:hover,table.bfx td.res.ruim.clk:hover{filter:brightness
 table.bfx td.res.bom:hover{background:#4caa4a !important}table.bfx td.res.ruim:hover{background:#f0483e !important}
 table.bfx-tot td{height:48px;font-weight:800;font-size:13.5px;border-bottom:0}
 table.bfx-tot td.dia{width:58px}
-.lf-grid.lf-parc{grid-template-columns:minmax(260px,2fr) minmax(180px,1.6fr) 140px auto 110px 150px}
+.lf-grid.lf-parc{grid-template-columns:minmax(240px,2fr) minmax(170px,1.5fr) 120px 140px auto 110px 150px}
 .f-tipo-v .seg{align-self:flex-start;text-transform:none;letter-spacing:0;font-weight:600}
 .lanc-form.modo-fixo{border-top-color:#7c4dff}
 .lanc-form.modo-parcelado{border-top-color:#1667b7}
@@ -1173,6 +1173,17 @@ table.dvf input{width:80px;text-align:right;border:1px solid #cfd0d4;border-radi
 .bk-datas input,.bk-lbl select{border:1px solid #cfd0d4;border-radius:6px;padding:6px 8px;font-size:13px;font-weight:500;min-height:34px;text-transform:none;letter-spacing:0;color:var(--text)}
 .bk-rodape{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px}
 .bk-ult{font-size:13px}
+/* ---------- NF nos lançamentos + divisão com colunas fixas ---------- */
+td.nf{font-variant-numeric:tabular-nums;white-space:nowrap}
+.f-nf-busca{width:150px}
+table.dvt,table.dv5{table-layout:fixed;min-width:1180px}
+table.dvt col.c-l{width:200px}
+table.dvt col.c-t{width:140px}
+table.dvt input{width:100%;max-width:96px}
+table.dvt td{overflow:hidden;text-overflow:ellipsis}
+table.dvt th:first-child{white-space:normal;line-height:1.25}
+table.dv5 col.c-it{width:34%}
+table.dv5 td.c{min-width:0}
 </style>
 </head>
 <body>
@@ -1551,7 +1562,7 @@ const S = {
   planilhas: [], bancos: [], grupos: [], grupos_dre: [], plano_contas: [],
   lancs: [], saldoAnt: 0,
   editId: null, cadEdit: null, trEdit: null,
-  filtro: { texto: '', banco: '', grupo: '', aj: false, sit: '' },
+  filtro: { texto: '', nf: '', banco: '', grupo: '', aj: false, sit: '' },
   lf: { modo: 'avulso', parc: null },
   cf: { emp: 'all', lista: [], sel: null, lancs: {} },
   pers: null, usuario: '',
@@ -1675,7 +1686,7 @@ const salvarVis = () => { try { localStorage.setItem(VIS_KEY, JSON.stringify(VIS
 const TELAS = {
   lancamentos: { nome: 'Lançamentos', cols: [
     { k: 'banco', h: 'Banco', fixo: true }, { k: 'data', h: 'Data Lanç.', fixo: true }, { k: 'grupo', h: 'Classificação' },
-    { k: 'plano', h: 'Plano de Contas', fixo: true }, { k: 'item', h: 'Item' }, { k: 'valor', h: 'Valor', fixo: true },
+    { k: 'plano', h: 'Plano de Contas', fixo: true }, { k: 'item', h: 'Item' }, { k: 'nf', h: 'Nota fiscal' }, { k: 'valor', h: 'Valor', fixo: true },
     { k: 'status', h: 'Situação', fixo: true }, { k: 'dprog', h: 'Vencimento' }, { k: 'dpag', h: 'Data Pagto.' }, { k: 'forma', h: 'Forma Pagto.' }, { k: 'acum', h: 'Acumulado' }] },
   fluxoAcum: { nome: 'Fluxo Acumulado', ordemTxt: ['JAN → DEZ', 'DEZ → JAN'], cols: [{ k: 'total', h: 'Acumulado' }, { k: 'media', h: 'Média' }] },
   fluxo: { nome: 'Fluxo de Caixa', cols: [
@@ -1738,7 +1749,7 @@ function renderLocal() {
 const EDIT = {
   lanc: { tab: 'lancamentos', get: id => S.lancs.find(x => x.id === id), reload: () => viewLancamentos(),
     campos: { banco: { c: 'banco_id', t: 'banco' }, data: { c: 'data_lancamento', t: 'date', req: 1 }, plano: { c: 'plano_conta_id', t: 'plano' },
-              item: { c: 'item', t: 'text' }, valor: { c: 'valor', t: 'money' }, dprog: { c: 'data_programada', t: 'date' }, dpag: { c: 'data_pagamento', t: 'date' },
+              item: { c: 'item', t: 'text' }, nf: { c: 'nf', t: 'text' }, valor: { c: 'valor', t: 'money' }, dprog: { c: 'data_programada', t: 'date' }, dpag: { c: 'data_pagamento', t: 'date' },
               forma: { c: 'forma_pagamento', t: 'forma' } } },
   tr: { tab: 'transferencias', get: id => S.trLista.find(x => x.id === id), reload: () => viewTransferencias(),
     campos: { data: { c: 'data', t: 'date', req: 1 }, origem: { c: 'banco_origem_id', t: 'banco' }, destino: { c: 'banco_destino_id', t: 'banco' },
@@ -1878,7 +1889,8 @@ function renderLancamentos() {
     <div class="lanc-tool">
       <div class="lt-tit"><b>Lançamentos de ${MESES_NOME[S.mes]}</b> <span class="mut" id="lt-cont"></span>${cfAtivos().length ? `<button class="cf-limpa" data-act="cfLimparTudo" title="Remove os filtros do cabeçalho da tabela">✕ Limpar filtros das colunas (${cfAtivos().length})</button>` : ''}</div>
       <div class="filtros">
-        <input id="f_texto" class="busca-ic" placeholder="Buscar item ou conta…" value="${esc(S.filtro.texto)}">
+        <input id="f_texto" class="busca-ic" placeholder="Buscar item, conta ou NF…" value="${esc(S.filtro.texto)}">
+        <input id="f_nf" class="busca-ic f-nf-busca" placeholder="Nota fiscal…" value="${esc(S.filtro.nf)}" title="Pesquisar pelo número da nota fiscal">
         <select id="f_sit" data-chg="fSit">${[['', 'Todas as situações'], ['aberto', 'Em aberto'], ['vencido', 'Vencidos'], ['pago', 'Pagos / recebidos']].map(([v, t]) => `<option value="${v}" ${S.filtro.sit === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
         <select id="f_banco" data-chg="fBanco" data-banco>${opcoes(bancosDaEmpresa(S.planilhaId), S.filtro.banco, b => b.nome, 'Todos os bancos')}</select>
         <select id="f_grupo" data-chg="fGrupo">${opcoes(gruposOrdenados(), S.filtro.grupo, g => g.nome, 'Todos os grupos')}</select>
@@ -1907,19 +1919,20 @@ function renderLinhas() {
   const comAcum = S.lancs.map(l => (acum += emAberto(l) ? 0 : sinal(l) * Number(l.valor), { ...l, acum }));
   const fimDoDia = {};                                   // acumulado ao fim de cada dia (sempre cronológico)
   for (const l of comAcum) fimDoDia[l.data_lancamento] = l.acum;
-  const f = S.filtro, t = f.texto.trim().toLowerCase();
+  const f = S.filtro, t = f.texto.trim().toLowerCase(), tnf = f.nf.trim().toLowerCase().replace(/[^0-9a-z]/g, '');
   let vis = comAcum.filter(l => {
     const pc = M.plano[l.plano_conta_id];
     if (f.banco && String(l.banco_id) !== f.banco) return false;
     if (f.grupo && String(pc?.grupo_id) !== f.grupo) return false;
     if (f.aj && !(l.ajustes && Object.keys(l.ajustes).length)) return false;
     if (f.sit && situacao(l) !== f.sit && !(f.sit === 'aberto' && situacao(l) === 'vencido')) return false;
-    if (t && !(`${l.item} ${pc?.codigo} ${pc?.nome}`.toLowerCase().includes(t))) return false;
+    if (t && !(`${l.item} ${pc?.codigo} ${pc?.nome} ${l.nf ?? ''}`.toLowerCase().includes(t))) return false;
+    if (tnf && !String(l.nf ?? '').toLowerCase().replace(/[^0-9a-z]/g, '').includes(tnf)) return false;
     if (!passaCF(l)) return false;
     return true;
   });
   if (cfg.desc) vis = vis.reverse();
-  const filtrado = !!(f.banco || f.grupo || f.aj || f.sit || t || cfAtivos().length);
+  const filtrado = !!(f.banco || f.grupo || f.aj || f.sit || t || tnf || cfAtivos().length);
   if ($('lt-cont')) $('lt-cont').textContent = `· ${vis.length} ${vis.length === 1 ? 'lançamento' : 'lançamentos'}${filtrado ? ` (de ${S.lancs.length})` : ''}`;
   const nCol = cfg.cols.length + 1;
   // totais de cada dia (dos lançamentos visíveis)
@@ -1945,6 +1958,7 @@ function renderLinhas() {
       grupo: celEd('lanc', l, 'plano', 'grupo', `<span class="pill ${'plano_conta_id' in A ? 'aj-b' : ''}" style="--c:${esc(corGrupo(g))}">${esc(g?.nome ?? '')}</span>`),
       plano: celEd('lanc', l, 'plano', 'plano', `<span class="cod">${esc(M.plano[l.plano_conta_id]?.codigo ?? '')}</span> ${esc(M.plano[l.plano_conta_id]?.nome ?? '')}`),
       item: celEd('lanc', l, 'item', 'item', esc(l.item) || '<span class="mut">—</span>'),
+      nf: celEd('lanc', l, 'nf', 'c nf', l.nf ? esc(l.nf) : '<span class="mut">—</span>'),
       valor: celEd('lanc', l, 'valor', 'r valor', `<span class="${s > 0 ? 'pos' : 'neg'}">${s > 0 ? '+' : '−'} ${num2(l.valor)}</span>`),
       dprog: celEd('lanc', l, 'dprog', 'c mut', fmtData(l.data_programada) || '—'),
       dpag: celEd('lanc', l, 'dpag', 'c mut', fmtData(l.data_pagamento) || '—'),
@@ -1965,6 +1979,7 @@ const CF_VAL = {
   grupo: l => grupoDoPlano(l.plano_conta_id)?.nome ?? CF_VAZIO,
   plano: l => planoLabel(l.plano_conta_id) || CF_VAZIO,
   item: l => String(l.item ?? '').trim() || CF_VAZIO,
+  nf: l => String(l.nf ?? '').trim() || CF_VAZIO,
   valor: l => `${sinal(l) > 0 ? '+' : '−'} ${num2(l.valor)}`,
   status: l => ({ pago: sinal(l) > 0 ? 'Recebido' : 'Pago', aberto: 'Em aberto', vencido: 'Vencido' })[situacao(l)],
   dprog: l => fmtData(l.data_programada) || CF_VAZIO,
@@ -2107,6 +2122,7 @@ function formLancamento(cor, dataPadrao) {
         <label class="f-data">Data do lançamento<input type="date" id="e_data" value="${dataPadrao}"></label>
         ${plano}
         <label class="f-item">Descrição<input id="e_item" placeholder="Ex.: Pix parcelas, pagamento fornecedor…"></label>
+        <label class="f-nf"><span>Nota fiscal <span class="opc">opcional</span></span><input id="e_nf" placeholder="Nº da NF"></label>
         <label class="f-valor">Valor (R$)<input id="e_valor" placeholder="0,00" inputmode="decimal"></label>
         <label class="f-dp">Data de vencimento<input type="date" id="e_dprog" title="Se ficar vazio, vence na data do lançamento"></label>
         <label class="f-dp"><span>Data de pagamento <span class="opc">opcional</span></span><input type="date" id="e_dpag" title="Só conta como pago/recebido quando esta data for preenchida"></label>
@@ -2131,6 +2147,7 @@ function formLancamento(cor, dataPadrao) {
       <div class="lf-grid lf-parc">
         ${plano}
         <label class="f-item">Descrição<input id="e_item" placeholder="Ex.: Empréstimo Viacredi, Financiamento veículo…" data-parc></label>
+        <label class="f-nf"><span>Nota fiscal <span class="opc">opcional</span></span><input id="e_nf" placeholder="Nº da NF"></label>
         <label class="f-valor">Valor (R$)<input id="e_valor" placeholder="0,00" inputmode="decimal" data-parc></label>
         <label class="f-tipo-v">O valor é<span class="seg seg-sm"><button type="button" class="${S.lf.base !== 'total' ? 'on' : ''}" data-act="parcBase" data-v="parcela">da parcela</button><button type="button" class="${S.lf.base === 'total' ? 'on' : ''}" data-act="parcBase" data-v="total">total</button></span></label>
         <label class="f-dia">Nº de parcelas<input id="e_np" type="number" min="2" max="360" value="${S.lf.np ?? 12}" data-parc></label>
@@ -2161,6 +2178,8 @@ async function salvarLanc() {
     data_programada: valCampo('e_dprog') || null,
     data_pagamento: valCampo('e_dpag') || null,
   };
+  const nf = $('e_nf') ? valCampo('e_nf').trim() : '';
+  if (nf || (S.editId && $('e_nf'))) row.nf = nf || null;
   if (!row.data_lancamento) return toast('Informe a data do lançamento.', true), $('e_data').focus();
   if (row.data_pagamento && !row.banco_id) return toast('Para marcar como pago/recebido, escolha também o banco.', true), abrirBsel($('e_banco'));
   if (!row.plano_conta_id) return toast('Selecione o plano de contas.', true), $('e_plano').focus();
@@ -2196,7 +2215,7 @@ function editarLanc(id) {
   S.editId = id;
   if (S.lf.modo !== 'avulso') renderLancamentos();
   const put = (i, v) => { if ($(i)) $(i).value = v; };
-  put('e_banco', l.banco_id ?? ''); put('e_data', l.data_lancamento); put('e_plano', l.plano_conta_id); put('e_item', l.item ?? '');
+  put('e_banco', l.banco_id ?? ''); put('e_data', l.data_lancamento); put('e_plano', l.plano_conta_id); put('e_item', l.item ?? ''); put('e_nf', l.nf ?? '');
   put('e_valor', num2(l.valor)); put('e_dprog', l.data_programada ?? ''); put('e_dpag', l.data_pagamento ?? '');
   $('e_salvar').textContent = 'Salvar alteração'; $('e_cancelar').hidden = false;
   $('lf-tit').textContent = `Editando lançamento de ${fmtData(l.data_lancamento)}`;
@@ -2311,7 +2330,7 @@ async function confirmarPagamento() {
     const pagoRow = p => ({ banco_id: p.banco, forma_pagamento: p.forma, data_pagamento: data, data_lancamento: dataLanc, data_programada: venc, valor: r2(p.valor) });
     const copia = p => {
       const r = { planilha_id: l.planilha_id, plano_conta_id: l.plano_conta_id, item: l.item, ...pagoRow(p) };
-      if (l.origem) r.origem = l.origem; if (l.parcela) r.parcela = l.parcela;
+      if (l.origem) r.origem = l.origem; if (l.parcela) r.parcela = l.parcela; if (l.nf) r.nf = l.nf;
       return r;
     };
     try {
@@ -2420,6 +2439,7 @@ function editarNaJanela(l, voltar, depois) {
       <label class="span2">Plano de contas<select id="m_plano" data-busca>${opcoesPlano(l.plano_conta_id)}</select></label>
       <label>Descrição<input id="m_item" value="${esc(l.item ?? '')}"></label>
       <label>Valor (R$)<input id="m_valor" inputmode="decimal" value="${num2(l.valor)}" class="m-val"></label>
+      <label class="span2">Nota fiscal<input id="m_nf" value="${esc(l.nf ?? '')}" placeholder="Nº da NF"></label>
       <div class="mlbl">Pagamento <span class="mut">— só conta como pago/recebido com a data de pagamento preenchida</span></div>
       <label>Banco<select id="m_banco" data-banco>${opcoes(bancosDaEmpresa(l.planilha_id), l.banco_id ?? '', b => b.nome, 'Em aberto (sem banco)')}</select></label>
       <label>Data do pagamento<input type="date" id="m_dpag" value="${l.data_pagamento ?? ''}"></label>
@@ -2439,6 +2459,8 @@ async function salvarNaJanela() {
     item: $('m_item').value.trim(), valor: parseValor($('m_valor').value), banco_id: Number($('m_banco').value) || null,
     data_pagamento: $('m_dpag').value || null, forma_pagamento: $('m_forma').value || null,
   };
+  const nfM = $('m_nf').value.trim();
+  if (nfM || l.nf) row.nf = nfM || null;
   if (!row.data_lancamento) return toast('Informe a data do lançamento.', true);
   if (!row.plano_conta_id) return toast('Selecione o plano de contas.', true);
   if (!(row.valor > 0)) return toast('Informe um valor maior que zero.', true);
@@ -2523,13 +2545,13 @@ function desenharParcelas() {
       <button class="salvar" data-act="lancarParcelas">+ Lançar ${P.length} parcelas · ${brl(tot)}</button></div>`;
 }
 async function lancarParcelas() {
-  const P = S.lf.parc, plano = Number(valCampo('e_plano')) || null, desc = valCampo('e_item').trim();
+  const P = S.lf.parc, plano = Number(valCampo('e_plano')) || null, desc = valCampo('e_item').trim(), nfP = $('e_nf') ? valCampo('e_nf').trim() : '';
   if (!plano) return toast('Selecione o plano de contas.', true), $('e_plano').focus();
   if (!P?.length) return toast('Informe valor, número de parcelas e 1º vencimento.', true);
   if (P.some(p => !p.data || !(p.valor > 0))) return toast('Confira as parcelas: todas precisam de data e valor maior que zero.', true);
   const origem = `PAR:${Date.now().toString(36)}`, n = P.length;
   const rows = P.map((p, i) => ({ planilha_id: S.planilhaId, banco_id: null, plano_conta_id: plano, data_lancamento: p.data, data_programada: p.data,
-    item: `${desc || M.plano[plano]?.nome || 'Parcela'} (${i + 1}/${n})`, valor: r2(p.valor), origem, parcela: `${i + 1}/${n}` }));
+    item: `${desc || M.plano[plano]?.nome || 'Parcela'} (${i + 1}/${n})`, valor: r2(p.valor), origem, parcela: `${i + 1}/${n}`, ...(nfP ? { nf: nfP } : {}) }));
   try { await store.insertMany('lancamentos', rows); } catch (e) { return toast(e.message, true); }
   toast(`${n} parcelas lançadas · ${brl(rows.reduce((a, r) => a + r.valor, 0))} · de ${fmtData(P[0].data)} a ${fmtData(P[n - 1].data)}`);
   S.lf.parc = null;
@@ -2675,13 +2697,13 @@ function renderDivisao() {
     ['Prêmio bruto', L.map(r => cel(num2(r.bruto))).join(''), brl(tBruto)],
     ['Nota 5S', L.map(r => cel(dvN(r.nota), r.nota === null ? 'mut' : r.nota >= 8 ? 'dv-ok' : 'dv-ruim')).join(''), dvN(notaMed)],
     ['Desconto pela nota', L.map(r => cel(r.desc ? '-' + r.desc + '%' : '—')).join(''), '']);
-  const resumo = `<table class="facum dvt">
+  const resumo = `<table class="facum dvt"><colgroup><col class="c-l">${'<col>'.repeat(12)}<col class="c-t"></colgroup>
     <thead><tr><th style="text-align:left">${esc(cfg.titulo)} · ${D.ano}</th>${MESES.map(m => `<th>${m}</th>`).join('')}<th>TOTAL</th></tr></thead>
     <tbody>${linhas.map(([rot, cols, tot]) => `<tr><td class="l">${rot}</td>${cols}<td class="tot">${tot}</td></tr>`).join('')}
       <tr class="liq"><td class="l">Prêmio a pagar</td>${L.map(r => cel(num2(r.liq))).join('')}<td class="tot">${brl(tLiq)}</td></tr></tbody></table>`;
 
   const c5 = (it, m) => { const v = (D.marc[it.id] || {})[m] || ''; return `<td class="c ${v === 'S' ? 's' : v === 'N' ? 'n' : ''}" data-act="dv5s" data-id="${esc(it.id)}" data-m="${m}" title="Clique para marcar: vazio → S → N → vazio">${v || '·'}</td>`; };
-  const t5s = `<table class="facum dv5">
+  const t5s = `<table class="facum dv5"><colgroup><col class="c-it">${'<col>'.repeat(12)}</colgroup>
     <thead><tr><th style="text-align:left">Regras do 5S</th>${MESES.map(m => `<th>${m}</th>`).join('')}</tr></thead>
     <tbody>${D.itens.map((it, i) => `<tr><td class="it"><span class="mut">${i + 1}</span> <input data-chg="dv5sTxt" data-id="${esc(it.id)}" value="${esc(it.texto)}" title="${esc(it.texto)}"><button class="ib del" data-act="dv5sDel" data-id="${esc(it.id)}" title="Excluir item">✕</button></td>${MESES.map((_, k) => c5(it, k + 1)).join('')}</tr>`).join('')
       || `<tr><td colspan="13" class="vazio">Nenhum item. Clique em "+ Incluir item".</td></tr>`}
@@ -6480,6 +6502,7 @@ document.addEventListener('input', e => {
     if (pt) pt.textContent = brl(tot); if (bt) bt.textContent = `+ Lançar ${S.lf.parc.length} parcelas · ${brl(tot)}`;
   }
   if (id === 'f_texto') { S.filtro.texto = e.target.value; renderLinhas(); }
+  if (id === 'f_nf') { S.filtro.nf = e.target.value; renderLinhas(); }
   if (id === 'cadBusca') buscaViva(e.target, v => S.buscaCad = v, renderCadastros);
   if (id === 'gdreBusca') buscaViva(e.target, v => S.gdre.busca = v, renderCadastros);
   if (id === 'bk_busca') { S.bk.busca = e.target.value; clearTimeout(bkT); bkT = setTimeout(buscaBancos, 250); }
