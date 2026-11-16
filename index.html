@@ -1184,6 +1184,30 @@ table.dvt td{overflow:hidden;text-overflow:ellipsis}
 table.dvt th:first-child{white-space:normal;line-height:1.25}
 table.dv5 col.c-it{width:34%}
 table.dv5 td.c{min-width:0}
+/* ---------- lançamento em foco (editado / incluído) ---------- */
+@keyframes focoLanc{0%,40%{background:#ffe2c7}100%{background:transparent}}
+table.lanc tr.lin.foco td{animation:focoLanc 2.6s ease-out}
+table.lanc tr.lin.foco td:first-child{box-shadow:inset 4px 0 0 var(--orange) !important}
+/* ---------- lançamentos: colunas com largura fixa e alinhadas (Plano de Contas e Item dividem o espaço que sobra) ---------- */
+@media (min-width:761px){
+  table.lanc{table-layout:fixed;min-width:1500px}
+  table.lanc th.c-banco{width:150px}table.lanc th.c-data{width:96px}table.lanc th.c-grupo{width:190px}
+  table.lanc th.c-nf{width:110px}table.lanc th.c-valor{width:120px}table.lanc th.c-status{width:140px}
+  table.lanc th.c-dprog,table.lanc th.c-dpag{width:100px}table.lanc th.c-forma{width:120px}table.lanc th.c-acum{width:125px}table.lanc th.c-acoes{width:64px}
+  table.lanc th.c-plano{width:260px}table.lanc th.c-item{width:auto}
+  table.lanc th.c-nf,table.lanc th.c-forma,table.lanc th.c-status{text-align:center}
+  table.lanc td{overflow:hidden;text-overflow:ellipsis}
+  table.lanc td.banco{white-space:nowrap}
+  table.lanc td.valor,table.lanc td.acc{text-align:right;white-space:nowrap}
+  table.lanc td.nf{text-align:center}
+  table.lanc tr.dia-sep td{overflow:visible}
+}
+@media (min-width:761px) and (max-width:1700px){
+  table.lanc th.c-banco{width:128px}table.lanc th.c-data{width:90px}table.lanc th.c-grupo{width:165px}
+  table.lanc th.c-nf{width:96px}table.lanc th.c-valor{width:110px}table.lanc th.c-status{width:128px}
+  table.lanc th.c-dprog,table.lanc th.c-dpag{width:92px}table.lanc th.c-forma{width:104px}table.lanc th.c-acum{width:112px}table.lanc th.c-acoes{width:60px}
+  table.lanc th.c-plano{width:auto}
+}
 </style>
 </head>
 <body>
@@ -1855,6 +1879,7 @@ async function gravarAjuste(ed, reg, campo, v, msg, desfazer, extra = null) {
   const cfg = EDIT[ed], y = window.scrollY;
   try {
     await store.update(cfg.tab, reg.id, { ...comAjuste(reg, { [campo]: v }), ...(extra || {}) });
+    if (ed === 'lanc' && S.view === 'lancamentos') S.focoLanc = { id: reg.id };
     toast(msg); await cfg.reload(); window.scrollTo(0, y);
   } catch (e) { toast(e.message, true); desfazer(); }
 }
@@ -1870,7 +1895,35 @@ async function viewLancamentos() {
   try {
     [S.lancs, S.saldoAnt] = await Promise.all([store.lancs({ ini, fim, planilha_id: S.planilhaId }), store.saldoAte(S.planilhaId, ini)]);
   } catch (e) { toast(e.message, true); S.lancs = []; S.saldoAnt = 0; }
+  // posição da lista: lançamento editado → fica nele; inclusão nova ou entrada na tela → dia de hoje; demais → onde estava
+  const chave = `${S.planilhaId}-${S.ano}-${S.mes}`, box = document.querySelector('#main .tabwrap.congela');
+  const antes = S.lancPos?.chave === chave && box ? box.scrollTop : null, y = window.scrollY;
+  const foco = S.focoLanc || (antes == null ? { hoje: true } : { scroll: antes });
+  S.focoLanc = null;
   renderLancamentos();
+  S.lancPos = { chave };
+  if (foco.id || foco.scroll != null) window.scrollTo(0, y);
+  posicionarLancs(foco);
+}
+// rola a tabela de lançamentos até o lançamento (destacado) ou até o dia de hoje
+function posicionarLancs(foco) {
+  const box = document.querySelector('#main .tabwrap.congela'); if (!box) return;
+  const thH = box.querySelector('thead')?.offsetHeight || 34;
+  const rolar = (el, folga) => { box.scrollTop += el.getBoundingClientRect().top - box.getBoundingClientRect().top - thH - folga; };
+  const linha = id => box.querySelector(`tr.lin[data-id="${id}"]`);
+  const destacar = el => { el.classList.add('foco'); setTimeout(() => el.classList.remove('foco'), 2600); };
+  if (foco.id) {
+    const el = linha(foco.id);
+    if (el) { rolar(el, Math.max(0, box.clientHeight / 3)); destacar(el); return; }
+    if (foco.scroll != null) { box.scrollTop = foco.scroll; return; }
+  }
+  if (foco.scroll != null && !foco.hoje) { box.scrollTop = foco.scroll; return; }
+  if (S.ano !== hoje.getFullYear() || S.mes !== hoje.getMonth()) { box.scrollTop = 0; return; }
+  const dias = [...box.querySelectorAll('tr.dia-sep[data-d]')].map(el => ({ el, d: el.dataset.d }));
+  const ate = dias.filter(x => x.d <= HOJE).sort((a, b) => b.d.localeCompare(a.d));
+  const alvo = ate[0] || dias.sort((a, b) => a.d.localeCompare(b.d))[0];
+  if (alvo) rolar(alvo.el, 0); else box.scrollTop = 0;
+  if (foco.novo) { const el = linha(foco.novo); if (el) destacar(el); }
 }
 
 function renderLancamentos() {
@@ -1943,7 +1996,7 @@ function renderLinhas() {
     if (l.data_lancamento !== ultimo) {
       ultimo = l.data_lancamento;
       const d = dia[ultimo], [a, m, dd] = ultimo.split('-').map(Number), dow = new Date(a, m - 1, dd).getDay();
-      html += `<tr class="dia-sep"><td colspan="${nCol}"><div>
+      html += `<tr class="dia-sep" data-d="${ultimo}"><td colspan="${nCol}"><div>
         <b>${pad(dd)}/${pad(m)}</b><span class="dsem">${['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'][dow]}</span>
         <span class="dn">${d.n} ${d.n === 1 ? 'lançamento' : 'lançamentos'}</span>
         ${d.ent ? `<span class="pos">entradas ${num2(d.ent)}</span>` : ''}${d.sai ? `<span class="neg">saídas ${num2(d.sai)}</span>` : ''}
@@ -1964,7 +2017,7 @@ function renderLinhas() {
       dpag: celEd('lanc', l, 'dpag', 'c mut', fmtData(l.data_pagamento) || '—'),
       acum: `<td class="r acc ${l.acum < 0 ? 'neg' : ''} ${emAberto(l) ? 'acc-ab' : ''}" ${emAberto(l) ? 'title="Em aberto: não entra no acumulado"' : ''}>${l.acum < 0 ? '−' : ''}${num2(Math.abs(l.acum))}</td>`,
     };
-    html += `<tr class="lin ${S.editId === l.id ? 'editando' : ''} ${Object.keys(A).length ? 'tem-aj' : ''} ${s > 0 ? 'rec' : 'desp'} ${situacao(l) !== 'pago' ? 'aberto' : ''} ${situacao(l) === 'vencido' ? 'vencido' : ''}">${cfg.cols.map(k => C[k]).join('')}
+    html += `<tr data-id="${l.id}" class="lin ${S.editId === l.id ? 'editando' : ''} ${Object.keys(A).length ? 'tem-aj' : ''} ${s > 0 ? 'rec' : 'desp'} ${situacao(l) !== 'pago' ? 'aberto' : ''} ${situacao(l) === 'vencido' ? 'vencido' : ''}">${cfg.cols.map(k => C[k]).join('')}
       <td class="acoes"><button class="ib" title="Editar todos os campos" data-act="editarLancJanela" data-id="${l.id}">✎</button><button class="ib del" title="Excluir" data-act="excluirLanc" data-id="${l.id}">✕</button></td></tr>`;
   }
   $('linhas').innerHTML = html || `<tr><td colspan="${nCol}" class="vazio">Nenhum lançamento ${f.aj ? 'ajustado ' : ''}${f.sit ? 'nessa situação ' : ''}${cfAtivos().length ? 'com os filtros das colunas ' : ''}em ${MESES_NOME[S.mes]} de ${S.ano}.${cfAtivos().length ? ' <button class="mini" data-act="cfLimparTudo">Limpar filtros das colunas</button>' : ''}</td></tr>`;
@@ -2192,9 +2245,11 @@ async function salvarLanc() {
       if (!$('e_dpag')) delete row.data_pagamento;
       if (!row.data_pagamento && orig.forma_pagamento) row.forma_pagamento = null;   // sem data de pagamento: volta a ficar em aberto
       await store.update('lancamentos', S.editId, comAjuste(orig, row));
+      S.focoLanc = { id: S.editId };
     } else {
       if (!row.data_programada) row.data_programada = row.data_lancamento;   // vencimento padrão = data do lançamento
-      await store.insert('lancamentos', row);
+      const novo = await store.insert('lancamentos', row);
+      S.focoLanc = { hoje: true, novo: novo?.id };
     }
   } catch (e) { return toast(e.message, true); }
   const [a, m] = row.data_lancamento.split('-').map(Number);
@@ -2205,7 +2260,6 @@ async function salvarLanc() {
   await viewLancamentos();
   if (!manter.edit) {
     $('e_banco').value = manter.banco;
-    if (!foraDoMes) $('e_data').value = manter.data;
     $('e_plano').focus();
   }
 }
@@ -2342,6 +2396,7 @@ async function confirmarPagamento() {
         if (partes.length > 1) await store.insertMany('lancamentos', partes.slice(1).map(copia));
       }
     } catch (e) { return toast(e.message, true); }
+    if (S.view === 'lancamentos') S.focoLanc = { id: l.id };
     fecharModal(true);
     toast(`${sinal(l) > 0 ? 'Recebido' : 'Pago'}: ${partes.map(p => `${p.forma} ${brl(p.valor)}`).join(' + ')}${resta > 0.004 ? ` · ${brl(resta)} em aberto` : ''}`);
     return (depois || rerender)();
@@ -2355,6 +2410,7 @@ async function confirmarPagamento() {
   if (dataLanc !== l.data_lancamento) row.data_lancamento = dataLanc;
   try { await store.update('lancamentos', l.id, row); }
   catch (e) { return toast(e.message, true); }
+  if (S.view === 'lancamentos') S.focoLanc = { id: l.id };
   fecharModal(true);
   toast(`${sinal(l) > 0 ? 'Recebido' : 'Pago'}: ${brl(l.valor)} · ${forma} · ${M.banco[banco]?.nome ?? ''}`);
   await (depois || rerender)();
@@ -2365,6 +2421,7 @@ async function estornarPagamento() {
   const row = { data_pagamento: null, forma_pagamento: null, banco_id: null };
   if (l.data_programada && l.data_programada !== l.data_lancamento) row.data_lancamento = l.data_programada;   // volta para o vencimento
   try { await store.update('lancamentos', l.id, row); } catch (e) { return toast(e.message, true); }
+  if (S.view === 'lancamentos') S.focoLanc = { id: l.id };
   fecharModal(true); toast('Pagamento desfeito — lançamento em aberto.');
   await (depois || rerender)();
 }
@@ -2470,6 +2527,7 @@ async function salvarNaJanela() {
   if (!row.data_pagamento) row.forma_pagamento = null;                                 // sem data de pagamento = em aberto
   if (!l.forma_pagamento && !row.forma_pagamento) delete row.forma_pagamento;          // não grava a coluna à toa
   try { await store.update('lancamentos', l.id, comAjuste(l, row)); } catch (e) { return toast(e.message, true); }
+  if (S.view === 'lancamentos') S.focoLanc = { id: l.id };
   fecharModal(true); toast('Lançamento alterado.');
   await (depois || mudouLista)();
 }
