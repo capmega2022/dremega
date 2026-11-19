@@ -224,6 +224,17 @@ th.ef-th { padding:8px 8px 8px 12px; }
 .kpi-val { font-size:26px; font-weight:700; font-family:'DM Mono',monospace; color:#1f2937; }
 .kpi-lbl { font-size:11px; color:#a8a29e; margin-top:4px; text-transform:uppercase; letter-spacing:.5px; }
 .filter-row { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:20px; }
+/* filtros compactos em uma linha (Lançamento de Contas a Pagar / Lançamentos — Contas a Receber) */
+.filter-row.flt-compacto { flex-wrap:nowrap; gap:6px; margin-bottom:12px; overflow-x:auto; padding-bottom:2px; }
+.filter-row.flt-compacto .form-group { flex:1 1 92px; min-width:62px; margin-bottom:0; }
+.filter-row.flt-compacto .form-group.fc-mes { flex:1 1 96px; }
+.filter-row.flt-compacto label { font-size:10.5px; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.filter-row.flt-compacto input, .filter-row.flt-compacto select, .filter-row.flt-compacto .ef-combo-trigger {
+  padding:5px 7px !important; font-size:12px !important; height:30px; width:100% !important; border-width:1px; }
+.filter-row.flt-compacto input[type=date] { padding:4px 4px !important; min-width:100px; }
+.filter-row.flt-compacto .form-group:has(input[type=date]) { flex:1 1 104px; min-width:100px; }
+.filter-row.flt-compacto > div:last-child { flex:0 0 auto; }
+.filter-row.flt-compacto > div:last-child .btn { padding:6px 10px; font-size:12px; height:30px; white-space:nowrap; }
 .filter-row .form-group { margin-bottom:0; min-width:140px; }
 .empty-state { text-align:center; padding:40px; color:#a8a29e; font-size:14px; }
 .actions { display:flex; gap:6px; }
@@ -1272,6 +1283,16 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
 .cc-imp-tag.cr { background:#dcfce7; color:#166534; }
 
 
+
+/* filtros em UMA linha, compactos — Lançamento de Contas a Pagar e Lançamentos — Contas a Receber (reforçado) */
+#page-lancamentos .filter-row.flt-compacto, #page-lancreceber .filter-row.flt-compacto { display:flex !important; flex-wrap:nowrap !important; gap:6px !important; align-items:flex-end !important; overflow-x:auto; margin-bottom:12px !important; }
+#page-lancamentos .flt-compacto > .form-group, #page-lancreceber .flt-compacto > .form-group { flex:1 1 90px !important; min-width:70px !important; width:auto !important; margin:0 !important; }
+#page-lancamentos .flt-compacto > .form-group:has(input[type=date]), #page-lancreceber .flt-compacto > .form-group:has(input[type=date]) { flex:1 1 112px !important; min-width:108px !important; }
+#page-lancamentos .flt-compacto label, #page-lancreceber .flt-compacto label { font-size:10.5px !important; line-height:1.2 !important; margin:0 0 3px !important; height:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
+#page-lancamentos .flt-compacto input, #page-lancamentos .flt-compacto select, #page-lancamentos .flt-compacto .ef-combo-trigger,
+#page-lancreceber .flt-compacto input, #page-lancreceber .flt-compacto select, #page-lancreceber .flt-compacto .ef-combo-trigger { height:30px !important; min-height:30px !important; padding:4px 7px !important; font-size:12px !important; width:100% !important; box-sizing:border-box; }
+#page-lancamentos .flt-compacto > div:last-child, #page-lancreceber .flt-compacto > div:last-child { flex:0 0 auto !important; align-self:flex-end !important; }
+#page-lancamentos .flt-compacto > div:last-child .btn, #page-lancreceber .flt-compacto > div:last-child .btn { height:30px !important; padding:0 10px !important; font-size:12px !important; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -1614,8 +1635,8 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
       </div>
       <div class="card">
         <div class="card-title">Filtros</div>
-        <div class="filter-row">
-          <div class="form-group"><label>Mês</label>
+        <div class="filter-row flt-compacto">
+          <div class="form-group fc-mes"><label>Mês</label>
             <select id="lf-mes" onchange="renderLancamentos()">
               <option value="">Todos</option>
               <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option>
@@ -2041,8 +2062,8 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
       <div id="form-lr" style="display:none;"></div><!-- placeholder -->
       <div class="card" style="margin-top:0">
         <div class="card-title">Filtros</div>
-        <div class="filter-row">
-          <div class="form-group"><label>Mês</label>
+        <div class="filter-row flt-compacto">
+          <div class="form-group fc-mes"><label>Mês</label>
             <select id="lrf-mes" onchange="renderLancReceber()">
               <option value="">Todos</option>
               <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option>
@@ -2597,7 +2618,7 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
         <div class="grid3">
           <div class="form-group"><label>Empresa *</label><select id="dfc-lan-empresa" class="sel-empresa"><option value="">Selecione...</option></select></div>
           <div class="form-group"><label>Data *</label><input id="dfc-lan-data" type="date" /></div>
-          <div class="form-group"><label class="label-add">Categoria *<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','dfc-lan-cat')">+</button></label>
+          <div class="form-group"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','dfc-lan-cat')">+</button></label>
             <select id="dfc-lan-cat"><option value="">Selecione...</option></select>
           </div>
           <div class="form-group"><label>Valor (R$) *</label><input id="dfc-lan-valor" type="number" step="0.01" placeholder="0,00" /></div>
@@ -3019,6 +3040,30 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
         </div>
       </div>
 
+      <div class="card" style="margin-top:16px;display:none" id="card-extrato-banco">
+        <div class="card-title">Extrato Bancário</div>
+        <div class="page-sub" style="margin-bottom:14px">Movimentações efetivamente pagas, recebidas e transferidas em cada conta, com saldo dia a dia. Os bancos são sempre consolidados (todas as empresas).</div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <div class="form-group" style="min-width:240px"><label>Conta</label>
+            <select id="ext-banco" onchange="renderExtratoBanco()"><option value="">Todas as Contas</option></select>
+          </div>
+          <div class="form-group"><label>De</label><input id="ext-ini" type="date" onchange="renderExtratoBanco()"></div>
+          <div class="form-group"><label>Até</label><input id="ext-fim" type="date" onchange="renderExtratoBanco()"></div>
+          <div class="form-group"><label>Movimento</label>
+            <select id="ext-tipo" onchange="renderExtratoBanco()"><option value="">Entradas e saídas</option><option value="e">Só entradas</option><option value="s">Só saídas</option><option value="t">Só transferências</option></select>
+          </div>
+          <div class="form-group" style="min-width:220px"><label>Buscar</label><input id="ext-busca" type="text" placeholder="Fornecedor, cliente, NF…" oninput="renderExtratoBanco()"></div>
+          <div class="form-group"><label>Período rápido</label>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm" style="padding:10px 12px" onclick="extratoPeriodo('mes')">Este mês</button>
+              <button class="btn btn-secondary btn-sm" style="padding:10px 12px" onclick="extratoPeriodo('ant')">Mês anterior</button>
+              <button class="btn btn-secondary btn-sm" style="padding:10px 12px" onclick="extratoPeriodo('30')">30 dias</button>
+            </div>
+          </div>
+        </div>
+        <div id="extrato-banco-wrap"></div>
+      </div>
+
       <div class="card" style="margin-top:16px">
         <div class="card-title">Fluxo de Caixa Diário</div>
         <div class="page-sub" style="margin-bottom:14px">Entradas e saídas efetivamente pagas/recebidas, dia a dia (01 a 31)</div>
@@ -3327,7 +3372,7 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
           <div class="form-group"><label>Nº da nota fiscal</label><input id="l-nf" type="text" placeholder="000000" /></div>
         </div>
         <div class="lanc-gcv">
-          <div class="form-group"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','l-catdre')">+</button></label><select id="l-catdre"><option value="">Nenhuma</option></select></div>
+          <div class="form-group"><label class="label-add">Categoria *<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','l-catdre')">+</button></label><select id="l-catdre"><option value="">Nenhuma</option></select></div>
           <div class="form-group lanc-valor-box"><label>Valor total (R$) *</label><input id="l-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
         </div>
       </div>
@@ -3446,7 +3491,7 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
           <div class="form-group"><label>Nº da nota fiscal</label><input id="lr-nf" type="text" placeholder="000000" /></div>
         </div>
         <div class="lanc-gcv">
-          <div class="form-group"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','lr-catdre')">+</button></label><select id="lr-catdre"><option value="">Nenhuma</option></select></div>
+          <div class="form-group"><label class="label-add">Categoria *<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','lr-catdre')">+</button></label><select id="lr-catdre"><option value="">Nenhuma</option></select></div>
           <div class="form-group lanc-valor-box"><label>Valor total (R$) *</label><input id="lr-valor" type="number" step="0.01" placeholder="0,00" class="lanc-valor" /></div>
         </div>
       </div>
@@ -3651,7 +3696,7 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
       <div class="form-group"><label>Valor Total</label><input id="elr-valor" type="number" step="0.01" /></div>
     </div>
     <div class="grid3">
-      <div class="form-group" style="grid-column:span 2"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','elr-catdre')">+</button></label><select id="elr-catdre"><option value="">Nenhuma</option></select></div>
+      <div class="form-group" style="grid-column:span 2"><label class="label-add">Categoria *<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','elr-catdre')">+</button></label><select id="elr-catdre"><option value="">Nenhuma</option></select></div>
     </div>
     <div class="grid3">
       <div class="form-group"><label>Parcelas</label>
@@ -4243,7 +4288,7 @@ body.menu-oculto .sidebar { transform:translateX(-248px); }
       <div class="el-sec">
         <div class="el-sec-t">Classificação</div>
         <div class="el-grid">
-          <div class="form-group span2"><label class="label-add">Categoria<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','edit-catdre')">+</button></label><select id="edit-catdre"><option value="">Nenhuma</option></select></div>
+          <div class="form-group span2"><label class="label-add">Categoria *<button type="button" class="btn-add-inline" title="Cadastrar nova categoria" onclick="abrirCadastroRapido('categoria','edit-catdre')">+</button></label><select id="edit-catdre"><option value="">Nenhuma</option></select></div>
           <div class="form-group"><label>Incluído no Financeiro?</label>
             <select id="edit-financeiro"><option value="nao">Não</option><option value="sim">Sim</option></select>
           </div>
@@ -4864,7 +4909,7 @@ const PAGINAS_OCULTAS = ['dfc-lancamentos'];
 
 function paginaOculta(p) { return PAGINAS_OCULTAS.includes(p); }
 // Telas de contas bancárias: só no Consolidado (somem do menu com empresa ativa).
-const PAGINAS_SO_CONSOLIDADO = ['bancos', 'transferencias'];
+const PAGINAS_SO_CONSOLIDADO = [];          // Bancos / Caixas e Transferências aparecem sempre (as contas bancárias são sempre consolidadas)
 function aplicarBancosSoConsolidado() {
   const emp = empresaAtual();
   if (typeof applyNavPermissions === 'function' && typeof currentUser !== 'undefined' && currentUser) applyNavPermissions();
@@ -5388,6 +5433,21 @@ async function _fetchOutrasEmpresas(table, order) {
   const e = encodeURIComponent(emp);
   return await fetchAll(table, order, `&or=(empresa_id.neq.${e},empresa_id.is.null)`);
 }
+// Busca TODAS as linhas de uma consulta avulsa, paginando de 1.000 em 1.000
+// (o Supabase devolve no máximo 1.000 linhas por requisição, mesmo com limit maior).
+async function sbFetchTodos(table, params, ordem) {
+  const lim = 1000; let off = 0; let all = [];
+  const base = (params || '').replace(/^\?/, '');
+  const ord = /(^|&)order=/.test(base) ? '' : `&order=${ordem || 'id'}`;
+  while (true) {
+    const lote = await sbFetch(table, 'GET', null, `?${base}${ord}&limit=${lim}&offset=${off}`);
+    if (lote === null) return off === 0 ? null : all;
+    all = all.concat(lote);
+    if (lote.length < lim) break;
+    off += lim;
+  }
+  return all;
+}
 async function fetchAll(table, order='', filtroForcado) {
   // [OTIMIZADO] Busca paginada com páginas em PARALELO.
   // Antes as páginas vinham uma de cada vez: com 5 mil registros eram 5 idas e
@@ -5395,11 +5455,19 @@ async function fetchAll(table, order='', filtroForcado) {
   // disparamos as próximas em blocos simultâneos.
   const limit = 1000;
   const PARALELO = 4;
-  const orderParam = order ? `order=${order}&` : '';
+  // [CORREÇÃO] A ordenação precisa ser ÚNICA para paginar com limit/offset:
+  // ordenando só pela data, registros com a mesma data podem trocar de lugar
+  // entre uma página e outra — uns aparecem duas vezes e outros somem.
+  // O "id" no fim da ordenação garante a ordem estável.
+  let orderParam = order ? `order=${order},id&` : 'order=id&';
   const fEmp = (filtroForcado !== undefined) ? filtroForcado : filtroEmpresaQuery(table);
   const pagina = off => sbFetch(table, 'GET', null, `?${orderParam}limit=${limit}&offset=${off}${fEmp}`);
 
-  const primeira = await pagina(0);
+  let primeira = await pagina(0);
+  if (primeira === null) {   // tabela sem coluna id: volta para a ordenação original
+    orderParam = order ? `order=${order}&` : '';
+    primeira = await pagina(0);
+  }
   if (!primeira || primeira.length === 0) return [];
   let all = primeira;
   if (primeira.length < limit) return all;
@@ -5411,7 +5479,8 @@ async function fetchAll(table, order='', filtroForcado) {
     const lotes = await Promise.all(offs.map(pagina));
     let acabou = false;
     for (const lote of lotes) {
-      if (!lote || lote.length === 0) { acabou = true; break; }
+      if (lote === null) throw new Error(`Falha ao carregar ${table} (página incompleta).`);
+      if (lote.length === 0) { acabou = true; break; }
       all = all.concat(lote);
       if (lote.length < limit) { acabou = true; break; }
     }
@@ -5438,7 +5507,7 @@ async function loadAllData() {
       fetchAll('dfc_categorias', 'nome'),     // 9
       fetchAll('dfc_lancamentos', 'data'),    // 10
       fetchAll('bancos', 'nome'),             // 11
-      sbFetch('dre_grupos', 'GET', null, '?order=ordem&limit=1000'), // 12
+      sbFetchTodos('dre_grupos', 'order=ordem,id'), // 12
       fetchAll('transferencias', 'data'),     // 13
       // Formas de pagamento/recebimento cadastradas pelo usuário (além das padrão).
       // Guardadas na tabela "config" que já existe — sem tabela nova.
@@ -5447,13 +5516,13 @@ async function loadAllData() {
       fetchAll('reposicoes', 'dt_reposicao'), // 16
       fetchAll('empresas', 'nome'), // 17 — nunca filtrado por empresa
       // 18 — Custos fixos e suas vigências (guardados na tabela `config`)
-      sbFetch('config', 'GET', null, '?key=like.custofixo_*&limit=5000'),
+      sbFetchTodos('config', 'key=like.custofixo_*'),
       // 19 — Cobrança: follow-ups e recebimentos parciais (tabela `config`)
-      sbFetch('config', 'GET', null, '?key=like.cobranca:*&limit=5000'),
+      sbFetchTodos('config', 'key=like.cobranca:*'),
       // 20 — Modelos de mensagem de cobrança (WhatsApp)
       sbFetch('config', 'GET', null, '?key=eq.cobranca_mensagens&limit=1'),
       // 21 — Auditoria: histórico de alterações (tabela `config`)
-      sbFetch('config', 'GET', null, '?key=like.audit:*&order=key.desc&limit=3000'),
+      sbFetchTodos('config', 'key=like.audit:*&order=key.desc,id'),
       fetchAll('cartoes', 'nome'),          // 22 — cartões de crédito
       fetchAll('cartao_despesas', 'data'),  // 23 — despesas lançadas nos cartões
       // 24/25 — Lançamentos das OUTRAS empresas: as contas bancárias são sempre
@@ -5726,7 +5795,7 @@ function showPage(p) {
   if (paginaOculta(p)) return;
   // Bancos/Caixas e Transferências existem apenas no Consolidado.
   if (PAGINAS_SO_CONSOLIDADO.includes(p) && empresaAtual()) {
-    alert('Bancos / Caixas e Transferências ficam disponíveis apenas no Consolidado.\n\nSelecione "Consolidado (todas)" no topo do menu para acessar.');
+    alert('Transferências ficam disponíveis apenas no Consolidado.\n\nSelecione "Consolidado (todas)" no topo do menu para acessar.');
     return;
   }
   // Verificar permissão (exceto admin e páginas de administração)
@@ -6836,6 +6905,19 @@ function validarBancoObrigatorio(status, banco) {
   return true;
 }
 
+// Categoria obrigatória em todos os lançamentos (receita e despesa)
+function exigirCategoria(selId) {
+  const el = document.getElementById(selId);
+  if (!el) return true;
+  if (el.value) { el.style.borderColor = ''; return true; }
+  alert('Selecione a Categoria. Ela é obrigatória em todos os lançamentos (receitas e despesas).');
+  el.style.borderColor = '#dc2626';
+  const ef = el.closest('.form-group'); const trig = ef && ef.querySelector('.ef-combo-trigger');
+  if (trig) trig.style.borderColor = '#dc2626';
+  try { (trig || el).focus(); (trig || el).scrollIntoView({ block: 'center' }); } catch(e) {}
+  el.addEventListener('change', function lim() { el.style.borderColor = ''; if (trig) trig.style.borderColor = ''; el.removeEventListener('change', lim); });
+  return false;
+}
 async function saveLancamento() {
   const dtcompra = document.getElementById('l-dtcompra').value;
   const forn = document.getElementById('l-forn').value;
@@ -6844,6 +6926,7 @@ async function saveLancamento() {
   // Despesas/Fornecedor e Item são opcionais: despesas avulsas podem não ter
   // nenhum dos dois. Só data da compra e valor são realmente obrigatórios.
   if(!dtcompra || !valor) { alert('Preencha a data da competência e o valor.'); return; }
+  if (!exigirCategoria('l-catdre')) return;
   const pago = document.getElementById('l-pago').value;
   const banco = document.getElementById('l-banco').value;
   if (!validarBancoObrigatorio(pago, banco)) return;
@@ -7093,6 +7176,7 @@ async function updateLancamento() {
   const id = document.getElementById('edit-lanc-id').value;
   const l = db.lancamentos.find(x=>x.id===id);
   if(!l) return;
+  if (!exigirCategoria('edit-catdre')) return;
   const pago = document.getElementById('edit-pago').value;
   const _travaCC = document.getElementById('edit-pago-seg').dataset.trava === '1';
   const banco = _travaCC ? (l.banco || '') : (document.getElementById('edit-banco') ? document.getElementById('edit-banco').value : (l.banco||''));
@@ -8170,8 +8254,8 @@ async function confirmarMarcarRecebidoMassa() {
 async function backupLancamentos() {
   console.log('Buscando dados direto do banco (lancamentos + lancreceber)...');
   const [pagar, receber] = await Promise.all([
-    sbFetch('lancamentos', 'GET', null, '?select=*'),
-    sbFetch('lancreceber', 'GET', null, '?select=*')
+    sbFetchTodos('lancamentos', 'select=*'),
+    sbFetchTodos('lancreceber', 'select=*')
   ]);
   if (!pagar || !receber) {
     console.error('Não foi possível buscar os dados para backup. Nada foi baixado.');
@@ -9377,7 +9461,7 @@ async function prFaixaExcluir(s, i) {
 let dreMetas = {};
 async function carregarDreMetas() {
   try {
-    const rows = await sbFetch('config', 'GET', null, '?key=like.dre_metas:*');
+    const rows = await sbFetchTodos('config', 'key=like.dre_metas:*');
     dreMetas = {};
     (rows || []).forEach(c => {
       const ano = c.key.split(':')[1];
@@ -9475,18 +9559,24 @@ function calcularDreParaMetas(ano, fonte) {
     if (!grupoId && !somenteClass && grupoBase) grupoId = grupoBase.id;
     if (grupoId && valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (l.valor||0) * dreSinalCat(catId, grupoId);
   });
+  const _ccMapaMeta = ccVencOrigensMap();
   ((fonte && fonte.lancamentos) || db.lancamentos).forEach(l => {
     const dtRef = l.dtcompra; if (!dtRef) return;
-    const p = dtRef.split('-'); if (parseInt(p[0]) !== ano) return;
-    const m = parseInt(p[1]);
     const prodObj = db.produtos.find(x => x.id === l.prod);
     const catId = l.cat_dre || (prodObj ? prodObj.cat : null);
     const grupoId = catId ? getDreCatGrupo(catId) : null;
-    if (grupoId && valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (l.valor||0) * dreSinalCat(catId, grupoId);
+    if (!grupoId) return;
+    // parcelas pagas com cartão: vencimento da fatura
+    const pedacos = ccPedacosLanc(l, _ccMapaMeta, dtRef) || [{ data: dtRef, valor: l.valor || 0 }];
+    pedacos.forEach(o => {
+      if (parseInt(o.data.slice(0, 4)) !== ano) return;
+      const m = parseInt(o.data.slice(5, 7));
+      if (valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (o.valor||0) * dreSinalCat(catId, grupoId);
+    });
   });
 
   // Despesas lançadas direto no cartão de crédito (mesma regra do DRE):
-  // competência = data da compra; as que vieram de Contas a Pagar ficam de
+  // sempre pelo vencimento da fatura; as que vieram de Contas a Pagar ficam de
   // fora (a conta original já entrou acima).
   const _empCC = (fonte && fonte.empresaVar !== undefined) ? (fonte.empresaVar || '') : empresaAtual();
   (db.cartao_despesas || []).forEach(d => {
@@ -9494,7 +9584,7 @@ function calcularDreParaMetas(ano, fonte) {
     if (_empCC && (d.empresa_id || '') !== _empCC) return;
     const catId = d.cat_dre || null; if (!catId) return;
     const grupoId = getDreCatGrupo(catId); if (!grupoId) return;
-    const dtRef = d.data; if (!dtRef) return;
+    const dtRef = ccDataDre(d); if (!dtRef) return;   // cartão: vencimento da fatura
     const p = dtRef.split('-'); if (parseInt(p[0]) !== ano) return;
     const m = parseInt(p[1]);
     if (valoresMes[m][grupoId] !== undefined) valoresMes[m][grupoId] += (Number(d.valor)||0) * dreSinalCat(catId, grupoId);
@@ -10531,7 +10621,7 @@ async function renderUsuariosAdmin() {
 
 async function loadUserActivity() {
   try {
-    const rows = await sbFetch('config', 'GET', null, '?key=like.activity:*&order=key');
+    const rows = await sbFetchTodos('config', 'key=like.activity:*&order=key,id');
     const activityMap = {};
     (rows || []).forEach(r => {
       const uname = (r.key || '').replace(/^activity:/, '');
@@ -10889,6 +10979,7 @@ async function saveLancReceber() {
   const cliente=document.getElementById('lr-cliente').value;
   const valor=parseFloat(document.getElementById('lr-valor').value);
   if(!dtvenda||!cliente||!valor){ alert('Preencha data, cliente e valor.'); return; }
+  if (!exigirCategoria('lr-catdre')) return;
   const recebido=document.getElementById('lr-recebido').value;
   const banco=document.getElementById('lr-banco').value;
   if (!validarBancoObrigatorio(recebido, banco)) return;
@@ -11068,6 +11159,7 @@ function editLancReceber(id) {
 async function updateLancReceber() {
   const id=document.getElementById('edit-lr-id').value;
   const l=db.lancreceber.find(x=>x.id===id); if(!l) return;
+  if (!exigirCategoria('elr-catdre')) return;
   const recebido=document.getElementById('elr-recebido').value;
   const banco = document.getElementById('elr-banco') ? document.getElementById('elr-banco').value : (l.banco||'');
   if (!validarBancoObrigatorio(recebido, banco)) return;
@@ -12609,7 +12701,7 @@ function parseContabil(s) {
 async function carregarVarEstoque() {
   await carregarEstoque();
   try {
-    const rows = await sbFetch('config', 'GET', null, '?key=like.var_estoque:*');
+    const rows = await sbFetchTodos('config', 'key=like.var_estoque:*');
     dreVarEstoque = {};
     (rows || []).forEach(c => {
       const ano = c.key.split(':')[1];
@@ -12723,7 +12815,7 @@ function estqSaldoSegmento(ano, mes, empId, campo) {
 
 async function carregarEstoque() {
   try {
-    const rows = await sbFetch('config', 'GET', null, '?key=like.estoque:*');
+    const rows = await sbFetchTodos('config', 'key=like.estoque:*');
     dreEstoque = {};
     (rows || []).forEach(c => {
       const ano = parseInt(String(c.key).split(':')[1]);
@@ -12993,6 +13085,8 @@ function renderDre() {
   });
 
   // 2. Lançamentos a Pagar (competência = data da compra)
+  //    Parcelas pagas com cartão de crédito entram no vencimento da fatura.
+  const _ccMapaDre = ccVencOrigensMap();
   db.lancamentos.forEach(l => {
     const prodObj = db.produtos.find(x => x.id === l.prod);
     const catId = l.cat_dre || (prodObj ? prodObj.cat : null);
@@ -13000,7 +13094,7 @@ function renderDre() {
     const grupoId = catId ? getDreCatGrupo(catId) : null;
     if (!grupoId) return;
     // A base é decidida depois de saber em que conta o lançamento cai
-    const ocorrencias = _dreOcorrencias(l, baseDoGrupo(grupoId), ano, 'pagar');
+    const ocorrencias = _dreOcorrenciasPagarCC(l, baseDoGrupo(grupoId), ano, _ccMapaDre);
     if (!ocorrencias.length) return;
     ocorrencias.forEach(o => {
       const m = o.mes;
@@ -13023,8 +13117,8 @@ function renderDre() {
 
   // 2b. Despesas lançadas direto no cartão de crédito. A fatura em Contas a
   //     Pagar não tem categoria (não entra no DRE); quem entra é cada despesa,
-  //     com o grupo/categoria dela. Competência = data da compra; base
-  //     vencimento = vencimento da fatura. Despesas que vieram de Contas a
+  //     com o grupo/categoria dela. Sempre pelo vencimento da fatura
+  //     (qualquer base do DRE). Despesas que vieram de Contas a
   //     Pagar ficam de fora (a conta original já está no DRE).
   (db.cartao_despesas || []).forEach(d => {
     if (d.origem_lanc) return;
@@ -13034,7 +13128,7 @@ function renderDre() {
     const grupoId = getDreCatGrupo(catId);
     if (!grupoId) return;
     const cc = ccCartao(d.cartao_id);
-    const dtRef = baseDoGrupo(grupoId) === 'vencimento' ? (cc && d.fatura ? ccDataVencimento(cc, d.fatura) : '') : d.data;
+    const dtRef = ccDataDre(d);   // cartão: sempre pelo vencimento da fatura
     if (!dtRef) return;
     const pr = dtRef.split('-');
     if (parseInt(pr[0]) !== ano) return;
@@ -13339,6 +13433,49 @@ function renderDre() {
 //    é assim que se enxerga a amortização de empréstimos ou as compras
 //    parceladas em 30/60/90 dias caindo mês a mês.
 // ──────────────────────────────────────────────────────────────────
+// Cartão de crédito no DRE: SEMPRE pelo vencimento da fatura.
+// Data de referência de uma despesa do cartão = vencimento da fatura dela.
+function ccDataDre(d) {
+  const cc = ccCartao(d.cartao_id);
+  return (cc && d.fatura) ? ccDataVencimento(cc, d.fatura) : (d.data || '');
+}
+// Parcelas de Contas a Pagar pagas com cartão: "idLanc|parcela" -> [{ data (venc. da fatura), valor, paga }]
+function ccVencOrigensMap() {
+  const mapa = new Map();
+  (db.cartao_despesas || []).forEach(d => {
+    if (!d.origem_lanc) return;
+    const k = `${d.origem_lanc}|${d.origem_parc || 1}`;
+    if (!mapa.has(k)) mapa.set(k, []);
+    mapa.get(k).push({ data: ccDataDre(d), valor: Number(d.valor) || 0, paga: ccFaturaPaga(d.cartao_id, d.fatura) });
+  });
+  return mapa;
+}
+// Divide um lançamento a pagar em pedaços {data, valor, parcela, quitado}: as
+// parcelas pagas com cartão vão para o vencimento da fatura; as demais ficam
+// na data padrão (dtPadrao) ou, se dtPadrao for null, no vencimento da parcela.
+function ccPedacosLanc(l, mapa, dtPadrao) {
+  const n = l.parcelas || 1;
+  let tem = false;
+  for (let i = 1; i <= n; i++) if (mapa.has(`${l.id}|${i}`)) { tem = true; break; }
+  if (!tem) return null;
+  const { datas, valores, pagos } = _parseParcelas(l.parcela_datas);
+  const out = [];
+  for (let i = 1; i <= n; i++) {
+    const rot = n > 1 ? `${i}/${n}` : '';
+    const cc = mapa.get(`${l.id}|${i}`);
+    if (cc) { cc.forEach(c => out.push({ data: c.data, valor: c.valor, parcela: (rot ? rot + ' ' : '') + '💳', quitado: c.paga })); continue; }
+    const val = (valores[i-1] != null) ? valores[i-1] : ((l.valor || 0) / n);
+    const dt = dtPadrao !== null ? dtPadrao : (datas[i-1] || parcelaVencimento(l.dtprev, i, n));
+    out.push({ data: dt, valor: val, parcela: rot, quitado: n > 1 ? (pagos[i-1] === true) : (l.pago === 'sim') });
+  }
+  return out.filter(o => o.data);
+}
+function _dreOcorrenciasPagarCC(l, base, ano, mapa) {
+  const ped = ccPedacosLanc(l, mapa, base === 'vencimento' ? null : (l.dtcompra || ''));
+  if (!ped) return _dreOcorrencias(l, base, ano, 'pagar');
+  return ped.filter(o => parseInt(o.data.slice(0, 4)) === ano)
+            .map(o => ({ mes: parseInt(o.data.slice(5, 7)), valor: o.valor, data: o.data, parcela: o.parcela, quitado: o.quitado }));
+}
 function _dreOcorrencias(l, base, ano, tipo) {
   const res = [];
   const quitadoTudo = tipo === 'receber' ? (l.recebido === 'sim') : (l.pago === 'sim');
@@ -13469,39 +13606,45 @@ function renderAnaliseCategoria() {
       status: l.recebido === 'sim' ? 'Recebido' : 'A Receber'
     });
   });
+  const _ccMapaAc = ccVencOrigensMap();
   db.lancamentos.forEach(l => {
     const dtRef = l.dtcompra;
     if (!dtRef) return;
-    const parts = dtRef.split('-');
-    if (parseInt(parts[0]) !== ano) return;
-    const m = parseInt(parts[1]);
     const prodObj = db.produtos.find(x => x.id === l.prod);
     const catId = l.cat_dre || (prodObj ? prodObj.cat : null);
     if (!catId || !valoresMes[catId]) return;
-    valoresMes[catId][m] += (l.valor || 0);
-    itensMes[m][catId].push({
-      tipo: 'pagar', id: l.id, nf: l.nf || '', data: dtRef, nome: getFornNome(l.forn),
-      prod: l.prod ? getProdNome(l.prod) : '', valor: l.valor || 0,
-      status: l.pago === 'sim' ? 'Pago' : 'A Pagar'
+    // parcelas pagas com cartão: vencimento da fatura
+    const pedacos = ccPedacosLanc(l, _ccMapaAc, dtRef)
+      || [{ data: dtRef, valor: l.valor || 0, parcela: '', quitado: l.pago === 'sim' }];
+    pedacos.forEach(o => {
+      if (parseInt(o.data.slice(0, 4)) !== ano) return;
+      const m = parseInt(o.data.slice(5, 7));
+      valoresMes[catId][m] += (o.valor || 0);
+      itensMes[m][catId].push({
+        tipo: 'pagar', id: l.id, nf: l.nf || '', data: o.data, nome: getFornNome(l.forn),
+        prod: (l.prod ? getProdNome(l.prod) : '') + (o.parcela ? ` (parc. ${o.parcela})` : ''), valor: o.valor || 0,
+        status: o.quitado ? 'Pago' : 'A Pagar'
+      });
     });
   });
 
   // Despesas lançadas direto no cartão de crédito (mesma regra do DRE):
-  // categoria da despesa, na data da compra. As que vieram de Contas a
+  // categoria da despesa, no vencimento da fatura. As que vieram de Contas a
   // Pagar ficam de fora (a conta original já foi somada acima).
   (db.cartao_despesas || []).forEach(d => {
     if (d.origem_lanc) return;
     if (!pertenceEmpresaAtiva(d.empresa_id || null)) return;
     const catId = d.cat_dre;
-    if (!catId || !valoresMes[catId] || !d.data) return;
-    const parts = d.data.split('-');
+    const dtCC = ccDataDre(d);   // cartão: vencimento da fatura
+    if (!catId || !valoresMes[catId] || !dtCC) return;
+    const parts = dtCC.split('-');
     if (parseInt(parts[0]) !== ano) return;
     const m = parseInt(parts[1]);
     const cc = ccCartao(d.cartao_id);
     const valor = Number(d.valor) || 0;
     valoresMes[catId][m] += valor;
     itensMes[m][catId].push({
-      tipo: 'cartao', id: d.grupo, nf: '', data: d.data, nome: '💳 ' + (d.descricao || '—'),
+      tipo: 'cartao', id: d.grupo, nf: '', data: dtCC, nome: '💳 ' + (d.descricao || '—'),
       prod: 'Cartão ' + (cc ? cc.nome : '') + ((d.total_parcelas || 1) > 1 ? ` (parc. ${d.parcela}/${d.total_parcelas})` : ''),
       valor, status: ccFaturaPaga(d.cartao_id, d.fatura) ? 'Pago' : 'A Pagar'
     });
@@ -14495,6 +14638,140 @@ function renderBancos() {
       </div>
     </div>`;
   }).join('');
+  renderExtratoBanco();
+}
+
+// ══════════════════════════════════════════════════════════
+// EXTRATO BANCÁRIO (tela Bancos / Caixas)
+// Mesmos critérios do saldo da conta e do Fluxo de Caixa Diário: parcelas pagas
+// (com data de pagamento), parcelas recebidas (com data de recebimento) e
+// transferências entre contas. Sempre consolidado (todas as empresas).
+// ══════════════════════════════════════════════════════════
+function _isoHoje() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function extratoPeriodo(tipo) {
+  const d = new Date(), y = d.getFullYear(), m = d.getMonth();
+  const iso = (a, b, c) => `${a}-${String(b + 1).padStart(2, '0')}-${String(c).padStart(2, '0')}`;
+  let ini, fim;
+  if (tipo === 'ant') { const a = m === 0 ? y - 1 : y, mm = m === 0 ? 11 : m - 1; ini = iso(a, mm, 1); fim = iso(a, mm, new Date(a, mm + 1, 0).getDate()); }
+  else if (tipo === '30') { const x = new Date(); x.setDate(x.getDate() - 30); ini = iso(x.getFullYear(), x.getMonth(), x.getDate()); fim = _isoHoje(); }
+  else { ini = iso(y, m, 1); fim = iso(y, m, new Date(y, m + 1, 0).getDate()); }
+  document.getElementById('ext-ini').value = ini;
+  document.getElementById('ext-fim').value = fim;
+  renderExtratoBanco();
+}
+function verExtratoBanco(id) {
+  const sel = document.getElementById('ext-banco'); if (!sel) return;
+  sel.value = id;
+  renderExtratoBanco();
+  const card = document.getElementById('card-extrato-banco');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function extratoBancoMovs(bancoIds, ini, fim) {
+  const empLanc = {}, empRec = {};
+  (db.lancamentos || []).concat(db._lancOutras || []).forEach(l => { empLanc[l.id] = l.empresa_id; });
+  (db.lancreceber || []).concat(db._lrOutras || []).forEach(l => { empRec[l.id] = l.empresa_id; });
+  const catNome = id => ((db.dfc_cats || []).find(c => c.id === id) || {}).nome || '';
+  const parcTxt = p => (p.totalParc > 1 ? ` (${p.parcIdx}/${p.totalParc})` : '');
+  let saldoAnt = db.bancos.filter(b => bancoIds.includes(b.id)).reduce((s, b) => s + (b.saldo_inicial || 0), 0);
+  const movs = [];
+  getParcelasBanco(true).forEach(p => {
+    if (!bancoIds.includes(p.banco) || !p.dtpago) return;
+    if (p.dtpago < ini) { saldoAnt -= (p.valParc || 0); return; }
+    if (p.dtpago > fim) return;
+    movs.push({ data: p.dtpago, tipo: 's', hist: getFornNome(p.forn) + parcTxt(p), det: [p.prod ? getProdNome(p.prod) : '', catNome(p.catId)].filter(Boolean).join(' · '),
+      doc: p.nf || '', forma: p.tipoPag || '', emp: empLanc[p.lancId] || '', valor: -(p.valParc || 0), conta: p.banco });
+  });
+  getParcelasReceberBanco(true).forEach(p => {
+    if (!bancoIds.includes(p.banco) || !p.dtrecebido) return;
+    if (p.dtrecebido < ini) { saldoAnt += (p.valParc || 0); return; }
+    if (p.dtrecebido > fim) return;
+    movs.push({ data: p.dtrecebido, tipo: 'e', hist: getClienteNome(p.cliente) + parcTxt(p), det: [p.prod ? getProdVendaNome(p.prod) : '', catNome(p.catId)].filter(Boolean).join(' · '),
+      doc: p.nf || '', forma: p.tipoPag || '', emp: empRec[p.lancId] || '', valor: (p.valParc || 0), conta: p.banco });
+  });
+  (db.transferencias || []).forEach(t => {
+    if (!t.data) return;
+    const sai = bancoIds.includes(t.origem), ent = bancoIds.includes(t.destino);
+    if (!sai && !ent) return;
+    if (t.data < ini) { if (sai) saldoAnt -= (t.valor || 0); if (ent) saldoAnt += (t.valor || 0); return; }
+    if (t.data > fim) return;
+    if (sai) movs.push({ data: t.data, tipo: 't', hist: 'Transferência enviada para ' + getBancoNome(t.destino), det: t.obs || '', doc: '', forma: '', emp: '', valor: -(t.valor || 0), conta: t.origem });
+    if (ent) movs.push({ data: t.data, tipo: 't', hist: 'Transferência recebida de ' + getBancoNome(t.origem), det: t.obs || '', doc: '', forma: '', emp: '', valor: (t.valor || 0), conta: t.destino });
+  });
+  movs.sort((a, b) => a.data.localeCompare(b.data) || (b.valor - a.valor));
+  return { saldoAnt, movs };
+}
+function renderExtratoBanco() {
+  const wrap = document.getElementById('extrato-banco-wrap'); if (!wrap) return;
+  const sel = document.getElementById('ext-banco'), iniEl = document.getElementById('ext-ini'), fimEl = document.getElementById('ext-fim');
+  // lista de contas (mantém a escolhida)
+  const atual = sel.value;
+  sel.innerHTML = '<option value="">Todas as Contas</option>' + db.bancos.map(b => `<option value="${esc(b.id)}">${esc(b.nome)}</option>`).join('');
+  sel.value = db.bancos.some(b => b.id === atual) ? atual : '';
+  if (!iniEl.value || !fimEl.value) {
+    const d = new Date(), y = d.getFullYear(), m = d.getMonth();
+    iniEl.value = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+    fimEl.value = `${y}-${String(m + 1).padStart(2, '0')}-${String(new Date(y, m + 1, 0).getDate()).padStart(2, '0')}`;
+  }
+  if (!db.bancos.length) { wrap.innerHTML = '<div class="empty-state" style="padding:24px">Cadastre uma conta bancária para ver o extrato.</div>'; return; }
+  let ini = iniEl.value, fim = fimEl.value;
+  if (ini > fim) { wrap.innerHTML = '<div class="empty-state" style="padding:24px">A data inicial é maior que a final.</div>'; return; }
+  const bancoSel = sel.value, bancoIds = bancoSel ? [bancoSel] : db.bancos.map(b => b.id), varias = !bancoSel;
+  const { saldoAnt, movs } = extratoBancoMovs(bancoIds, ini, fim);
+  const tipo = document.getElementById('ext-tipo').value;
+  const q = (document.getElementById('ext-busca').value || '').trim().toLowerCase();
+  // saldo corre sobre TODAS as movimentações; o filtro só esconde linhas
+  let saldo = saldoAnt, totE = 0, totS = 0;
+  movs.forEach(m => { saldo += m.valor; m.saldo = saldo; if (m.valor >= 0) totE += m.valor; else totS += -m.valor; });
+  const saldoFim = saldo;
+  const vis = movs.filter(m => (!tipo || m.tipo === tipo) &&
+    (!q || `${m.hist} ${m.det} ${m.doc} ${m.forma} ${empresaNome(m.emp)} ${getBancoNome(m.conta)}`.toLowerCase().includes(q)));
+  const filtrado = !!(tipo || q);
+  const cor = v => v < 0 ? 'color:#c62828' : 'color:#2e7d32';
+  const tile = (rot, val, st) => `<div style="flex:1;min-width:160px;border:1px solid #e7e5e4;border-radius:10px;padding:10px 12px;background:#fff">
+      <div style="font-size:11px;color:#78716c;text-transform:uppercase;letter-spacing:.4px;font-weight:600">${rot}</div>
+      <div style="font-size:18px;font-weight:800;margin-top:3px;${st || ''}">${fmtBRL(val)}</div></div>`;
+  let dia = '', linhas = '';
+  vis.forEach(m => {
+    if (m.data !== dia) {
+      dia = m.data;
+      const doDia = movs.filter(x => x.data === dia), fimDia = doDia[doDia.length - 1].saldo;
+      linhas += `<tr style="background:#f6f6f8"><td colspan="${varias ? 8 : 7}" style="font-weight:700;padding:7px 10px">${fmtDate(dia)}
+        <span style="float:right;font-weight:600;color:#57534e">saldo no fim do dia <b style="${cor(fimDia)}">${fmtBRL(fimDia)}</b></span></td></tr>`;
+    }
+    const ic = m.tipo === 't' ? '⇄' : m.valor >= 0 ? '↓' : '↑';
+    linhas += `<tr>
+      <td style="white-space:nowrap">${fmtDate(m.data)}</td>
+      <td><b>${ic} ${esc(m.hist)}</b>${m.det ? `<div style="font-size:11px;color:#78716c">${esc(m.det)}</div>` : ''}</td>
+      ${varias ? `<td>${esc(getBancoNome(m.conta))}</td>` : ''}
+      <td>${m.emp ? esc(empresaNome(m.emp)) : '<span style="color:#a8a29e">—</span>'}</td>
+      <td>${esc(m.doc) || '<span style="color:#a8a29e">—</span>'}${m.forma ? `<div style="font-size:11px;color:#78716c">${esc(m.forma)}</div>` : ''}</td>
+      <td style="text-align:right;color:#2e7d32;font-weight:700;white-space:nowrap">${m.valor >= 0 ? fmtBRL(m.valor) : ''}</td>
+      <td style="text-align:right;color:#c62828;font-weight:700;white-space:nowrap">${m.valor < 0 ? fmtBRL(-m.valor) : ''}</td>
+      <td style="text-align:right;font-weight:700;white-space:nowrap;${cor(m.saldo)}">${fmtBRL(m.saldo)}</td></tr>`;
+  });
+  const nCol = varias ? 8 : 7;
+  wrap.innerHTML = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      ${tile('Saldo anterior · ' + fmtDate(ini), saldoAnt, saldoAnt < 0 ? 'color:#c62828' : '')}
+      ${tile('Entradas no período', totE, 'color:#2e7d32')}
+      ${tile('Saídas no período', totS, 'color:#c62828')}
+      ${tile('Saldo final · ' + fmtDate(fim), saldoFim, cor(saldoFim))}
+    </div>
+    <div class="table-wrap" style="overflow:auto;max-height:70vh">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="position:sticky;top:0;background:#4a4b50;color:#fff">
+          <th style="padding:8px 10px;text-align:left">Data</th><th style="padding:8px 10px;text-align:left">Histórico</th>${varias ? '<th style="padding:8px 10px;text-align:left">Conta</th>' : ''}
+          <th style="padding:8px 10px;text-align:left">Empresa</th><th style="padding:8px 10px;text-align:left">Documento / Forma</th>
+          <th style="padding:8px 10px;text-align:right">Entrada</th><th style="padding:8px 10px;text-align:right">Saída</th><th style="padding:8px 10px;text-align:right">Saldo</th></tr></thead>
+        <tbody>
+          <tr style="background:#fff7ed"><td>${fmtDate(ini)}</td><td colspan="${nCol - 2}"><b>SALDO ANTERIOR</b></td><td style="text-align:right;font-weight:800;${cor(saldoAnt)}">${fmtBRL(saldoAnt)}</td></tr>
+          ${linhas || `<tr><td colspan="${nCol}" style="text-align:center;color:#888;padding:18px">${filtrado ? 'Nenhuma movimentação com esses filtros.' : 'Nenhuma movimentação no período.'}</td></tr>`}
+          <tr style="background:#fff7ed"><td>${fmtDate(fim)}</td><td colspan="${nCol - 4}"><b>SALDO FINAL</b>${filtrado ? ' <span style="font-weight:400;color:#78716c">(considera todas as movimentações, mesmo as escondidas pelo filtro)</span>' : ''}</td>
+            <td style="text-align:right;color:#2e7d32;font-weight:800">${fmtBRL(totE)}</td><td style="text-align:right;color:#c62828;font-weight:800">${fmtBRL(totS)}</td>
+            <td style="text-align:right;font-weight:800;${cor(saldoFim)}">${fmtBRL(saldoFim)}</td></tr>
+        </tbody>
+      </table>
+    </div>`;
 }
 function editBanco(id) {
   const b = db.bancos.find(x=>x.id===id); if(!b) return;
@@ -15961,6 +16238,7 @@ async function confirmarImportLinha(i) {
   const tipo = document.getElementById('import-tipo').value;
   const r = importPreviewRows[i];
   if(!r || r.importado) return;
+  if(!r.catId) { alert('Selecione a Categoria desta linha antes de importar (obrigatória em todos os lançamentos).'); return; }
   definirBotoesImportDesabilitados(true);
   atualizarProgressoImport(0, 1, 'Importando linha...');
   const ok = await importarLinha(tipo, r);
@@ -15978,6 +16256,8 @@ async function confirmarImport() {
   const tipo = document.getElementById('import-tipo').value;
   const linhas = importPreviewRows.filter(r=>r.incluir && !r.importado);
   if(!linhas.length) { alert('Nenhuma linha selecionada para importar.'); return; }
+  const semCat = linhas.filter(r => !r.catId).length;
+  if(semCat) { alert(`${semCat} linha(s) selecionada(s) estão sem Categoria. A categoria é obrigatória em todos os lançamentos — preencha (ou use "aplicar categoria a todas") antes de importar.`); return; }
 
   definirBotoesImportDesabilitados(true);
   let criados = 0, erros = 0;
@@ -18123,7 +18403,7 @@ async function ccSalvarDespesa() {
   if (!data) { alert('Informe a data da compra.'); return; }
   if (!descricao) { alert('Informe a descrição.'); return; }
   if (!valor) { alert('Informe o valor.'); return; }
-  if (!cat_dre && !document.getElementById('cc-d-orig-lanc').value) { alert('Selecione a categoria: sem ela a despesa do cartão não entra no DRE.'); return; }
+  if (!cat_dre && !document.getElementById('cc-d-orig-lanc').value) { alert('Selecione a Categoria: ela é obrigatória em todos os lançamentos (sem ela a despesa do cartão não entra no DRE).'); return; }
   if (valor < 0 && document.getElementById('cc-d-parcelada').value === 'sim') { alert('Crédito/estorno (valor negativo) não pode ser parcelado.'); return; }
   const ps = ccMontarParcelas();
   if (!ps[0].fatura) { alert('Selecione a fatura.'); return; }
@@ -18526,6 +18806,8 @@ async function ccImpConfirmar() {
   const mes = document.getElementById('cc-imp-fatura').value;
   const sel = _ccImp.linhas.filter(l => l.sel);
   if (!cid || !mes || !sel.length) return;
+  const _semCatCC = sel.filter(l => !l.pagto && !l.cat).length;
+  if (_semCatCC) { alert(`${_semCatCC} lançamento(s) selecionado(s) estão sem Categoria. A categoria é obrigatória (sem ela a despesa do cartão não entra no DRE).`); return; }
   if (ccFaturaPaga(cid, mes)) { alert(`A fatura de ${ccMesLabel(mes)} já foi paga. Desfaça o pagamento para importar nela.`); return; }
   const c = ccCartao(cid);
   if (!confirm(`Importar ${sel.length} lançamento(s) na fatura de ${ccMesLabel(mes)} do cartão ${c.nome}?`)) return;
